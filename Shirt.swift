@@ -33,6 +33,7 @@ class Shirt: CCNode {
     weak var sprite: CCNode?
     let initialXVelocity: CGFloat = 0
     let initialYVelocity: CGFloat = -8
+    let maxInitialAngularMomentum: Float = 10
     let bounceSpeed: CGFloat = 600
     var shirtColor: Color!
     var radius: CGFloat!
@@ -41,6 +42,7 @@ class Shirt: CCNode {
     func didLoadFromCCB() -> Void {
         shirtColor = Shirt.Color.randomColor()
         self.physicsBody.velocity = ccp( initialXVelocity, initialYVelocity )
+        self.physicsBody.angularVelocity = CGFloat( CCRANDOM_0_1() * maxInitialAngularMomentum * ( CCRANDOM_MINUS1_1() > 0 ? 1 : -1 ) )
         //self.physicsBody.allowsRotation = false
         //        self.physicsBody.allowsRotation = false // for noob version
         radius = 2*ccpDistance( self.anchorPointInPoints, CGPointZero )
@@ -54,7 +56,7 @@ class Shirt: CCNode {
         sprite!.position = CGPointZero
         self.addChild( sprite )
         sprite!.scale = Float( self.contentSize.height / sprite!.contentSize.height )
-        
+        self.contentSize = CGSizeMake( sprite!.contentSize.width * CGFloat( sprite!.scale ), self.contentSize.height )
         
         var tintColor: CCColor!
         switch shirtColor! {
@@ -75,8 +77,8 @@ class Shirt: CCNode {
     }
     
     func getShirtSprite() -> String {
-        var numberOfItems = clothesSprites.count
-        var upperBound = UInt32( max( Float( GameState.sharedState.score ) / 3, 1 ) )
+        var numberOfItems = Float( clothesSprites.count ) // types in Swift are a freakin' disaster
+        var upperBound = UInt32( min( max( Float( GameState.sharedState.score ) / 3, 1 ), numberOfItems - 1 ) )
         return "clothesSprites/" + clothesSprites[Int( arc4random_uniform( upperBound ) )] + ".png" // file extension apparently required in Swift
     }
     

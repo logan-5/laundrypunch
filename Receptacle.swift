@@ -14,7 +14,7 @@ class Receptacle: CCNode {
     private(set) var receptacleColor: String!
     private(set) var shirtColor: Shirt.Color!
     private var shirts: [Shirt] = Array()
-    let shirtStackOffset: Float = 3
+    let shirtStackOffset: Float = 5
     let receiveTime: Float = 0.3 // seconds
     
     func didLoadFromCCB() -> Void {
