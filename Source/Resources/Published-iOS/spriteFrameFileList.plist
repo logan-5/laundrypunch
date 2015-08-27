@@ -10,6 +10,7 @@
 	<key>spriteFrameFiles</key>
 	<array>
 		<string>clothesSprites.plist</string>
+		<string>miscSprites.plist</string>
 	</array>
 </dict>
 </plist>

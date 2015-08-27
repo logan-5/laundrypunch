@@ -16,7 +16,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     override func touchBegan( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
         hasBeenTouched = true
         
-        if GameState.sharedState.currentShirt == nil {
+        if GameState.sharedState.lastLaunchedObject == nil {
             inflow.launch()
         } else {
             var touchPos = touch.locationInNode( self.parent )
@@ -41,17 +41,33 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         return true
     }
     
+    func ccPhysicsCollisionPostSolve( pair:CCPhysicsCollisionPair!, quarter:Quarter!, bouncer:Bouncer! ) -> ObjCBool {
+        var quarterSpeed = quarter.bounceSpeed 
+        var quarterNewVelocity = ccp( quarterSpeed, 0 )
+        quarterNewVelocity = ccpRotateByAngle( quarterNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
+        quarter.physicsBody.velocity = ccp( -quarterNewVelocity.x, quarterNewVelocity.y )
+        
+        return true
+    }
+    
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, shirt: Shirt!, receptacle: Receptacle!) -> ObjCBool {
         if shirt.shirtColor == receptacle.shirtColor {
-            GameState.sharedState.success()
-            receptacle.receiveShirt( shirt )
+            //GameState.sharedState.success()
+            receptacle.receiveItem( shirt )
         } else {
-            GameState.sharedState.failure()
-            shirt.physicsBody.sensor = true
-            shirt.physicsBody.velocity = CGPointZero
-            shirt.physicsBody.collisionType = "failedShirt"
+            //GameState.sharedState.failure()
+            shirt.fall()
+            receptacle.killShirt()
         }
         
+        return false
+    }
+    
+    func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, quarter: Quarter!, receptacle: Receptacle!) -> ObjCBool {
+        if receptacle.shirts.count > 0 {
+            receptacle.receiveItem( quarter )
+            receptacle.doLaundry()
+        }
         return false
     }
     

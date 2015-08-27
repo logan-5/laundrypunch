@@ -13,7 +13,7 @@ class Receptacle: CCNode {
     weak var sprite: CCNode!
     private(set) var receptacleColor: String!
     private(set) var shirtColor: Shirt.Color!
-    private var shirts: [Shirt] = Array()
+    private(set) var shirts: [CCNode] = Array()
     let shirtStackOffset: Float = 5
     let receiveTime: Float = 0.3 // seconds
     
@@ -54,20 +54,34 @@ class Receptacle: CCNode {
         self.sprite!.color = tintColor
     }
     
-    func receiveShirt( shirt: Shirt ) -> Void {
-        println( "shirt received" )
-        shirt.physicsBody.sensor = true
-        shirt.physicsBody.affectedByGravity = false
-        shirt.physicsBody.velocity = CGPointZero
-        shirt.physicsBody.angularVelocity = 0
-        shirts.append( shirt )
+    func receiveItem( item: CCNode ) -> Void {
+        item.physicsBody.sensor = true
+        item.physicsBody.affectedByGravity = false
+        item.physicsBody.velocity = CGPointZero
+        item.physicsBody.angularVelocity = 0
+        shirts.append( item )
         var destination = ccp( 0, CGFloat( -shirtStackOffset * Float( shirts.count ) ) )
         destination = ccpRotateByAngle( destination, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
         destination = ccpAdd( destination, self.position )
         
         var move = CCActionMoveTo.actionWithDuration( CCTime(receiveTime), position: destination ) as CCActionMoveTo
         var rotate = CCActionRotateTo.actionWithDuration( CCTime(receiveTime), angle: self.rotation ) as CCActionRotateTo
-        shirt.runAction( move ); shirt.runAction( rotate )
+        item.runAction( move ); item.runAction( rotate )
         
+    }
+    
+    func killShirt() -> Void {
+        if shirts.count == 0 { return }
+        var shirt = shirts.removeLast() as Shirt
+        shirt.physicsBody.affectedByGravity = true
+        shirt.fall()
+    }
+    
+    func doLaundry() -> Void {
+        // for now
+        for shirt in shirts {
+            shirt.removeFromParent()
+        }
+        shirts.removeAll( keepCapacity: false )
     }
 }
