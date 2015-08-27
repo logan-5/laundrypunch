@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>frames</key>
+	<dict>
+		<key>clothesSprites/girlshirt.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{2111, 1055}, {735, 969}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {735, 969}}</string>
+			<key>sourceSize</key>
+			<string>{735, 969}</string>
+		</dict>
+		<key>clothesSprites/girlstank.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{890, 1}, {541, 1062}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {541, 1062}}</string>
+			<key>sourceSize</key>
+			<string>{541, 1062}</string>
+		</dict>
+		<key>clothesSprites/lsbuttondown.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{1, 1}, {887, 1064}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {887, 1064}}</string>
+			<key>sourceSize</key>
+			<string>{887, 1064}</string>
+		</dict>
+		<key>clothesSprites/polo.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{1, 1067}, {969, 1053}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<true/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {969, 1053}}</string>
+			<key>sourceSize</key>
+			<string>{969, 1053}</string>
+		</dict>
+		<key>clothesSprites/ssbuttondown.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{1056, 1065}, {969, 1053}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<true/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {969, 1053}}</string>
+			<key>sourceSize</key>
+			<string>{969, 1053}</string>
+		</dict>
+		<key>clothesSprites/stripper.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{1433, 1}, {680, 1052}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {680, 1052}}</string>
+			<key>sourceSize</key>
+			<string>{680, 1052}</string>
+		</dict>
+		<key>clothesSprites/tee.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{2115, 1}, {968, 999}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {968, 999}}</string>
+			<key>sourceSize</key>
+			<string>{968, 999}</string>
+		</dict>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>format</key>
+		<integer>2</integer>
+		<key>size</key>
+		<string>{4096, 2048}</string>
+		<key>textureFileName</key>
+		<string>clothesSprites.png</string>
+	</dict>
+</dict>
+</plist>
