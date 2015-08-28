@@ -5,12 +5,14 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     private(set) weak var inflow: Inflow!
     private(set) weak var physicsNode: CCPhysicsNode!
     private(set) weak var scoreLabel: CCLabelTTF!
+    private(set) weak var livesLabel: CCLabelTTF!
     private(set) var hasBeenTouched = false
     
     func didLoadFromCCB() -> Void {
         GameState.sharedState.scene = self
         self.userInteractionEnabled = true
         physicsNode.collisionDelegate = self
+        updateScoreLabel(); updateLivesLabel()
     }
     
     override func touchBegan( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
@@ -55,9 +57,13 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             //GameState.sharedState.success()
             receptacle.receiveItem( shirt )
         } else {
-            //GameState.sharedState.failure()
+            GameState.sharedState.failure()
             shirt.fall()
             receptacle.killShirt()
+            var failEffect = CCBReader.load( "Effects/Failure" ) as CCParticleSystem
+            failEffect.autoRemoveOnFinish = true
+            failEffect.position = shirt.position
+            self.addChild( failEffect )
         }
         
         return false
@@ -67,11 +73,17 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         if receptacle.shirts.count > 0 {
             receptacle.receiveItem( quarter )
             receptacle.doLaundry()
+        } else {
+            quarter.fall()
         }
         return false
     }
     
     func updateScoreLabel() -> Void {
         scoreLabel.string = String( GameState.sharedState.score )
+    }
+    
+    func updateLivesLabel() -> Void {
+        livesLabel.string = "Lives: " + String( GameState.sharedState.lives )
     }
 }

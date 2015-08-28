@@ -60,15 +60,15 @@ class Shirt: CCNode {
         
         var tintColor: CCColor!
         switch shirtColor! {
-        case Shirt.Color.Red:
+        case .Red:
             tintColor = CCColor.redColor()
-        case Shirt.Color.Blue:
+        case .Blue:
             tintColor = CCColor.blueColor()
-        case Shirt.Color.Green:
+        case .Green:
             tintColor = CCColor.greenColor()
-        case Shirt.Color.Yellow:
+        case .Yellow:
             tintColor = CCColor.yellowColor()
-        case Shirt.Color.Purple:
+        case .Purple:
             fallthrough
         default:
             tintColor = CCColor.purpleColor()

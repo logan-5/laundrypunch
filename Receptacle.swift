@@ -16,6 +16,7 @@ class Receptacle: CCNode {
     private(set) var shirts: [CCNode] = Array()
     let shirtStackOffset: Float = 5
     let receiveTime: Float = 0.3 // seconds
+    private var oldPosition = CGPointZero
     
     func didLoadFromCCB() -> Void {
         shirtColor = Shirt.Color.randomColor()
@@ -38,15 +39,15 @@ class Receptacle: CCNode {
         
         var tintColor: CCColor!
         switch shirtColor! {
-        case Shirt.Color.Red:
+        case .Red:
             tintColor = CCColor.redColor()
-        case Shirt.Color.Blue:
+        case .Blue:
             tintColor = CCColor.blueColor()
-        case Shirt.Color.Green:
+        case .Green:
             tintColor = CCColor.greenColor()
-        case Shirt.Color.Yellow:
+        case .Yellow:
             tintColor = CCColor.yellowColor()
-        case Shirt.Color.Purple:
+        case .Purple:
             fallthrough
         default:
             tintColor = CCColor.purpleColor()
@@ -64,8 +65,10 @@ class Receptacle: CCNode {
         destination = ccpRotateByAngle( destination, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
         destination = ccpAdd( destination, self.position )
         
-        var move = CCActionMoveTo.actionWithDuration( CCTime(receiveTime), position: destination ) as CCActionMoveTo
-        var rotate = CCActionRotateTo.actionWithDuration( CCTime(receiveTime), angle: self.rotation ) as CCActionRotateTo
+        var move: CCAction = CCActionMoveTo.actionWithDuration( CCTime(receiveTime), position: destination ) as CCActionMoveTo
+        var rotate: CCAction = CCActionRotateTo.actionWithDuration( CCTime(receiveTime), angle: self.rotation ) as CCActionRotateTo
+        move = CCActionEaseSineOut.actionWithAction( move as CCActionMoveTo ) as CCActionEaseSineOut
+        rotate = CCActionEaseSineOut.actionWithAction( rotate as CCActionRotateTo ) as CCActionEaseSineOut
         item.runAction( move ); item.runAction( rotate )
         
     }
@@ -78,10 +81,26 @@ class Receptacle: CCNode {
     }
     
     func doLaundry() -> Void {
-        // for now
+        GameState.sharedState.cashIn( shirts.count )
+        
+        var offScreen = ccp( 0, ( self.contentSize.height + CGFloat( shirtStackOffset * Float( shirts.count ) ) ) )
+        offScreen = ccpRotateByAngle( offScreen, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
+
+        var moveOffScreen: CCAction = CCActionMoveBy.actionWithDuration( 0.3, position: offScreen ) as CCActionMoveBy
+        moveOffScreen = CCActionEaseSineInOut.actionWithAction( moveOffScreen as CCActionMoveBy ) as CCAction
         for shirt in shirts {
-            shirt.removeFromParent()
+            var moveShirt = moveOffScreen.copyWithZone( nil ) as CCAction
+            shirt.runAction( moveShirt )
         }
-        shirts.removeAll( keepCapacity: false )
+        oldPosition = self.position
+        var comeBack: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: oldPosition ) as CCActionMoveTo
+        comeBack = CCActionEaseSineInOut.actionWithAction( comeBack as CCActionMoveTo ) as CCAction
+        var sequence = CCActionSequence.actionWithArray([moveOffScreen, CCActionCallBlock.actionWithBlock({ () -> Void in
+            for shirt in self.shirts {
+                shirt.removeFromParent()
+            }
+            self.shirts.removeAll( keepCapacity: true )
+        }), comeBack]) as CCActionSequence
+        self.runAction( sequence )
     }
 }

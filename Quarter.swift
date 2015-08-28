@@ -39,4 +39,10 @@ class Quarter: CCNode {
                 self.removeFromParent();
         }
     }
+    
+    func fall() -> Void {
+        self.physicsBody.sensor = true
+        self.physicsBody.velocity = CGPointZero
+        self.physicsBody.collisionType = "failedQuarter"
+    }
 }

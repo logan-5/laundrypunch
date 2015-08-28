@@ -17,6 +17,32 @@
 			<key>sourceSize</key>
 			<string>{266, 266}</string>
 		</dict>
+		<key>miscSprites/sad.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{1, 269}, {64, 64}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {64, 64}}</string>
+			<key>sourceSize</key>
+			<string>{64, 64}</string>
+		</dict>
+		<key>miscSprites/smile.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{1, 335}, {64, 64}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {64, 64}}</string>
+			<key>sourceSize</key>
+			<string>{64, 64}</string>
+		</dict>
 	</dict>
 	<key>metadata</key>
 	<dict>

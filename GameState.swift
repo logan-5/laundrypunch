@@ -18,10 +18,14 @@ class GameState: NSObject {
         case Easy
         //case Impossible
     }
+    struct Lives {
+        static let Easy = 5
+    }
     private(set) var mode: Mode! // linker errors without '!'. I thought it'd work.  I must not understand
     private(set) var score: Int = 0
-    private var quarterFrequency: UInt32 = 10 // you get a quarter every (1 / (quarterFrequency +/- (quarterFrequency / 5))) shirts
-    private(set) var nextQuarter: UInt32!
+    private(set) var lives: Int = 0
+    private var quarterFrequency: UInt32 = 10 // best case scenario, with a 30% chance of being 1.5* this
+    private(set) var nextQuarter: UInt32 = 0
     
     weak var scene: MainScene?
     weak var lastLaunchedObject: CCNode?
@@ -31,6 +35,18 @@ class GameState: NSObject {
         emitRate = INITIAL_EMIT_RATE
         mode = Mode.Easy
         super.init()
+        setLives()
+        getNextQuarterTime()
+    }
+    
+    func setLives() -> Int {
+        switch mode! {
+        case .Easy:
+            fallthrough
+        default:
+            lives = Lives.Easy
+        }
+        return lives
     }
     
 //    func success() -> Void {
@@ -42,21 +58,27 @@ class GameState: NSObject {
 //        scene!.updateScoreLabel()
 //    }
 //    
-//    func failure() -> Void {
-//        println( "Failure" )
+    func failure() -> Void {
+        println( "Failure" )
 //        switch mode! { // and here
 //        case Mode.Easy:
 //            --score
 //        }
 //        scene!.updateScoreLabel()
-//    }
+        --lives
+        scene!.updateLivesLabel()
+    }
 
     func cashIn( amount: Int ) -> Void {
         score += amount
+        scene!.updateScoreLabel()
     }
     
     func getNextQuarterTime() -> UInt32 {
-        nextQuarter = UInt32(quarterFrequency) +  arc4random_uniform( quarterFrequency / 5 ) * UInt32( CCRANDOM_MINUS1_1() > 0 ? 1 : -1 )
+        nextQuarter = quarterFrequency
+        if CCRANDOM_0_1() < 0.3 {
+            nextQuarter += quarterFrequency / 2
+        }
         return nextQuarter
         // I hate Swift. can't do jack without getting pedantic af
         // even the dreaded C++ doesn't split hairs between "int" and "unsigned 32-bit int"
