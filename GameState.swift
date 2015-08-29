@@ -28,7 +28,7 @@ class GameState: NSObject {
     private(set) var nextQuarter: UInt32 = 0
     
     weak var scene: MainScene?
-    weak var lastLaunchedObject: CCNode?
+    weak var lastLaunchedObject: Dispensable?
     private(set) var emitRate: Float
     let INITIAL_EMIT_RATE: Float = 2 // in seconds
     override init() {

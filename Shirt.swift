@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Shirt: CCNode {
+class Shirt: Dispensable {
     enum Color: UInt32 {
         case Red
         case Blue
@@ -31,26 +31,19 @@ class Shirt: CCNode {
     let clothesSprites = ["tee", "polo", "girlstank", "ssbuttondown", "girlshirt", "lsbuttondown", "stripper"]
     
     weak var sprite: CCNode?
-    let initialXVelocity: CGFloat = 0
-    let initialYVelocity: CGFloat = -8
-    let maxInitialAngularMomentum: Float = 10
-    let bounceSpeed: CGFloat = 600
     var shirtColor: Color!
-    var radius: CGFloat!
-    var ready = false
     
-    func didLoadFromCCB() -> Void {
+    override func didLoadFromCCB() -> Void {
+        initialXVelocity = 0
+        initialYVelocity = -8
+        maxInitialAngularMomentum = 10
+        bounceSpeed = 600
+        super.didLoadFromCCB()
         shirtColor = Shirt.Color.randomColor()
-        self.physicsBody.velocity = ccp( initialXVelocity, initialYVelocity )
-        self.physicsBody.angularVelocity = CGFloat( CCRANDOM_0_1() * maxInitialAngularMomentum * ( CCRANDOM_MINUS1_1() > 0 ? 1 : -1 ) )
-        //self.physicsBody.allowsRotation = false
-        //        self.physicsBody.allowsRotation = false // for noob version
-        radius = 2*ccpDistance( self.anchorPointInPoints, CGPointZero )
-        ready = true
         self.physicsBody.collisionType = "shirt";
         
         // choose sprite
-        var shirtSprite = CCSprite.spriteWithImageNamed( getShirtSprite() ) as CCSprite
+        let shirtSprite = CCSprite.spriteWithImageNamed( getShirtSprite() ) as CCSprite
         sprite = shirtSprite
         sprite!.anchorPoint = CGPointZero
         sprite!.position = CGPointZero
@@ -77,25 +70,8 @@ class Shirt: CCNode {
     }
     
     func getShirtSprite() -> String {
-        var numberOfItems = Float( clothesSprites.count ) // types in Swift are a freakin' disaster
-        var upperBound = UInt32( min( max( Float( GameState.sharedState.score ) / 3, 1 ), numberOfItems - 1 ) )
+        let numberOfItems = Float( clothesSprites.count ) // types in Swift are a freakin' disaster
+        let upperBound = UInt32( min( max( Float( GameState.sharedState.score ) / 3, 1 ), numberOfItems - 1 ) )
         return "clothesSprites/" + clothesSprites[Int( arc4random_uniform( upperBound ) )] + ".png" // file extension apparently required in Swift
-    }
-    
-    override func update(delta: CCTime) -> Void {
-        if !ready { return }
-        var pos = self.parent.parent.convertToNodeSpace( self.position )
-        if  pos.x < -radius ||
-            pos.x > radius + CCDirector.sharedDirector().viewSize().width ||
-            pos.y < -radius ||
-            pos.y > radius + CCDirector.sharedDirector().viewSize().height {
-                self.removeFromParent();
-        }
-    }
-    
-    func fall() -> Void {
-        self.physicsBody.sensor = true
-        self.physicsBody.velocity = CGPointZero
-        self.physicsBody.collisionType = "failedShirt"
     }
 }

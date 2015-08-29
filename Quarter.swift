@@ -8,41 +8,19 @@
 
 import UIKit
 
-class Quarter: CCNode {
+class Quarter: Dispensable {
     
     weak var sprite: CCSprite!
     
-    let initialXVelocity: CGFloat = 0
-    let initialYVelocity: CGFloat = -8
-    let bounceSpeed: CGFloat = 600
-    var radius: CGFloat!
-    var ready = false
-
-    func didLoadFromCCB() -> Void {
-        self.physicsBody.velocity = ccp( initialXVelocity, initialYVelocity )
-        
-        radius = 2*ccpDistance( self.anchorPointInPoints, CGPointZero )
-        ready = true
+    override func didLoadFromCCB() -> Void {
+        initialXVelocity = 0
+        initialYVelocity = -8
+        maxInitialAngularMomentum = 0
+        bounceSpeed = 600
+        super.didLoadFromCCB()
         
         self.physicsBody.collisionType = "quarter"
         
         sprite.scale = Float(self.contentSize.width / sprite.contentSize.width)
-    }
-    
-    override func update(delta: CCTime) -> Void {
-        if !ready { return }
-        var pos = self.parent.parent.convertToNodeSpace( self.position )
-        if  pos.x < -radius ||
-            pos.x > radius + CCDirector.sharedDirector().viewSize().width ||
-            pos.y < -radius ||
-            pos.y > radius + CCDirector.sharedDirector().viewSize().height {
-                self.removeFromParent();
-        }
-    }
-    
-    func fall() -> Void {
-        self.physicsBody.sensor = true
-        self.physicsBody.velocity = CGPointZero
-        self.physicsBody.collisionType = "failedQuarter"
     }
 }

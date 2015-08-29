@@ -60,13 +60,24 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             GameState.sharedState.failure()
             shirt.fall()
             receptacle.killShirt()
-            var failEffect = CCBReader.load( "Effects/Failure" ) as CCParticleSystem
-            failEffect.autoRemoveOnFinish = true
-            failEffect.position = shirt.position
-            self.addChild( failEffect )
+            runFailParticles( shirt.position )
         }
         
         return false
+    }
+    
+    private func runFailParticles( position: CGPoint ) -> Void {
+        let failEffectSmell = CCBReader.load( "Effects/FailureSmell" ) as CCParticleSystem
+        failEffectSmell.autoRemoveOnFinish = true
+        failEffectSmell.position = position
+        self.addChild( failEffectSmell )
+        
+        let failEffect = CCBReader.load( "Effects/Failure" ) as CCParticleSystem
+        failEffect.autoRemoveOnFinish = true
+        failEffect.position = position
+        let particles = 1.0 / Float( max(GameState.sharedState.lives, 1) ) * 80.0
+        failEffect.totalParticles = UInt( 20 + UInt( max( particles, 80.0 ) ) )
+        self.addChild( failEffect )
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, quarter: Quarter!, receptacle: Receptacle!) -> ObjCBool {

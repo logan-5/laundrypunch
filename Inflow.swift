@@ -21,22 +21,22 @@ class Inflow: CCNode {
         GameState.sharedState.getNextQuarterTime()
         
         // launch a shirt
-        var emitRate = CCTime( GameState.sharedState.emitRate )
-        var delay = CCActionDelay.actionWithDuration( emitRate ) as CCActionDelay
-        var launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as CCActionCallFunc
+        let emitRate = CCTime( GameState.sharedState.emitRate )
+        let delay = CCActionDelay.actionWithDuration( emitRate ) as CCActionDelay
+        let launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as CCActionCallFunc
         launchingAction = CCActionSequence.actionWithArray( [delay, launch] ) as CCActionSequence
         self.runAction( launchingAction )
     }
     
     func setUpLaunch() -> Void {
-        var stillLaunching: Bool = launchingAction != nil && !launchingAction!.isDone()
-        var initialDelays: Bool = !GameState.sharedState.scene!.hasBeenTouched || !emittedFirstShirt
+        let stillLaunching: Bool = launchingAction != nil && !launchingAction!.isDone()
+        let initialDelays: Bool = !GameState.sharedState.scene!.hasBeenTouched || !emittedFirstShirt
         if stillLaunching || initialDelays {
             return
         }
-        var emitRate = CCTime( emittedFirstShirt ? GameState.sharedState.emitRate : GameState.sharedState.emitRate / 2 )
-        var delay = CCActionDelay.actionWithDuration( emitRate ) as CCActionDelay
-        var launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as CCActionCallFunc
+        let emitRate = CCTime( emittedFirstShirt ? GameState.sharedState.emitRate : GameState.sharedState.emitRate / 2 )
+        let delay = CCActionDelay.actionWithDuration( emitRate ) as CCActionDelay
+        let launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as CCActionCallFunc
         launchingAction = CCActionSequence.actionWithArray( [delay, launch] ) as CCActionSequence
         self.runAction( launchingAction )
     }
@@ -46,7 +46,7 @@ class Inflow: CCNode {
             self.stopAction( l )
             launchingAction = nil
         }
-        var object: CCNode
+        var object: Dispensable
         if quarterCounter!++ < GameState.sharedState.nextQuarter {
             object = CCBReader.load( "Shirt" ) as Shirt
         } else {

@@ -75,7 +75,7 @@ class Receptacle: CCNode {
     
     func killShirt() -> Void {
         if shirts.count == 0 { return }
-        var shirt = shirts.removeLast() as Shirt
+        let shirt = shirts.removeLast() as Shirt
         shirt.physicsBody.affectedByGravity = true
         shirt.fall()
     }
@@ -89,18 +89,49 @@ class Receptacle: CCNode {
         var moveOffScreen: CCAction = CCActionMoveBy.actionWithDuration( 0.3, position: offScreen ) as CCActionMoveBy
         moveOffScreen = CCActionEaseSineInOut.actionWithAction( moveOffScreen as CCActionMoveBy ) as CCAction
         for shirt in shirts {
-            var moveShirt = moveOffScreen.copyWithZone( nil ) as CCAction
+            let moveShirt = moveOffScreen.copyWithZone( nil ) as CCAction
             shirt.runAction( moveShirt )
         }
         oldPosition = self.position
         var comeBack: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: oldPosition ) as CCActionMoveTo
         comeBack = CCActionEaseSineInOut.actionWithAction( comeBack as CCActionMoveTo ) as CCAction
-        var sequence = CCActionSequence.actionWithArray([moveOffScreen, CCActionCallBlock.actionWithBlock({ () -> Void in
+        let sequence = CCActionSequence.actionWithArray([moveOffScreen, CCActionCallBlock.actionWithBlock({ () -> Void in
+            self.setUpSuccessParticleEffects()
             for shirt in self.shirts {
                 shirt.removeFromParent()
             }
             self.shirts.removeAll( keepCapacity: true )
         }), comeBack]) as CCActionSequence
         self.runAction( sequence )
+    }
+    
+    func setUpSuccessParticleEffects() -> Void {
+        let rotation: Float = 0 // don't get why this works. adapts correctly to differently-rotated receptacles with no extra code
+        // maybe adding a child to a rotated parent rotates the child too?
+        // or does something or other to its rotation. I guess probably
+        
+        // big problems here. can't change particleeffect.totalParticles dynamically. no compiler error, but runtime crashes.  have to resort to hacks.
+        var s = 2 * self.shirts.count
+        do {
+            let successSmellBackground = CCBReader.load( "Effects/SuccessSmellBackground" ) as CCParticleSystem
+            successSmellBackground.rotation = rotation
+            successSmellBackground.particlePositionType = CCParticleSystemPositionType.Relative
+            successSmellBackground.autoRemoveOnFinish = true
+            self.addChild( successSmellBackground )
+            
+            let successSmell = CCBReader.load( "Effects/SuccessSmell" ) as CCParticleSystem
+            successSmell.rotation = rotation
+            successSmell.particlePositionType = CCParticleSystemPositionType.Relative
+            successSmell.autoRemoveOnFinish = true
+            self.addChild( successSmell )
+            
+            let smileyEffect = CCBReader.load( "Effects/Success" ) as CCParticleSystem
+            smileyEffect.totalParticles = UInt( 30 * self.shirts.count )
+            smileyEffect.rotation = -self.rotation
+            smileyEffect.particlePositionType = CCParticleSystemPositionType.Relative
+            smileyEffect.autoRemoveOnFinish = true
+            self.addChild( smileyEffect )
+            s /= 2
+        } while s > 2
     }
 }
