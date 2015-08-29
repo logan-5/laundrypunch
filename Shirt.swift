@@ -45,11 +45,11 @@ class Shirt: Dispensable {
         // choose sprite
         let shirtSprite = CCSprite.spriteWithImageNamed( getShirtSprite() ) as CCSprite
         sprite = shirtSprite
-        sprite!.anchorPoint = CGPointZero
         sprite!.position = CGPointZero
         self.addChild( sprite )
         sprite!.scale = Float( self.contentSize.height / sprite!.contentSize.height )
         self.contentSize = CGSizeMake( sprite!.contentSize.width * CGFloat( sprite!.scale ), self.contentSize.height )
+        sprite!.anchorPoint = CGPointZero
         
         var tintColor: CCColor!
         switch shirtColor! {

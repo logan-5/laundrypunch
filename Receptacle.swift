@@ -111,7 +111,7 @@ class Receptacle: CCNode {
         // or does something or other to its rotation. I guess probably
         
         // big problems here. can't change particleeffect.totalParticles dynamically. no compiler error, but runtime crashes.  have to resort to hacks.
-        var s = 2 * self.shirts.count
+        var s = 3 * self.shirts.count
         do {
             let successSmellBackground = CCBReader.load( "Effects/SuccessSmellBackground" ) as CCParticleSystem
             successSmellBackground.rotation = rotation
