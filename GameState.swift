@@ -16,10 +16,11 @@ class GameState: NSObject {
     
     enum Mode {
         case Easy
-        //case Impossible
+        case Hard
     }
     struct Lives {
         static let Easy = 5
+        static let Hard = 0
     }
     private(set) var mode: Mode! // linker errors without '!'. I thought it'd work.  I must not understand
     private(set) var score: Int = 0
@@ -39,6 +40,8 @@ class GameState: NSObject {
     
     func setLives() -> Int {
         switch mode! {
+        case .Hard:
+            lives = Lives.Hard
         case .Easy:
             fallthrough
         default:
@@ -107,5 +110,10 @@ class GameState: NSObject {
         setLives()
         getNextQuarterTime()
         score = 0
+    }
+    
+    func setMode( newMode: Mode ) -> Void {
+        mode = newMode;
+        setLives()
     }
 }

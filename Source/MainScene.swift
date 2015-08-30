@@ -7,36 +7,32 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     private(set) weak var scoreLabel: CCLabelTTF!
     private(set) weak var livesLabel: CCLabelTTF!
     private(set) weak var overlay: CCNodeGradient!
-    private(set) var hasBeenTouched = false
+    var hasBeenTouched = false
     
     func didLoadFromCCB() -> Void {
         GameState.sharedState.scene = self
-        self.userInteractionEnabled = true
+        self.userInteractionEnabled = false
         physicsNode.collisionDelegate = self
         updateScoreLabel(); updateLivesLabel()
         overlay.zOrder = 100
         let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as CCAction
         overlay.runAction( fadeOut )
-    }
-    
-    override func touchBegan( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
-        hasBeenTouched = true
         
-        if GameState.sharedState.lastLaunchedObject == nil {
-            inflow.launch()
-        } else {
-            var touchPos = touch.locationInNode( self.parent )
-            touchPos = ccp( touchPos.x, touchPos.y )
-            var direction = ccpSub( touchPos, bouncer.positionInPoints )
-            var angle = Float( ccpToAngle( direction ) )
-            angle = 360 - CC_RADIANS_TO_DEGREES( angle )
-            bouncer.rotation = angle
-        }
+        self.contentSize = CCDirector.sharedDirector().viewSize()
+        self.position = CGPointZero
     }
     
-    override func touchMoved( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
-        self.touchBegan( touch, withEvent: event )
-    }
+//    override func touchBegan( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
+//        hasBeenTouched = true
+//        
+//        if GameState.sharedState.lastLaunchedObject == nil {
+//            inflow.launch()
+//        }
+//    }
+//    
+//    override func touchMoved( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
+//        self.touchBegan( touch, withEvent: event )
+//    }
     
     func ccPhysicsCollisionPostSolve( pair:CCPhysicsCollisionPair!, shirt:Shirt!, bouncer:Bouncer! ) -> ObjCBool {
         var shirtSpeed = shirt.bounceSpeed //ccpLength( shirt.physicsBody.velocity )
