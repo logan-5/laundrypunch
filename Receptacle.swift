@@ -53,6 +53,10 @@ class Receptacle: CCNode {
             tintColor = CCColor.purpleColor()
         }
         self.sprite!.color = tintColor
+        sprite!.scale = Float(self.contentSize.height / sprite!.contentSize.height)
+        sprite!.position = ccp( self.contentSize.width / 2, self.contentSize.height / 2 )
+        sprite!.rotation = 180 + self.rotation
+        //sprite!.position = ccp( 0, sprite.contentSize.width / CGFloat(sprite!.scale) )
     }
     
     func receiveItem( item: CCNode ) -> Void {

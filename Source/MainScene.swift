@@ -6,6 +6,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     private(set) weak var physicsNode: CCPhysicsNode!
     private(set) weak var scoreLabel: CCLabelTTF!
     private(set) weak var livesLabel: CCLabelTTF!
+    private(set) weak var overlay: CCNodeGradient!
     private(set) var hasBeenTouched = false
     
     func didLoadFromCCB() -> Void {
@@ -13,6 +14,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         self.userInteractionEnabled = true
         physicsNode.collisionDelegate = self
         updateScoreLabel(); updateLivesLabel()
+        overlay.zOrder = 100
+        let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as CCAction
+        overlay.runAction( fadeOut )
     }
     
     override func touchBegan( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
@@ -96,5 +100,11 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
     func updateLivesLabel() -> Void {
         livesLabel.string = "Lives: " + String( GameState.sharedState.lives )
+    }
+    
+    func gameOver() -> Void {
+        var adMenu = CCBReader.load( "AfterDeathMenu" ) as AfterDeathMenu
+        self.addChild( adMenu )
+        inflow.cancel()
     }
 }

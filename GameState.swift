@@ -29,14 +29,12 @@ class GameState: NSObject {
     
     weak var scene: MainScene?
     weak var lastLaunchedObject: Dispensable?
-    private(set) var emitRate: Float
+    private(set) var emitRate: Float!
     let INITIAL_EMIT_RATE: Float = 2 // in seconds
     override init() {
-        emitRate = INITIAL_EMIT_RATE
         mode = Mode.Easy
         super.init()
-        setLives()
-        getNextQuarterTime()
+        refresh()
     }
     
     func setLives() -> Int {
@@ -59,7 +57,7 @@ class GameState: NSObject {
 //    }
 //    
     func failure() -> Void {
-        println( "Failure" )
+        //println( "Failure" )
 //        switch mode! { // and here
 //        case Mode.Easy:
 //            --score
@@ -67,6 +65,10 @@ class GameState: NSObject {
 //        scene!.updateScoreLabel()
         --lives
         scene!.updateLivesLabel()
+        if lives < 0 {
+            scene!.gameOver()
+            endGame()
+        }
     }
 
     func cashIn( amount: Int ) -> Void {
@@ -82,5 +84,28 @@ class GameState: NSObject {
         return nextQuarter
         // I hate Swift. can't do jack without getting pedantic af
         // even the dreaded C++ doesn't split hairs between "int" and "unsigned 32-bit int"
+    }
+    
+    func endGame() -> Void {
+        println( "game over" )
+    }
+    
+    func restart() -> Void {
+        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as CCAction
+        let reset = CCActionCallBlock.actionWithBlock( { () -> Void in
+            let newScene = CCBReader.loadAsScene( "MainScene" )
+            CCDirector.sharedDirector().replaceScene( newScene )
+            GameState.sharedState.refresh()
+            GameState.sharedState.scene!.updateScoreLabel()
+            GameState.sharedState.scene!.updateLivesLabel()
+        }) as CCAction
+        scene!.overlay.runAction( CCActionSequence.actionWithArray([fadeIn, reset]) as CCAction )
+    }
+    
+    func refresh() -> Void {
+        emitRate = INITIAL_EMIT_RATE
+        setLives()
+        getNextQuarterTime()
+        score = 0
     }
 }

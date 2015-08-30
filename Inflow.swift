@@ -12,6 +12,7 @@ class Inflow: CCNode {
     var emitPoint: CGPoint!
     var launchingAction: CCAction?
     var emittedFirstShirt = false
+    var canceled = false
     var quarterCounter: UInt32! // launch a quarter when this == GameState.sharedState.nextQuarter
     
     func didLoadFromCCB() -> Void {
@@ -62,8 +63,16 @@ class Inflow: CCNode {
     }
     
     override func update( delta: CCTime ) -> Void {
-        if launchingAction == nil || launchingAction!.isDone() || GameState.sharedState.lastLaunchedObject == nil {
+        if ( launchingAction == nil || launchingAction!.isDone() || GameState.sharedState.lastLaunchedObject == nil ) && !canceled {
             self.setUpLaunch()
         }
+    }
+    
+    func cancel() -> Void {
+        if let l = launchingAction {
+            self.stopAction( l )
+            launchingAction = nil
+        }
+        canceled = true
     }
 }

@@ -4,10 +4,23 @@
 <dict>
 	<key>frames</key>
 	<dict>
+		<key>miscSprites/basket.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{1, 1}, {1200, 1065}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<true/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {1200, 1065}}</string>
+			<key>sourceSize</key>
+			<string>{1200, 1065}</string>
+		</dict>
 		<key>miscSprites/quarter.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{1, 1}, {1067, 1067}}</string>
+			<string>{{1068, 1}, {1067, 1067}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
@@ -20,7 +33,7 @@
 		<key>miscSprites/sad.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{1, 1070}, {256, 256}}</string>
+			<string>{{1, 1461}, {256, 256}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
@@ -33,7 +46,7 @@
 		<key>miscSprites/smile.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{1, 1328}, {256, 256}}</string>
+			<string>{{1, 1203}, {256, 256}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
@@ -49,7 +62,7 @@
 		<key>format</key>
 		<integer>2</integer>
 		<key>size</key>
-		<string>{2048, 2048}</string>
+		<string>{4096, 2048}</string>
 		<key>textureFileName</key>
 		<string>miscSprites.png</string>
 	</dict>

@@ -68,6 +68,7 @@
 		96AA23BF1B8E8D240033C26B /* Receptacle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AA23BE1B8E8D240033C26B /* Receptacle.swift */; };
 		96AA23C11B8E8D5E0033C26B /* Shirt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AA23C01B8E8D5E0033C26B /* Shirt.swift */; };
 		96AFCD0D1B9238DD009319E5 /* Dispensable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFCD0C1B9238DD009319E5 /* Dispensable.swift */; };
+		96AFCD111B925DFB009319E5 /* AfterDeathMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFCD101B925DFA009319E5 /* AfterDeathMenu.swift */; };
 		96FB4D4C1B8EEA780042FCCA /* Quarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FB4D4B1B8EEA780042FCCA /* Quarter.swift */; };
 		B71F5911188484E7003F4D28 /* iPad-old.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F5907188484E7003F4D28 /* iPad-old.png */; };
 		B71F5912188484E7003F4D28 /* iPad-old@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F5908188484E7003F4D28 /* iPad-old@2x.png */; };
@@ -186,6 +187,7 @@
 		96AA23BE1B8E8D240033C26B /* Receptacle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Receptacle.swift; sourceTree = "<group>"; };
 		96AA23C01B8E8D5E0033C26B /* Shirt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shirt.swift; sourceTree = "<group>"; };
 		96AFCD0C1B9238DD009319E5 /* Dispensable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispensable.swift; sourceTree = "<group>"; };
+		96AFCD101B925DFA009319E5 /* AfterDeathMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AfterDeathMenu.swift; sourceTree = "<group>"; };
 		96FB4D4B1B8EEA780042FCCA /* Quarter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Quarter.swift; sourceTree = "<group>"; };
 		B71F5907188484E7003F4D28 /* iPad-old.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iPad-old.png"; path = "Icons/iPad-old.png"; sourceTree = "<group>"; };
 		B71F5908188484E7003F4D28 /* iPad-old@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iPad-old@2x.png"; path = "Icons/iPad-old@2x.png"; sourceTree = "<group>"; };
@@ -457,6 +459,7 @@
 				96AA23C01B8E8D5E0033C26B /* Shirt.swift */,
 				96FB4D4B1B8EEA780042FCCA /* Quarter.swift */,
 				96AFCD0C1B9238DD009319E5 /* Dispensable.swift */,
+				96AFCD101B925DFA009319E5 /* AfterDeathMenu.swift */,
 				D352B48019EC608A00829775 /* MetalShaders */,
 			);
 			name = Source;
@@ -839,6 +842,7 @@
 				96AA23BD1B8E8CF20033C26B /* Inflow.swift in Sources */,
 				B73789871807631A0076A88C /* main.m in Sources */,
 				7A046D7919E84ED5004C4763 /* MainScene.swift in Sources */,
+				96AFCD111B925DFB009319E5 /* AfterDeathMenu.swift in Sources */,
 				96AA23BF1B8E8D240033C26B /* Receptacle.swift in Sources */,
 				96AA23BB1B8E8CB90033C26B /* GameState.swift in Sources */,
 				96AA23B51B8E8C760033C26B /* Bouncer.swift in Sources */,
