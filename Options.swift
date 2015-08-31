@@ -13,7 +13,7 @@ class Options: CCNode {
     func didLoadFromCCB() -> Void {
         self.cascadeOpacityEnabled = true
         self.opacity = 0
-        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as CCAction
+        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as! CCAction
         self.runAction( fadeIn )
         
         self.userInteractionEnabled = true
@@ -28,16 +28,16 @@ class Options: CCNode {
     }
     
     func returnButton() -> Void {
-        let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as CCAction
+        let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as! CCAction
         let dispose = CCActionCallBlock.actionWithBlock( { () -> Void in
             self.removeFromParent()
-        } ) as CCAction
-        let s = CCActionSequence.actionWithArray([fadeOut, dispose]) as CCAction
+        } )as! CCAction
+        let s = CCActionSequence.actionWithArray([fadeOut, dispose]) as! CCAction
         self.runAction( s )
     }
     
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
-        let failEffectSmell = CCBReader.load( "Effects/FailureSmell" ) as CCParticleSystem
+        let failEffectSmell = CCBReader.load( "Effects/FailureSmell" ) as! CCParticleSystem
         failEffectSmell.autoRemoveOnFinish = true
         failEffectSmell.position = touch.locationInNode( self )
         self.addChild( failEffectSmell )

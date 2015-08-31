@@ -43,7 +43,7 @@ class Shirt: Dispensable {
         self.physicsBody.collisionType = "shirt";
         
         // choose sprite
-        let shirtSprite = CCSprite.spriteWithImageNamed( getShirtSprite() ) as CCSprite
+        let shirtSprite = CCSprite.spriteWithImageNamed( getShirtSprite() ) as! CCSprite
         sprite = shirtSprite
         sprite!.position = CGPointZero
         self.addChild( sprite )

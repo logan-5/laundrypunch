@@ -94,15 +94,15 @@ class GameState: NSObject {
     }
     
     func restart() -> Void {
-        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as CCAction
+        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as! CCAction
         let reset = CCActionCallBlock.actionWithBlock( { () -> Void in
             let newScene = CCBReader.loadAsScene( "MainScene" )
             CCDirector.sharedDirector().replaceScene( newScene )
             GameState.sharedState.refresh()
             GameState.sharedState.scene!.updateScoreLabel()
             GameState.sharedState.scene!.updateLivesLabel()
-        }) as CCAction
-        scene!.overlay.runAction( CCActionSequence.actionWithArray([fadeIn, reset]) as CCAction )
+        }) as! CCAction
+        scene!.overlay.runAction( CCActionSequence.actionWithArray([fadeIn, reset]) as! CCAction )
     }
     
     func refresh() -> Void {

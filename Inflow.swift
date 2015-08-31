@@ -23,9 +23,9 @@ class Inflow: CCNode {
         
         // launch a shirt
         let emitRate = CCTime( GameState.sharedState.emitRate )
-        let delay = CCActionDelay.actionWithDuration( emitRate ) as CCActionDelay
-        let launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as CCActionCallFunc
-        launchingAction = CCActionSequence.actionWithArray( [delay, launch] ) as CCActionSequence
+        let delay = CCActionDelay.actionWithDuration( emitRate ) as! CCActionDelay
+        let launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as! CCActionCallFunc
+        launchingAction = CCActionSequence.actionWithArray( [delay, launch] ) as! CCActionSequence
         self.runAction( launchingAction )
     }
     
@@ -36,9 +36,9 @@ class Inflow: CCNode {
             return
         }
         let emitRate = CCTime( emittedFirstShirt ? GameState.sharedState.emitRate : GameState.sharedState.emitRate / 2 )
-        let delay = CCActionDelay.actionWithDuration( emitRate ) as CCActionDelay
-        let launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as CCActionCallFunc
-        launchingAction = CCActionSequence.actionWithArray( [delay, launch] ) as CCActionSequence
+        let delay = CCActionDelay.actionWithDuration( emitRate ) as! CCActionDelay
+        let launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as! CCActionCallFunc
+        launchingAction = CCActionSequence.actionWithArray( [delay, launch] ) as! CCActionSequence
         self.runAction( launchingAction )
     }
     
@@ -49,13 +49,13 @@ class Inflow: CCNode {
         }
         var object: Dispensable
         if quarterCounter!++ < GameState.sharedState.nextQuarter {
-            object = CCBReader.load( "Shirt" ) as Shirt
+            object = CCBReader.load( "Shirt" ) as! Shirt
         } else {
             quarterCounter = 0
             GameState.sharedState.getNextQuarterTime()
-            object = CCBReader.load( "Quarter" ) as Quarter
+            object = CCBReader.load( "Quarter" ) as! Quarter
         }
-        GameState.sharedState.scene!.physicsNode.addChild( object )
+        GameState.sharedState.scene!.myPhysicsNode.addChild( object )
         GameState.sharedState.lastLaunchedObject = object
         object.position = self.parent.convertToNodeSpace( emitPoint )
         emittedFirstShirt = true

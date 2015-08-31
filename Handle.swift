@@ -16,9 +16,9 @@ class Handle: CCNode {
         self.userInteractionEnabled = true
         
         highlights.cascadeOpacityEnabled = true
-        let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as CCAction
-        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as CCAction
-        let blink = CCActionRepeatForever.actionWithAction( CCActionSequence.actionWithArray([fadeOut, fadeIn]) as CCActionSequence ) as CCAction
+        let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as! CCAction
+        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as! CCAction
+        let blink = CCActionRepeatForever.actionWithAction( CCActionSequence.actionWithArray([fadeOut, fadeIn]) as! CCActionSequence ) as! CCAction
         highlights.runAction( blink )
     }
     
@@ -35,7 +35,7 @@ class Handle: CCNode {
     
     override func update( delta: CCTime ) {
         if bouncer == nil && self.parent != nil {
-            bouncer = GameState.sharedState.scene!.bouncer as Bouncer
+            bouncer = GameState.sharedState.scene!.bouncer as! Bouncer
         }
     }
 }

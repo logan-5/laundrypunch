@@ -13,7 +13,7 @@ class AfterDeathMenu: CCNode {
     func didLoadFromCCB() -> Void {
         self.cascadeOpacityEnabled = true
         self.opacity = 0
-        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as CCAction
+        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as! CCAction
         self.runAction( fadeIn )
         
         self.userInteractionEnabled = true
@@ -28,7 +28,7 @@ class AfterDeathMenu: CCNode {
     }
     
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
-        let failEffectSmell = CCBReader.load( "Effects/FailureSmell" ) as CCParticleSystem
+        let failEffectSmell = CCBReader.load( "Effects/FailureSmell" ) as! CCParticleSystem
         failEffectSmell.autoRemoveOnFinish = true
         failEffectSmell.position = touch.locationInNode( self )
         self.addChild( failEffectSmell )

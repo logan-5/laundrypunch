@@ -3,7 +3,7 @@ import Foundation
 class MainScene: CCNode, CCPhysicsCollisionDelegate {
     private(set) weak var bouncer: Bouncer!
     private(set) weak var inflow: Inflow!
-    private(set) weak var physicsNode: CCPhysicsNode!
+    private(set) weak var myPhysicsNode: CCPhysicsNode!
     private(set) weak var scoreLabel: CCLabelTTF!
     private(set) weak var livesLabel: CCLabelTTF!
     private(set) weak var overlay: CCNodeGradient!
@@ -12,10 +12,10 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     func didLoadFromCCB() -> Void {
         GameState.sharedState.scene = self
         self.userInteractionEnabled = false
-        physicsNode.collisionDelegate = self
+        myPhysicsNode.collisionDelegate = self
         updateScoreLabel(); updateLivesLabel()
         overlay.zOrder = 100
-        let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as CCAction
+        let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as! CCAction
         overlay.runAction( fadeOut )
         
         self.contentSize = CCDirector.sharedDirector().viewSize()
@@ -67,12 +67,12 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     private func runFailParticles( position: CGPoint ) -> Void {
-        let failEffectSmell = CCBReader.load( "Effects/FailureSmell" ) as CCParticleSystem
+        let failEffectSmell = CCBReader.load( "Effects/FailureSmell" ) as! CCParticleSystem
         failEffectSmell.autoRemoveOnFinish = true
         failEffectSmell.position = position
         self.addChild( failEffectSmell )
         
-        let failEffect = CCBReader.load( "Effects/Failure" ) as CCParticleSystem
+        let failEffect = CCBReader.load( "Effects/Failure" ) as! CCParticleSystem
         failEffect.autoRemoveOnFinish = true
         failEffect.position = position
         let particles = 1.0 / Float( max(GameState.sharedState.lives, 1) ) * 80.0
@@ -99,7 +99,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     func gameOver() -> Void {
-        var adMenu = CCBReader.load( "AfterDeathMenu" ) as AfterDeathMenu
+        var adMenu = CCBReader.load( "AfterDeathMenu" ) as! AfterDeathMenu
         self.addChild( adMenu )
         inflow.cancel()
     }

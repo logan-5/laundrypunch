@@ -69,17 +69,17 @@ class Receptacle: CCNode {
         destination = ccpRotateByAngle( destination, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
         destination = ccpAdd( destination, self.position )
         
-        var move: CCAction = CCActionMoveTo.actionWithDuration( CCTime(receiveTime), position: destination ) as CCActionMoveTo
-        var rotate: CCAction = CCActionRotateTo.actionWithDuration( CCTime(receiveTime), angle: self.rotation ) as CCActionRotateTo
-        move = CCActionEaseSineOut.actionWithAction( move as CCActionMoveTo ) as CCActionEaseSineOut
-        rotate = CCActionEaseSineOut.actionWithAction( rotate as CCActionRotateTo ) as CCActionEaseSineOut
+        var move: CCAction = CCActionMoveTo.actionWithDuration( CCTime(receiveTime), position: destination ) as! CCActionMoveTo
+        var rotate: CCAction = CCActionRotateTo.actionWithDuration( CCTime(receiveTime), angle: self.rotation ) as! CCActionRotateTo
+        move = CCActionEaseSineOut.actionWithAction( move as! CCActionMoveTo ) as! CCActionEaseSineOut
+        rotate = CCActionEaseSineOut.actionWithAction( rotate as! CCActionRotateTo ) as! CCActionEaseSineOut
         item.runAction( move ); item.runAction( rotate )
         
     }
     
     func killShirt() -> Void {
         if shirts.count == 0 { return }
-        let shirt = shirts.removeLast() as Shirt
+        let shirt = shirts.removeLast() as! Shirt
         shirt.physicsBody.affectedByGravity = true
         shirt.fall()
     }
@@ -90,22 +90,22 @@ class Receptacle: CCNode {
         var offScreen = ccp( 0, ( self.contentSize.height + CGFloat( shirtStackOffset * Float( shirts.count ) ) ) )
         offScreen = ccpRotateByAngle( offScreen, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
 
-        var moveOffScreen: CCAction = CCActionMoveBy.actionWithDuration( 0.3, position: offScreen ) as CCActionMoveBy
-        moveOffScreen = CCActionEaseSineInOut.actionWithAction( moveOffScreen as CCActionMoveBy ) as CCAction
+        var moveOffScreen: CCAction = CCActionMoveBy.actionWithDuration( 0.3, position: offScreen ) as! CCActionMoveBy
+        moveOffScreen = CCActionEaseSineInOut.actionWithAction( moveOffScreen as! CCActionMoveBy ) as! CCAction
         for shirt in shirts {
-            let moveShirt = moveOffScreen.copyWithZone( nil ) as CCAction
+            let moveShirt = moveOffScreen.copyWithZone( nil ) as! CCAction
             shirt.runAction( moveShirt )
         }
         oldPosition = self.position
-        var comeBack: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: oldPosition ) as CCActionMoveTo
-        comeBack = CCActionEaseSineInOut.actionWithAction( comeBack as CCActionMoveTo ) as CCAction
+        var comeBack: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: oldPosition ) as! CCActionMoveTo
+        comeBack = CCActionEaseSineInOut.actionWithAction( comeBack as! CCActionMoveTo ) as! CCAction
         let sequence = CCActionSequence.actionWithArray([moveOffScreen, CCActionCallBlock.actionWithBlock({ () -> Void in
             self.setUpSuccessParticleEffects()
             for shirt in self.shirts {
                 shirt.removeFromParent()
             }
             self.shirts.removeAll( keepCapacity: true )
-        }), comeBack]) as CCActionSequence
+        }), comeBack]) as! CCActionSequence
         self.runAction( sequence )
     }
     
@@ -117,19 +117,19 @@ class Receptacle: CCNode {
         // big problems here. can't change particleeffect.totalParticles dynamically. no compiler error, but runtime crashes.  have to resort to hacks.
         var s = 3 * self.shirts.count
         do {
-            let successSmellBackground = CCBReader.load( "Effects/SuccessSmellBackground" ) as CCParticleSystem
+            let successSmellBackground = CCBReader.load( "Effects/SuccessSmellBackground" ) as! CCParticleSystem
             successSmellBackground.rotation = rotation
             successSmellBackground.particlePositionType = CCParticleSystemPositionType.Relative
             successSmellBackground.autoRemoveOnFinish = true
             self.addChild( successSmellBackground )
             
-            let successSmell = CCBReader.load( "Effects/SuccessSmell" ) as CCParticleSystem
+            let successSmell = CCBReader.load( "Effects/SuccessSmell" ) as! CCParticleSystem
             successSmell.rotation = rotation
             successSmell.particlePositionType = CCParticleSystemPositionType.Relative
             successSmell.autoRemoveOnFinish = true
             self.addChild( successSmell )
             
-            let smileyEffect = CCBReader.load( "Effects/Success" ) as CCParticleSystem
+            let smileyEffect = CCBReader.load( "Effects/Success" ) as! CCParticleSystem
             smileyEffect.totalParticles = UInt( 30 * self.shirts.count )
             smileyEffect.rotation = -self.rotation
             smileyEffect.particlePositionType = CCParticleSystemPositionType.Relative

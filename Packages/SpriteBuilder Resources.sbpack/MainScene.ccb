@@ -708,7 +708,7 @@
 				<key>displayName</key>
 				<string>CCPhysicsNode</string>
 				<key>memberVarAssignmentName</key>
-				<string>physicsNode</string>
+				<string>myPhysicsNode</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>
@@ -792,6 +792,8 @@
 						<real>0.5</real>
 					</dict>
 				</array>
+				<key>selected</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>UUID</key>
@@ -1499,8 +1501,6 @@
 				</array>
 			</dict>
 		</array>
-		<key>selected</key>
-		<true/>
 	</dict>
 	<key>notes</key>
 	<array/>
