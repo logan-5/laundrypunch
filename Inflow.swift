@@ -19,7 +19,7 @@ class Inflow: CCNode {
         emitPoint = CGPointMake( self.position.x, self.position.y - self.contentSize.height )
         self.zOrder = 2
         quarterCounter = 0
-        GameState.sharedState.getNextQuarterTime()
+//        GameState.sharedState.getNextQuarterTime()
         
         // launch a shirt
         let emitRate = CCTime( GameState.sharedState.emitRate )
@@ -48,12 +48,17 @@ class Inflow: CCNode {
             launchingAction = nil
         }
         var object: Dispensable
-        if quarterCounter!++ < GameState.sharedState.nextQuarter {
-            object = CCBReader.load( "Shirt" ) as! Shirt
-        } else {
-            quarterCounter = 0
-            GameState.sharedState.getNextQuarterTime()
+//        if quarterCounter!++ < GameState.sharedState.nextQuarter {
+//            object = CCBReader.load( "Shirt" ) as! Shirt
+//        } else {
+//            quarterCounter = 0
+//            GameState.sharedState.getNextQuarterTime()
+//            object = CCBReader.load( "Quarter" ) as! Quarter
+//        }
+        if GameState.sharedState.quarterProbability() {
             object = CCBReader.load( "Quarter" ) as! Quarter
+        } else {
+            object = CCBReader.load( "Shirt" ) as! Shirt
         }
         GameState.sharedState.scene!.myPhysicsNode.addChild( object )
         GameState.sharedState.lastLaunchedObject = object

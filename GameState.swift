@@ -8,6 +8,10 @@
 
 import UIKit
 
+func probabilityOf( probability: Double ) -> Bool {
+    return Double(CCRANDOM_0_1()) < probability
+}
+
 class GameState: NSObject {
     class var sharedState: GameState {
         get { return sharedInstance.sharedState }
@@ -25,8 +29,10 @@ class GameState: NSObject {
     private(set) var mode: Mode! // linker errors without '!'. I thought it'd work.  I must not understand
     private(set) var score: Int = 0
     private(set) var lives: Int = 0
-    private var quarterFrequency: UInt32 = 10 // best case scenario, with a 30% chance of being 1.5* this
-    private(set) var nextQuarter: UInt32 = 0
+//    private var quarterFrequency: UInt32 = 10 // best case scenario, with a 30% chance of being 1.5* this
+//    private(set) var nextQuarter: UInt32 = 0
+    private var _quarterProbability = 0.1
+    func quarterProbability() -> Bool { return probabilityOf( _quarterProbability ) } // for lazy people
     
     weak var scene: MainScene?
     weak var lastLaunchedObject: Dispensable?
@@ -79,15 +85,15 @@ class GameState: NSObject {
         scene!.updateScoreLabel()
     }
     
-    func getNextQuarterTime() -> UInt32 {
-        nextQuarter = quarterFrequency
-        if CCRANDOM_0_1() < 0.3 {
-            nextQuarter += quarterFrequency / 2
-        }
-        return nextQuarter
-        // I hate Swift. can't do jack without getting pedantic af
-        // even the dreaded C++ doesn't split hairs between "int" and "unsigned 32-bit int"
-    }
+//    func getNextQuarterTime() -> UInt32 {
+//        nextQuarter = quarterFrequency
+//        if CCRANDOM_0_1() < 0.3 {
+//            nextQuarter += quarterFrequency / 2
+//        }
+//        return nextQuarter
+//        // I hate Swift. can't do jack without getting pedantic af
+//        // even the dreaded C++ doesn't split hairs between "int" and "unsigned 32-bit int"
+//    }
     
     func endGame() -> Void {
         println( "game over" )
@@ -108,7 +114,6 @@ class GameState: NSObject {
     func refresh() -> Void {
         emitRate = INITIAL_EMIT_RATE
         setLives()
-        getNextQuarterTime()
         score = 0
     }
     

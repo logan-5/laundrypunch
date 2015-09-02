@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		022A696F1B9680E90004BDEB /* CCActionAnimateRainbow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022A696E1B9680E90004BDEB /* CCActionAnimateRainbow.swift */; };
 		5B121030197484FA004C1E1D /* LaundryLaunchREActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B12102F197484FA004C1E1D /* LaundryLaunchREActivity.m */; };
 		5B121038197487F2004C1E1D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B737893E1807617C0076A88C /* AppDelegate.m */; };
 		7A046D7919E84ED5004C4763 /* MainScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A046D7519E84C36004C4763 /* MainScene.swift */; };
@@ -158,6 +159,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		022A696E1B9680E90004BDEB /* CCActionAnimateRainbow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CCActionAnimateRainbow.swift; sourceTree = "<group>"; };
 		5B12100919748273004C1E1D /* libEGL.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libEGL.so; path = /usr/lib/armv7a/libEGL.so; sourceTree = SDKROOT; };
 		5B12100F197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
 		5B121011197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
@@ -473,6 +475,7 @@
 				96AA23C01B8E8D5E0033C26B /* Shirt.swift */,
 				96FB4D4B1B8EEA780042FCCA /* Quarter.swift */,
 				96AFCD0C1B9238DD009319E5 /* Dispensable.swift */,
+				022A696E1B9680E90004BDEB /* CCActionAnimateRainbow.swift */,
 				96A990171B92EAE500B40AA7 /* Menus */,
 				D352B48019EC608A00829775 /* MetalShaders */,
 			);
@@ -857,6 +860,7 @@
 				96AA23C11B8E8D5E0033C26B /* Shirt.swift in Sources */,
 				96AA23BD1B8E8CF20033C26B /* Inflow.swift in Sources */,
 				B73789871807631A0076A88C /* main.m in Sources */,
+				022A696F1B9680E90004BDEB /* CCActionAnimateRainbow.swift in Sources */,
 				7A046D7919E84ED5004C4763 /* MainScene.swift in Sources */,
 				96AFCD111B925DFB009319E5 /* AfterDeathMenu.swift in Sources */,
 				96AA23BF1B8E8D240033C26B /* Receptacle.swift in Sources */,

@@ -29,6 +29,8 @@ class Shirt: Dispensable {
     }
     
     let clothesSprites = ["tee", "polo", "girlstank", "ssbuttondown", "girlshirt", "lsbuttondown", "stripper"]
+    static let _rainbowProbability: Double = 0.05
+    func rainbowProbability() -> Bool { return probabilityOf( Shirt._rainbowProbability ) }
     
     weak var sprite: CCNode?
     var shirtColor: Color!
@@ -51,22 +53,28 @@ class Shirt: Dispensable {
         self.contentSize = CGSizeMake( sprite!.contentSize.width * CGFloat( sprite!.scale ), self.contentSize.height )
         sprite!.anchorPoint = CGPointZero
         
-        var tintColor: CCColor!
-        switch shirtColor! {
-        case .Red:
-            tintColor = CCColor.redColor()
-        case .Blue:
-            tintColor = CCColor.blueColor()
-        case .Green:
-            tintColor = CCColor.greenColor()
-        case .Yellow:
-            tintColor = CCColor.yellowColor()
-        case .Purple:
-            fallthrough
-        default:
-            tintColor = CCColor.purpleColor()
+        self.cascadeColorEnabled = true
+        if rainbowProbability() {
+            self.sprite!.runAction( CCActionAnimateRainbow.instantiate() )
+            println( " rainbow!!! " )
+        } else {
+            var tintColor: CCColor!
+            switch shirtColor! {
+            case .Red:
+                tintColor = CCColor.redColor()
+            case .Blue:
+                tintColor = CCColor.blueColor()
+            case .Green:
+                tintColor = CCColor.greenColor()
+            case .Yellow:
+                tintColor = CCColor.yellowColor()
+            case .Purple:
+                fallthrough
+            default:
+                tintColor = CCColor.purpleColor()
+            }
+            self.sprite!.color = tintColor
         }
-        self.sprite!.color = tintColor
     }
     
     func getShirtSprite() -> String {
