@@ -7,11 +7,11 @@
 		<key>miscSprites/arrow.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{1, 1921}, {200, 80}}</string>
+			<string>{{1, 1405}, {200, 80}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
-			<false/>
+			<true/>
 			<key>sourceColorRect</key>
 			<string>{{0, 0}, {200, 80}}</string>
 			<key>sourceSize</key>
@@ -20,7 +20,7 @@
 		<key>miscSprites/arrow_highlight.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{1, 1719}, {200, 80}}</string>
+			<string>{{1, 1203}, {200, 80}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
@@ -55,32 +55,6 @@
 			<string>{{0, 0}, {1067, 1067}}</string>
 			<key>sourceSize</key>
 			<string>{1067, 1067}</string>
-		</dict>
-		<key>miscSprites/sad.png</key>
-		<dict>
-			<key>frame</key>
-			<string>{{1, 1203}, {256, 256}}</string>
-			<key>offset</key>
-			<string>{0, 0}</string>
-			<key>rotated</key>
-			<false/>
-			<key>sourceColorRect</key>
-			<string>{{0, 0}, {256, 256}}</string>
-			<key>sourceSize</key>
-			<string>{256, 256}</string>
-		</dict>
-		<key>miscSprites/smile.png</key>
-		<dict>
-			<key>frame</key>
-			<string>{{1, 1461}, {256, 256}}</string>
-			<key>offset</key>
-			<string>{0, 0}</string>
-			<key>rotated</key>
-			<false/>
-			<key>sourceColorRect</key>
-			<string>{{0, 0}, {256, 256}}</string>
-			<key>sourceSize</key>
-			<string>{256, 256}</string>
 		</dict>
 	</dict>
 	<key>metadata</key>

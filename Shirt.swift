@@ -29,7 +29,7 @@ class Shirt: Dispensable {
     }
     
     let clothesSprites = ["tee", "polo", "girlstank", "ssbuttondown", "girlshirt", "lsbuttondown", "stripper"]
-    static let _rainbowProbability: Double = 0.05
+    static let _rainbowProbability: Double = 0.04
     // static let _rainbowProbability: Double = 1 // for debugging only
     func rainbowProbability() -> Bool { return probabilityOf( Shirt._rainbowProbability ) }
     private(set) var isRainbow: Bool = false

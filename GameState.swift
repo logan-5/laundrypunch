@@ -31,7 +31,7 @@ class GameState: NSObject {
     private(set) var lives: Int = 0
 //    private var quarterFrequency: UInt32 = 10 // best case scenario, with a 30% chance of being 1.5* this
 //    private(set) var nextQuarter: UInt32 = 0
-    private var _quarterProbability = 0.1
+    private var _quarterProbability = 0.06
     func quarterProbability() -> Bool { return probabilityOf( _quarterProbability ) } // for lazy people
     
     weak var scene: MainScene?

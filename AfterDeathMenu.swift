@@ -9,6 +9,14 @@
 import UIKit
 
 class AfterDeathMenu: CCNode {
+
+    weak var scoreLabel: CCLabelTTF!
+    weak var scoreScoreLabel: CCLabelTTF!
+    weak var stinkyLabel: CCLabelTTF!
+    weak var restartButton: CCButton!
+    weak var optionsLabel: CCLabelTTF!
+    weak var optionsButton: CCButton!
+    private var score = 0
    
     func didLoadFromCCB() -> Void {
         self.cascadeOpacityEnabled = true
@@ -17,6 +25,8 @@ class AfterDeathMenu: CCNode {
         self.runAction( fadeIn )
         
         self.userInteractionEnabled = true
+        displayScore()
+        scoreScoreLabel.runAction( CCActionAnimateRainbow.instantiate() )
     }
     
     func restartButtonPressed() -> Void {
@@ -32,5 +42,10 @@ class AfterDeathMenu: CCNode {
         failEffectSmell.autoRemoveOnFinish = true
         failEffectSmell.position = touch.locationInNode( self )
         self.addChild( failEffectSmell )
+    }
+
+    func displayScore() -> Void {
+        score = GameState.sharedState.score
+        scoreScoreLabel.string = String( score )
     }
 }

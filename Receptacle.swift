@@ -16,6 +16,8 @@ class Receptacle: CCNode {
     private(set) var shirts: [CCNode] = Array()
     let shirtStackOffset: Float = 5
     let receiveTime: Float = 0.3 // seconds
+    static let _quarkBarfProbability = 0.25
+    class func quarkBarfProbability() -> Bool { return probabilityOf( _quarkBarfProbability ) }
     private var oldPosition = CGPointZero
     
     func didLoadFromCCB() -> Void {
