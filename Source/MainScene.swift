@@ -53,8 +53,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, shirt: Shirt!, receptacle: Receptacle!) -> ObjCBool {
-        if shirt.shirtColor == receptacle.shirtColor {
+        if shirt.isRainbow || shirt.shirtColor == receptacle.shirtColor {
             //GameState.sharedState.success()
+            shirt.stack( receptacle.shirtColor )
             receptacle.receiveItem( shirt )
         } else {
             GameState.sharedState.failure()
