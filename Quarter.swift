@@ -11,6 +11,8 @@ import UIKit
 class Quarter: Dispensable {
     
     weak var sprite: CCSprite!
+    static private let goldProbability: Double = 0.1
+    private(set) var gold: Bool = probabilityOf( goldProbability )
     
     override func didLoadFromCCB() -> Void {
         initialXVelocity = 0
@@ -22,5 +24,10 @@ class Quarter: Dispensable {
         self.physicsBody.collisionType = "quarter"
         
         sprite.scale = Float(self.contentSize.width / sprite.contentSize.width)
+
+        if gold {
+            // make me gold
+            self.sprite.color = CCColor.yellowColor()
+        }
     }
 }

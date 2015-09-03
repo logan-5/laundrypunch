@@ -792,8 +792,6 @@
 						<real>0.5</real>
 					</dict>
 				</array>
-				<key>selected</key>
-				<true/>
 			</dict>
 			<dict>
 				<key>UUID</key>
@@ -875,7 +873,7 @@
 						<key>type</key>
 						<string>FontTTF</string>
 						<key>value</key>
-						<string>Helvetica</string>
+						<string>Courier</string>
 					</dict>
 					<dict>
 						<key>name</key>
@@ -1095,7 +1093,7 @@
 						<key>type</key>
 						<string>FontTTF</string>
 						<key>value</key>
-						<string>Helvetica</string>
+						<string>Courier</string>
 					</dict>
 					<dict>
 						<key>name</key>
@@ -1372,7 +1370,7 @@
 				<key>displayName</key>
 				<string>Handle</string>
 				<key>memberVarAssignmentName</key>
-				<string></string>
+				<string>handle</string>
 				<key>memberVarAssignmentType</key>
 				<integer>1</integer>
 				<key>properties</key>
@@ -1429,6 +1427,8 @@
 						<string>Handle.ccb</string>
 					</dict>
 				</array>
+				<key>selected</key>
+				<true/>
 			</dict>
 		</array>
 		<key>customClass</key>

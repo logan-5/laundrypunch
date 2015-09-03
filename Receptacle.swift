@@ -75,8 +75,13 @@ class Receptacle: CCNode {
         var rotate: CCAction = CCActionRotateTo.actionWithDuration( CCTime(receiveTime), angle: self.rotation ) as! CCActionRotateTo
         move = CCActionEaseSineOut.actionWithAction( move as! CCActionMoveTo ) as! CCActionEaseSineOut
         rotate = CCActionEaseSineOut.actionWithAction( rotate as! CCActionRotateTo ) as! CCActionEaseSineOut
-        item.runAction( move ); item.runAction( rotate )
-        
+        let store: CCAction = CCActionCallBlock.actionWithBlock { () -> Void in
+            if let s = item as? Shirt {
+                s.stackedPosition = s.position
+            }
+        } as! CCActionCallBlock
+        item.runAction( move )
+        item.runAction( CCActionSequence.actionWithArray( [rotate, store] ) as! CCActionSequence )
     }
     
     func killShirt() -> Void {
@@ -86,9 +91,10 @@ class Receptacle: CCNode {
         shirt.fall()
     }
     
-    func doLaundry() -> Void {
-        GameState.sharedState.cashIn( shirts.count )
-        
+    func doLaundry( goldCoin: Bool ) -> Void {
+
+
+        // animate
         var offScreen = ccp( 0, ( self.contentSize.height + CGFloat( shirtStackOffset * Float( shirts.count ) ) ) )
         offScreen = ccpRotateByAngle( offScreen, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
 
@@ -101,14 +107,79 @@ class Receptacle: CCNode {
         oldPosition = self.position
         var comeBack: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: oldPosition ) as! CCActionMoveTo
         comeBack = CCActionEaseSineInOut.actionWithAction( comeBack as! CCActionMoveTo ) as! CCAction
-        let sequence = CCActionSequence.actionWithArray([moveOffScreen, CCActionCallBlock.actionWithBlock({ () -> Void in
+        var sequence = CCActionSequence.actionWithArray([moveOffScreen, CCActionCallBlock.actionWithBlock({ () -> Void in
             self.setUpSuccessParticleEffects()
-            for shirt in self.shirts {
-                shirt.removeFromParent()
+            self.cashInLoad()
+            if !goldCoin {
+                // gold coins cash in the stack but don't destroy it
+                // so destroy if not gold coin
+                for shirt in self.shirts {
+                    shirt.removeFromParent()
+                }
+                self.shirts.removeAll( keepCapacity: true )
+            } else {
+                // but if it is, just remove the coin
+                self.shirts.removeLast().removeFromParent()
+                // and bring the shirts back
+                for shirt in self.shirts {
+                    var c: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: (shirt as! Shirt).stackedPosition! ) as! CCActionMoveTo
+                    //c = CCActionEaseSineInOut.actionWithAction( comeBack as! CCActionMoveTo ) as! CCAction
+                    shirt.runAction( c )
+                }
             }
-            self.shirts.removeAll( keepCapacity: true )
         }), comeBack]) as! CCActionSequence
+
         self.runAction( sequence )
+    }
+
+    func cashInLoad() -> Void {
+        // cash in
+        var p = countPointsAndCreateString()
+        GameState.sharedState.cashIn( p.points )
+
+        // set up numerical animation
+        let label: CCLabelTTF = CCLabelTTF.labelWithString( p.string, fontName: "Courier", fontSize: 18 )
+        label.cascadeColorEnabled = true; label.cascadeOpacityEnabled = true
+        label.opacity = 0
+        GameState.sharedState.scene?.addChild( label )
+        var x: CGFloat
+        if self.position.x > GameState.sharedState.scene!.contentSize.width / 2 {
+            x = GameState.sharedState.scene!.contentSize.width - 100
+        } else {
+            x = 100
+        }
+        label.position = ccp( x, self.position.y + self.contentSize.height )
+        if p.points > 0 { label.runAction( CCActionAnimateRainbow.instantiate() ) }
+        label.runAction( CCActionFadeIn.actionWithDuration( 0.3 ) as! CCActionFadeIn )
+        let moveUp: CCAction = CCActionMoveBy.actionWithDuration( 2.5, position: ccp( CGFloat(CCRANDOM_MINUS1_1() * 20), self.contentSize.height * 2 ) ) as! CCActionMoveBy
+        label.runAction( moveUp )
+        let delay: CCAction = CCActionDelay.actionWithDuration( 1.5 ) as! CCActionDelay
+        let fadeOut: CCAction = CCActionFadeOut.actionWithDuration( 0.6 ) as! CCActionFadeOut
+        let remove: CCAction = CCActionCallBlock.actionWithBlock { () -> Void in
+            label.removeFromParent()
+            } as! CCActionCallBlock
+        label.runAction( CCActionSequence.actionWithArray([delay, fadeOut, remove]) as! CCActionSequence )
+    }
+
+    func countPointsAndCreateString() -> ( points: Int, string: String) {
+        var points: Int = 0
+        var string: String = ""
+
+        var modifier: Int = 1
+
+        for shirt in shirts {
+            if let s = shirt as? Shirt {
+                if s.isRainbow {
+                    modifier *= 2
+                    string += " x 2"
+                } else {
+                    ++points
+                }
+            }
+        }
+        string = "+" + String( points ) + string
+        points *= modifier
+        return ( points, string )
     }
     
     func setUpSuccessParticleEffects() -> Void {

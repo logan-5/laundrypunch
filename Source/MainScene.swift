@@ -3,8 +3,10 @@ import Foundation
 class MainScene: CCNode, CCPhysicsCollisionDelegate {
     private(set) weak var bouncer: Bouncer!
     private(set) weak var inflow: Inflow!
+    private(set) weak var handle: Handle!
     private(set) weak var myPhysicsNode: CCPhysicsNode!
     private(set) weak var scoreLabel: CCLabelTTF!
+    weak var scoreEffect: CCParticleSystem?
     private(set) weak var livesLabel: CCLabelTTF!
     private(set) weak var overlay: CCNodeGradient!
     var hasBeenTouched = false
@@ -14,6 +16,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         self.userInteractionEnabled = false
         myPhysicsNode.collisionDelegate = self
         updateScoreLabel(); updateLivesLabel()
+        scoreLabel.zOrder = 2
         overlay.zOrder = 100
         let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as! CCAction
         overlay.runAction( fadeOut )
@@ -55,7 +58,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, shirt: Shirt!, receptacle: Receptacle!) -> ObjCBool {
         if shirt.isRainbow || shirt.shirtColor == receptacle.shirtColor {
             //GameState.sharedState.success()
-            shirt.stack( receptacle.shirtColor )
+//            shirt.stack( receptacle.shirtColor )
             receptacle.receiveItem( shirt )
         } else {
             GameState.sharedState.failure()
@@ -83,8 +86,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, quarter: Quarter!, receptacle: Receptacle!) -> ObjCBool {
         if receptacle.shirts.count > 0 {
+            quarter.physicsBody.collisionType = "usedQuarter"
             receptacle.receiveItem( quarter )
-            receptacle.doLaundry()
+            receptacle.doLaundry( quarter.gold )
         } else {
             quarter.fall()
         }
@@ -100,8 +104,28 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     func gameOver() -> Void {
-        var adMenu = CCBReader.load( "AfterDeathMenu" ) as! AfterDeathMenu
-        self.addChild( adMenu )
         inflow.cancel()
+        let delay = CCActionDelay.actionWithDuration( 0.5 ) as! CCActionDelay
+        let effect = CCActionCallBlock.actionWithBlock { () -> Void in
+            for node in self.myPhysicsNode.children as! [CCNode] {
+                if let i = node as? Inflow {
+                    // skip the inflow
+                } else {
+                    node.physicsBody!.type = CCPhysicsBodyType.Dynamic // load a new physics body here
+                }
+            }
+            let delay2 = CCActionDelay.actionWithDuration( 1.5 ) as! CCActionDelay
+            let finish = CCActionCallBlock.actionWithBlock { () -> Void in
+                var adMenu = CCBReader.load( "AfterDeathMenu" ) as! AfterDeathMenu
+                self.addChild( adMenu )
+                } as! CCActionCallBlock
+            self.runAction( CCActionSequence.actionWithArray([delay2, finish]) as! CCActionSequence )
+
+            self.handle.cascadeOpacityEnabled = true
+            let fadeHandle = CCActionFadeOut.actionWithDuration( 0.5 ) as! CCActionFadeOut
+            self.handle.runAction( fadeHandle )
+            self.inflow.launchSadFace()
+        } as! CCActionCallBlock
+        self.runAction( CCActionSequence.actionWithArray([delay, effect]) as! CCActionSequence )
     }
 }

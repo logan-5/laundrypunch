@@ -35,7 +35,7 @@ class Handle: CCNode {
     
     override func update( delta: CCTime ) {
         if bouncer == nil && self.parent != nil {
-            bouncer = GameState.sharedState.scene!.bouncer as! Bouncer
+            bouncer = GameState.sharedState.scene!.bouncer as? Bouncer
         }
     }
 }

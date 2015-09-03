@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Personal High Score</key>
+	<integer>0</integer>
+	<key>Game Mode</key>
+	<string>Hard</string>
+	<key>Colors</key>
+	<array>
+		<dict>
+			<key>Red</key>
+			<integer>1</integer>
+			<key>Green</key>
+			<integer>1</integer>
+			<key>Blue</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>Red</key>
+			<integer>1</integer>
+			<key>Green</key>
+			<integer>0</integer>
+			<key>Blue</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>Red</key>
+			<integer>0</integer>
+			<key>Green</key>
+			<integer>0</integer>
+			<key>Blue</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>Red</key>
+			<integer>0</integer>
+			<key>Green</key>
+			<integer>1</integer>
+			<key>Blue</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>Red</key>
+			<integer>1</integer>
+			<key>Green</key>
+			<integer>0</integer>
+			<key>Blue</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+</dict>
+</plist>

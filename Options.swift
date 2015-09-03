@@ -26,6 +26,10 @@ class Options: CCNode {
     func unreasonableMode() -> Void {
         GameState.sharedState.setMode( GameState.Mode.Hard )
     }
+
+    func efficiencyMode() -> Void {
+        GameState.sharedState.setMode( GameState.Mode.Efficiency )
+    }
     
     func returnButton() -> Void {
         let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as! CCAction

@@ -21,31 +21,38 @@ class GameState: NSObject {
     enum Mode {
         case Easy
         case Hard
+        case Efficiency
     }
     struct Lives {
         static let Easy = 5
         static let Hard = 0
+        static let Efficiency = 10
     }
     private(set) var mode: Mode! // linker errors without '!'. I thought it'd work.  I must not understand
     private(set) var score: Int = 0
+    private var targetScore: Int = 0
+    private var scoreUpdateTimer: NSTimer?
     private(set) var lives: Int = 0
 //    private var quarterFrequency: UInt32 = 10 // best case scenario, with a 30% chance of being 1.5* this
 //    private(set) var nextQuarter: UInt32 = 0
-    private var _quarterProbability = 0.06
+    private var _quarterProbability = 0.08
     func quarterProbability() -> Bool { return probabilityOf( _quarterProbability ) } // for lazy people
     
     weak var scene: MainScene?
     weak var lastLaunchedObject: Dispensable?
-    private(set) var emitRate: Float!
+    private(set) var emitRate: Float = 0
     let INITIAL_EMIT_RATE: Float = 2 // in seconds
+    let EFFICIENCY_EMIT_RATE: Float = 0.2
     override init() {
-        mode = Mode.Easy
+        mode = Mode.Hard
         super.init()
         refresh()
     }
     
     func setLives() -> Int {
         switch mode! {
+        case .Efficiency:
+            lives = Lives.Efficiency
         case .Hard:
             lives = Lives.Hard
         case .Easy:
@@ -54,6 +61,10 @@ class GameState: NSObject {
             lives = Lives.Easy
         }
         return lives
+    }
+
+    func getEmitRate() -> Float {
+        return mode == Mode.Efficiency ? EFFICIENCY_EMIT_RATE : INITIAL_EMIT_RATE
     }
     
 //    func success() -> Void {
@@ -81,7 +92,30 @@ class GameState: NSObject {
     }
 
     func cashIn( amount: Int ) -> Void {
-        score += amount
+        if amount <= 0 { return }
+        targetScore += amount
+        if scoreUpdateTimer == nil {
+            scoreUpdateTimer = NSTimer.scheduledTimerWithTimeInterval( 0.04, target: self, selector: "incrementScore", userInfo: nil, repeats: true )
+        }
+        if scene!.scoreEffect == nil { scene!.scoreEffect?.stopSystem() }
+        let effect = CCBReader.load( "Effects/RainbowFireworks" ) as! CCParticleSystem
+        scene!.scoreEffect = effect
+        effect.position = scene!.scoreLabel.position
+        effect.autoRemoveOnFinish = true
+        scene!.addChild( effect )
+        if mode != Mode.Efficiency {
+            emitRate -= 0.05
+        }
+    }
+
+    func incrementScore() -> Void {
+        if let s = scoreUpdateTimer {
+            if ++score >= targetScore {
+                s.invalidate()
+                scoreUpdateTimer = nil
+                if scene!.scoreEffect != nil { scene!.scoreEffect?.stopSystem() }//scene!.scoreEffect!.removeFromParent() }
+            }
+        }
         scene!.updateScoreLabel()
     }
     
@@ -96,7 +130,7 @@ class GameState: NSObject {
 //    }
     
     func endGame() -> Void {
-        println( "game over" )
+        // ?
     }
     
     func restart() -> Void {
@@ -112,13 +146,13 @@ class GameState: NSObject {
     }
     
     func refresh() -> Void {
-        emitRate = INITIAL_EMIT_RATE
+        emitRate = getEmitRate()
         setLives()
         score = 0
     }
     
     func setMode( newMode: Mode ) -> Void {
         mode = newMode;
-        setLives()
+        refresh()
     }
 }

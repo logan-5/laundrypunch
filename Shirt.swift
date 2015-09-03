@@ -29,11 +29,11 @@ class Shirt: Dispensable {
     }
     
     let clothesSprites = ["tee", "polo", "girlstank", "ssbuttondown", "girlshirt", "lsbuttondown", "stripper"]
-    static let _rainbowProbability: Double = 0.04
-    // static let _rainbowProbability: Double = 1 // for debugging only
+    static let _rainbowProbability: Double = 0.02
     func rainbowProbability() -> Bool { return probabilityOf( Shirt._rainbowProbability ) }
     private(set) var isRainbow: Bool = false
     var rainbowAnimation: CCAction?
+    var stackedPosition: CGPoint?
     
     weak var sprite: CCNode?
     var shirtColor: Color!
@@ -61,7 +61,6 @@ class Shirt: Dispensable {
             self.isRainbow = true
             rainbowAnimation = CCActionAnimateRainbow.instantiate()
             self.sprite!.runAction( rainbowAnimation )
-            println( " rainbow!!! " )
         } else {
             var tintColor: CCColor!
             switch shirtColor! {
@@ -88,28 +87,28 @@ class Shirt: Dispensable {
         return "clothesSprites/" + clothesSprites[Int( arc4random_uniform( upperBound ) )] + ".png" // file extension apparently required in Swift
     }
 
-    func stack( color: Color ) -> Void {
-        if let r = rainbowAnimation {
-            self.sprite!.stopAction( rainbowAnimation )
-            var tint: CCActionTintTo?;
-
-            switch color {
-            case .Blue:
-                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.blueColor() ) as? CCActionTintTo
-            case .Green:
-                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.greenColor() ) as? CCActionTintTo
-            case .Purple:
-                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.purpleColor() ) as? CCActionTintTo
-            case .Red:
-                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.redColor() ) as? CCActionTintTo
-            case .Yellow:
-                fallthrough
-            default:
-                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.yellowColor() ) as? CCActionTintTo
-            }
-            if let t = tint {
-                self.sprite!.runAction( t )
-            }
-        }
-    }
+//    func stack( color: Color ) -> Void {
+//        if let r = rainbowAnimation {
+//            self.sprite!.stopAction( rainbowAnimation )
+//            var tint: CCActionTintTo?;
+//
+//            switch color {
+//            case .Blue:
+//                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.blueColor() ) as? CCActionTintTo
+//            case .Green:
+//                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.greenColor() ) as? CCActionTintTo
+//            case .Purple:
+//                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.purpleColor() ) as? CCActionTintTo
+//            case .Red:
+//                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.redColor() ) as? CCActionTintTo
+//            case .Yellow:
+//                fallthrough
+//            default:
+//                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.yellowColor() ) as? CCActionTintTo
+//            }
+//            if let t = tint {
+//                self.sprite!.runAction( t )
+//            }
+//        }
+//    }
 }

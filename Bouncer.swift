@@ -24,4 +24,10 @@ class Bouncer: CCNode {
         angle = 180 - CC_RADIANS_TO_DEGREES( angle )
         self.rotation = angle
     }
+
+    override func update(delta: CCTime) {
+        if self.physicsBody.type == CCPhysicsBodyType.Dynamic {
+            self.physicsBody.affectedByGravity = false
+        }
+    }
 }
