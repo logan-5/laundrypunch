@@ -29,11 +29,12 @@ class Shirt: Dispensable {
     }
     
     let clothesSprites = ["tee", "polo", "girlstank", "ssbuttondown", "girlshirt", "lsbuttondown", "stripper"]
-    static let _rainbowProbability: Double = 0.02
+    static let _rainbowProbability: Double = 0.035
     func rainbowProbability() -> Bool { return probabilityOf( Shirt._rainbowProbability ) }
-    private(set) var isRainbow: Bool = false
+    private(set) var isRainbow: Bool = probabilityOf( Shirt._rainbowProbability )
+    static let goldProbability: Double = 0.05
+    private(set) var isGold: Bool = probabilityOf( Shirt.goldProbability )
     var rainbowAnimation: CCAction?
-    var stackedPosition: CGPoint?
     
     weak var sprite: CCNode?
     var shirtColor: Color!
@@ -57,10 +58,17 @@ class Shirt: Dispensable {
         sprite!.anchorPoint = CGPointZero
         
         self.cascadeColorEnabled = true
-        if rainbowProbability() {
-            self.isRainbow = true
+        if isRainbow {
             rainbowAnimation = CCActionAnimateRainbow.instantiate()
             self.sprite!.runAction( rainbowAnimation )
+        } else if isGold {
+            let sparkle = CCBReader.load( "Effects/GoldSparkle" ) as! FreeParticles
+            sparkle.particlePositionType = CCParticleSystemPositionType.Free
+            GameState.sharedState.scene!.addChild( sparkle )
+            sparkle.object = self
+            sparkle.ready = true
+
+            println( "gold" ) // thought I saw some golds with no sparkle
         } else {
             var tintColor: CCColor!
             switch shirtColor! {

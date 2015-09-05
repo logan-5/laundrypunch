@@ -17,7 +17,9 @@ class Dispensable: CCNode {
     var bounceSpeed: CGFloat = 600
     var radius: CGFloat!
     var ready = false
-    
+    var stackedPosition: CGPoint?
+    var stacked = false
+
     func didLoadFromCCB() -> Void {
         self.physicsBody.velocity = ccp( initialXVelocity, initialYVelocity )
         self.physicsBody.angularVelocity = CGFloat( CCRANDOM_0_1() * maxInitialAngularMomentum * ( CCRANDOM_MINUS1_1() > 0 ? 1 : -1 ) )
@@ -30,15 +32,17 @@ class Dispensable: CCNode {
     override func update(delta: CCTime) -> Void {
         if !ready { return }
         let pos = self.parent.parent.convertToNodeSpace( self.position )
-        if  pos.x < -radius ||
+        if  !stacked &&
+            ( pos.x < -radius ||
             pos.x > radius + CCDirector.sharedDirector().viewSize().width ||
             pos.y < -radius ||
-            pos.y > radius + CCDirector.sharedDirector().viewSize().height {
+            pos.y > radius + CCDirector.sharedDirector().viewSize().height ) {
                 self.removeFromParent();
         }
     }
     
     func fall() -> Void {
+        self.physicsBody.affectedByGravity = true
         self.physicsBody.sensor = true
         self.physicsBody.velocity = CGPointZero
         self.physicsBody.collisionType = "faller"

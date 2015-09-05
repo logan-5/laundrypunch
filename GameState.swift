@@ -32,10 +32,13 @@ class GameState: NSObject {
     private(set) var score: Int = 0
     private var targetScore: Int = 0
     private var scoreUpdateTimer: NSTimer?
+    var goldShirts: Int = 0
+    private var finalScore: Int = 0
     private(set) var lives: Int = 0
+    private(set) var lost = false
 //    private var quarterFrequency: UInt32 = 10 // best case scenario, with a 30% chance of being 1.5* this
 //    private(set) var nextQuarter: UInt32 = 0
-    private var _quarterProbability = 0.08
+    private var _quarterProbability = 0.4//0.16
     func quarterProbability() -> Bool { return probabilityOf( _quarterProbability ) } // for lazy people
     
     weak var scene: MainScene?
@@ -130,7 +133,8 @@ class GameState: NSObject {
 //    }
     
     func endGame() -> Void {
-        // ?
+        lost = true
+        finalScore = score * goldShirts
     }
     
     func restart() -> Void {
@@ -149,6 +153,8 @@ class GameState: NSObject {
         emitRate = getEmitRate()
         setLives()
         score = 0
+        goldShirts = 0
+        lost = false
     }
     
     func setMode( newMode: Mode ) -> Void {

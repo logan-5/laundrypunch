@@ -51,12 +51,37 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         var quarterNewVelocity = ccp( quarterSpeed, 0 )
         quarterNewVelocity = ccpRotateByAngle( quarterNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
         quarter.physicsBody.velocity = ccp( -quarterNewVelocity.x, quarterNewVelocity.y )
-        
         return true
+    }
+
+    func ccPhysicsCollisionPostSolve(pair: CCPhysicsCollisionPair!, restoredQuarter: Quarter!, bouncer: Bouncer!) -> ObjCBool {
+
+        restoredQuarter.physicsBody.collisionType = "quarter"
+        var quarterSpeed = restoredQuarter.bounceSpeed
+        var quarterNewVelocity = ccp( quarterSpeed, 0 )
+        quarterNewVelocity = ccpRotateByAngle( quarterNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
+        restoredQuarter.physicsBody.velocity = ccp( -quarterNewVelocity.x, quarterNewVelocity.y )
+        return true
+    }
+
+    func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, quarter: CCNode!, shirt: CCNode!) -> ObjCBool {
+        return false
+    }
+
+    func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, restoredQuarter: CCNode!, shirt: CCNode!) -> ObjCBool {
+        return false
+    }
+
+    func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, restoredQuarter: CCNode!, receptacle: CCNode!) -> ObjCBool {
+        return false
+    }
+    
+    func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, restoredQuarter: CCNode!, quarter: CCNode!) -> ObjCBool {
+        return false
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, shirt: Shirt!, receptacle: Receptacle!) -> ObjCBool {
-        if shirt.isRainbow || shirt.shirtColor == receptacle.shirtColor {
+        if shirt.isRainbow || shirt.isGold || shirt.shirtColor == receptacle.shirtColor {
             //GameState.sharedState.success()
 //            shirt.stack( receptacle.shirtColor )
             receptacle.receiveItem( shirt )
@@ -104,6 +129,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     func gameOver() -> Void {
+        if GameState.sharedState.lost { return } // YOLO
         inflow.cancel()
         let delay = CCActionDelay.actionWithDuration( 0.5 ) as! CCActionDelay
         let effect = CCActionCallBlock.actionWithBlock { () -> Void in
@@ -111,7 +137,17 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
                 if let i = node as? Inflow {
                     // skip the inflow
                 } else {
-                    node.physicsBody!.type = CCPhysicsBodyType.Dynamic // load a new physics body here
+                    if node.physicsBody != nil {
+                        node.physicsBody!.type = CCPhysicsBodyType.Dynamic
+                        if let s = node as? Shirt {
+                            s.fall()
+                        }
+                    } else {
+                        node.physicsBody = CCPhysicsBody( circleOfRadius: 10, andCenter: node.position )
+                        node.physicsBody!.affectedByGravity = true
+                        node.physicsBody!.sensor = true
+                    }
+                    node.physicsBody!.applyTorque( CGFloat( CCRANDOM_MINUS1_1() * 900 ) )
                 }
             }
             let delay2 = CCActionDelay.actionWithDuration( 1.5 ) as! CCActionDelay
@@ -124,7 +160,17 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             self.handle.cascadeOpacityEnabled = true
             let fadeHandle = CCActionFadeOut.actionWithDuration( 0.5 ) as! CCActionFadeOut
             self.handle.runAction( fadeHandle )
-            self.inflow.launchSadFace()
+
+            // launch faces
+            var delayTime = 0.025
+            var numberOfFaces = arc4random_uniform( 12 ) + 10
+            for var i: UInt32 = 0; i < numberOfFaces; ++i, delayTime *= 1.5 {
+                var launchFaceDelay = CCActionDelay.actionWithDuration( delayTime ) as! CCActionDelay
+                var launchFace = CCActionCallBlock.actionWithBlock({ () -> Void in
+                    self.inflow.launchDeathFace()
+                }) as! CCActionCallBlock
+                self.runAction( CCActionSequence.actionWithArray([launchFaceDelay, launchFace] ) as! CCActionSequence )
+            }
         } as! CCActionCallBlock
         self.runAction( CCActionSequence.actionWithArray([delay, effect]) as! CCActionSequence )
     }

@@ -68,12 +68,12 @@ class Inflow: CCNode {
         self.setUpLaunch()
     }
 
-    func launchSadFace() -> Void {
-        if let l = launchingAction {
-            self.stopAction( l )
-            launchingAction = nil
-        }
-        var object: Dispensable = CCBReader.load( "DeathFace" ) as! Dispensable
+    func launchDeathFace() -> Void {
+//        if let l = launchingAction {
+//            self.stopAction( l )
+//            launchingAction = nil
+//        }
+        var object: Dispensable = CCBReader.load( probabilityOf( 0.5 ) ? "DeathSadFace" : "DeathHappyFace" ) as! Dispensable
         GameState.sharedState.scene!.myPhysicsNode.addChild( object )
         GameState.sharedState.lastLaunchedObject = object
         object.position = self.parent.convertToNodeSpace( emitPoint )

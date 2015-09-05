@@ -16,9 +16,10 @@ class Receptacle: CCNode {
     private(set) var shirts: [CCNode] = Array()
     let shirtStackOffset: Float = 5
     let receiveTime: Float = 0.3 // seconds
-    static let _quarkBarfProbability = 0.25
-    class func quarkBarfProbability() -> Bool { return probabilityOf( _quarkBarfProbability ) }
+    static let lucky: Double = 0.1
+    var luckyQuarter: Quarter?
     private var oldPosition = CGPointZero
+    private var doNotDisturb = false
     
     func didLoadFromCCB() -> Void {
         shirtColor = Shirt.Color.randomColor()
@@ -61,16 +62,18 @@ class Receptacle: CCNode {
         //sprite!.position = ccp( 0, sprite.contentSize.width / CGFloat(sprite!.scale) )
     }
     
-    func receiveItem( item: CCNode ) -> Void {
+    func receiveItem( item: Dispensable ) -> Void {
         item.physicsBody.sensor = true
         item.physicsBody.affectedByGravity = false
         item.physicsBody.velocity = CGPointZero
         item.physicsBody.angularVelocity = 0
+        item.physicsBody.collisionType = "stacked"
+        item.stacked = true
         shirts.append( item )
         var destination = ccp( 0, CGFloat( -shirtStackOffset * Float( shirts.count ) ) )
         destination = ccpRotateByAngle( destination, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
         destination = ccpAdd( destination, self.position )
-        
+
         var move: CCAction = CCActionMoveTo.actionWithDuration( CCTime(receiveTime), position: destination ) as! CCActionMoveTo
         var rotate: CCAction = CCActionRotateTo.actionWithDuration( CCTime(receiveTime), angle: self.rotation ) as! CCActionRotateTo
         move = CCActionEaseSineOut.actionWithAction( move as! CCActionMoveTo ) as! CCActionEaseSineOut
@@ -92,8 +95,8 @@ class Receptacle: CCNode {
     }
     
     func doLaundry( goldCoin: Bool ) -> Void {
-
-
+        if doNotDisturb { return }
+        doNotDisturb = true
         // animate
         var offScreen = ccp( 0, ( self.contentSize.height + CGFloat( shirtStackOffset * Float( shirts.count ) ) ) )
         offScreen = ccpRotateByAngle( offScreen, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
@@ -110,10 +113,16 @@ class Receptacle: CCNode {
         var sequence = CCActionSequence.actionWithArray([moveOffScreen, CCActionCallBlock.actionWithBlock({ () -> Void in
             self.setUpSuccessParticleEffects()
             self.cashInLoad()
+
             if !goldCoin {
                 // gold coins cash in the stack but don't destroy it
                 // so destroy if not gold coin
                 for shirt in self.shirts {
+                    if let q = shirt as? Quarter {
+                        self.luckyQuarter = q
+                        if probabilityOf( Receptacle.lucky ) { self.regurgitateQuarter() }
+                        continue
+                    }
                     shirt.removeFromParent()
                 }
                 self.shirts.removeAll( keepCapacity: true )
@@ -122,14 +131,24 @@ class Receptacle: CCNode {
                 self.shirts.removeLast().removeFromParent()
                 // and bring the shirts back
                 for shirt in self.shirts {
-                    var c: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: (shirt as! Shirt).stackedPosition! ) as! CCActionMoveTo
+                    var c: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: (shirt as! Dispensable).stackedPosition! ) as! CCActionMoveTo
                     //c = CCActionEaseSineInOut.actionWithAction( comeBack as! CCActionMoveTo ) as! CCAction
                     shirt.runAction( c )
                 }
             }
-        }), comeBack]) as! CCActionSequence
+        }), comeBack, CCActionCallBlock.actionWithBlock({ () -> Void in
+            self.doNotDisturb = false
+        }) as! CCActionCallBlock]) as! CCActionSequence
 
         self.runAction( sequence )
+    }
+
+    func regurgitateQuarter() {
+        let q = luckyQuarter!
+        q.physicsBody.affectedByGravity = true
+        q.physicsBody.sensor = false
+        q.physicsBody.applyForce( ccp( 180 * ( self.position.y / CCDirector.sharedDirector().viewSize().height ) * (GameState.sharedState.scene!.bouncer.position.x - q.position.x ) , 18_000 * CCDirector.sharedDirector().viewSize().height / self.position.y ) )
+        q.physicsBody.collisionType = "restoredQuarter"
     }
 
     func cashInLoad() -> Void {
@@ -161,24 +180,31 @@ class Receptacle: CCNode {
         label.runAction( CCActionSequence.actionWithArray([delay, fadeOut, remove]) as! CCActionSequence )
     }
 
-    func countPointsAndCreateString() -> ( points: Int, string: String) {
+    func countPointsAndCreateString() -> ( points: Int, string: String ) {
         var points: Int = 0
         var string: String = ""
+        var prefix: String = ""
+        var golds: Int = 0
 
-        var modifier: Int = 1
+        var modifier: Int = 0
 
         for shirt in shirts {
             if let s = shirt as? Shirt {
                 if s.isRainbow {
-                    modifier *= 2
-                    string += " x 2"
+                    modifier += 2
+                } else if s.isGold {
+                    ++GameState.sharedState.goldShirts
+                    ++golds
                 } else {
                     ++points
                 }
             }
         }
-        string = "+" + String( points ) + string
-        points *= modifier
+        if golds > 0 {
+            prefix = String( golds ) + " gold "
+        }
+        string = prefix + "+" + String( points ) + ( modifier > 0 ? " x " + String( modifier ) : "" )
+        if modifier > 0 { points *= modifier }
         return ( points, string )
     }
     

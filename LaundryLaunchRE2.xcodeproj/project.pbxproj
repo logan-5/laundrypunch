@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		022A696F1B9680E90004BDEB /* CCActionAnimateRainbow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022A696E1B9680E90004BDEB /* CCActionAnimateRainbow.swift */; };
 		02D33F6B1B97EEF300C235EA /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 02D33F6A1B97EEF300C235EA /* Settings.plist */; };
+		02D33F6F1B9A3AD700C235EA /* FreeParticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F6E1B9A3AD700C235EA /* FreeParticles.swift */; };
 		5B121030197484FA004C1E1D /* LaundryLaunchREActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B12102F197484FA004C1E1D /* LaundryLaunchREActivity.m */; };
 		5B121038197487F2004C1E1D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B737893E1807617C0076A88C /* AppDelegate.m */; };
 		7A046D7919E84ED5004C4763 /* MainScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A046D7519E84C36004C4763 /* MainScene.swift */; };
@@ -162,6 +163,7 @@
 /* Begin PBXFileReference section */
 		022A696E1B9680E90004BDEB /* CCActionAnimateRainbow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CCActionAnimateRainbow.swift; sourceTree = "<group>"; };
 		02D33F6A1B97EEF300C235EA /* Settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Settings.plist; sourceTree = "<group>"; };
+		02D33F6E1B9A3AD700C235EA /* FreeParticles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreeParticles.swift; sourceTree = "<group>"; };
 		5B12100919748273004C1E1D /* libEGL.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libEGL.so; path = /usr/lib/armv7a/libEGL.so; sourceTree = SDKROOT; };
 		5B12100F197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
 		5B121011197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
@@ -295,6 +297,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		02D33F701B9A3AED00C235EA /* Effect Misc */ = {
+			isa = PBXGroup;
+			children = (
+				022A696E1B9680E90004BDEB /* CCActionAnimateRainbow.swift */,
+				02D33F6E1B9A3AD700C235EA /* FreeParticles.swift */,
+			);
+			name = "Effect Misc";
+			sourceTree = "<group>";
+		};
 		5B12100D197483EE004C1E1D /* res */ = {
 			isa = PBXGroup;
 			children = (
@@ -477,7 +488,7 @@
 				96AA23C01B8E8D5E0033C26B /* Shirt.swift */,
 				96FB4D4B1B8EEA780042FCCA /* Quarter.swift */,
 				96AFCD0C1B9238DD009319E5 /* Dispensable.swift */,
-				022A696E1B9680E90004BDEB /* CCActionAnimateRainbow.swift */,
+				02D33F701B9A3AED00C235EA /* Effect Misc */,
 				02D33F6A1B97EEF300C235EA /* Settings.plist */,
 				96A990171B92EAE500B40AA7 /* Menus */,
 				D352B48019EC608A00829775 /* MetalShaders */,
@@ -866,6 +877,7 @@
 				B73789871807631A0076A88C /* main.m in Sources */,
 				022A696F1B9680E90004BDEB /* CCActionAnimateRainbow.swift in Sources */,
 				7A046D7919E84ED5004C4763 /* MainScene.swift in Sources */,
+				02D33F6F1B9A3AD700C235EA /* FreeParticles.swift in Sources */,
 				96AFCD111B925DFB009319E5 /* AfterDeathMenu.swift in Sources */,
 				96AA23BF1B8E8D240033C26B /* Receptacle.swift in Sources */,
 				96AA23BB1B8E8CB90033C26B /* GameState.swift in Sources */,

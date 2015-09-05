@@ -16,7 +16,12 @@ class AfterDeathMenu: CCNode {
     weak var restartButton: CCButton!
     weak var optionsLabel: CCLabelTTF!
     weak var optionsButton: CCButton!
-    private var score = 0
+    weak var scoreFireworks: CCParticleSystem?
+    private(set) var gold: Int = GameState.sharedState.goldShirts
+    private(set) var score: Int = 0
+    private var targetScore: Int = 0
+    private var scoreUpdateTimer: NSTimer?
+    private var scoreUpdateStep: Int = 1
    
     func didLoadFromCCB() -> Void {
         self.cascadeOpacityEnabled = true
@@ -45,7 +50,54 @@ class AfterDeathMenu: CCNode {
     }
 
     func displayScore() -> Void {
-        score = GameState.sharedState.score
+        score = 0
+        targetScore = GameState.sharedState.score
+        if targetScore > 0 {
+            scoreUpdateTimer = NSTimer.scheduledTimerWithTimeInterval( 0.04, target: self, selector: "incrementScore", userInfo: nil, repeats: true )
+            if targetScore > 50 {
+                scoreUpdateStep = targetScore / 50
+            }
+            var fireWorks = CCBReader.load( "Effects/RainbowFireworks" ) as! CCParticleSystem
+            scoreFireworks = fireWorks
+            fireWorks.autoRemoveOnFinish = true
+            //fireWorks.positionType = scoreScoreLabel.positionType
+            fireWorks.position = scoreScoreLabel.positionInPoints
+            self.addChild( fireWorks )
+        } else {
+            scoreScoreLabel.string = String( 0 )
+        }
+    }
+
+    func goldShirtEffectManager() {
+        if gold-- > 0 {
+            var delay = CCActionDelay.actionWithDuration( 0.22 ) as! CCActionDelay
+            var effect = CCActionCallFunc.actionWithTarget( self, selector: "goldShirtEffect" ) as! CCActionCallFunc
+            self.runAction( CCActionSequence.actionWithArray([delay, effect] ) as! CCActionSequence )
+        }
+    }
+
+    func goldShirtEffect() {
+        var goldExplosion = CCBReader.load( "Effects/GoldExplosion" ) as! CCParticleSystem
+        goldExplosion.autoRemoveOnFinish = true
+        //fireWorks.positionType = scoreScoreLabel.positionType
+        goldExplosion.position = scoreScoreLabel.positionInPoints
+        self.addChild( goldExplosion )
+
+        score += targetScore
+        scoreScoreLabel.string = String( score )
+        goldShirtEffectManager()
+    }
+
+    func incrementScore() -> Void {
+        if let s = scoreUpdateTimer {
+            score = min( targetScore, score + scoreUpdateStep )
+            if score >= targetScore {
+                s.invalidate()
+                scoreUpdateTimer = nil
+                scoreFireworks!.stopSystem()
+                goldShirtEffectManager()
+            }
+        }
         scoreScoreLabel.string = String( score )
     }
 }

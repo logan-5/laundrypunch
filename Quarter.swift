@@ -22,6 +22,7 @@ class Quarter: Dispensable {
         super.didLoadFromCCB()
         
         self.physicsBody.collisionType = "quarter"
+        self.physicsBody.collisionGroup = "quarter"
         
         sprite.scale = Float(self.contentSize.width / sprite.contentSize.width)
 
