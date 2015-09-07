@@ -7,7 +7,7 @@
 	<key>defaultOrientation</key>
 	<integer>1</integer>
 	<key>designTarget</key>
-	<integer>1</integer>
+	<integer>0</integer>
 	<key>deviceOrientationLandscapeLeft</key>
 	<true/>
 	<key>deviceOrientationLandscapeRight</key>
@@ -168,6 +168,11 @@
 			<true/>
 		</dict>
 		<key>miscSprites</key>
+		<dict>
+			<key>isSmartSpriteSheet</key>
+			<true/>
+		</dict>
+		<key>springs</key>
 		<dict>
 			<key>isSmartSpriteSheet</key>
 			<true/>

@@ -18,19 +18,7 @@ class Options: CCNode {
         
         self.userInteractionEnabled = true
     }
-    
-    func wussMode() -> Void {
-        GameState.sharedState.setMode( GameState.Mode.Easy )
-    }
-    
-    func unreasonableMode() -> Void {
-        GameState.sharedState.setMode( GameState.Mode.Hard )
-    }
-
-    func efficiencyMode() -> Void {
-        GameState.sharedState.setMode( GameState.Mode.Efficiency )
-    }
-    
+     
     func returnButton() -> Void {
         let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as! CCAction
         let dispose = CCActionCallBlock.actionWithBlock( { () -> Void in
@@ -45,5 +33,9 @@ class Options: CCNode {
         failEffectSmell.autoRemoveOnFinish = true
         failEffectSmell.position = touch.locationInNode( self )
         self.addChild( failEffectSmell )
+    }
+
+    func difficultyMenu () -> Void {
+        self.addChild( CCBReader.load( "DifficultyMenu" ) as CCNode )
     }
 }

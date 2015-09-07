@@ -10,6 +10,14 @@
 		022A696F1B9680E90004BDEB /* CCActionAnimateRainbow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022A696E1B9680E90004BDEB /* CCActionAnimateRainbow.swift */; };
 		02D33F6B1B97EEF300C235EA /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 02D33F6A1B97EEF300C235EA /* Settings.plist */; };
 		02D33F6F1B9A3AD700C235EA /* FreeParticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F6E1B9A3AD700C235EA /* FreeParticles.swift */; };
+		02D33F721B9A7FC800C235EA /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F711B9A7FC800C235EA /* Data.swift */; };
+		02D33F741B9A833800C235EA /* Jargon.plist in Resources */ = {isa = PBXBuildFile; fileRef = 02D33F731B9A833800C235EA /* Jargon.plist */; };
+		02D33F761B9A968200C235EA /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F751B9A968200C235EA /* Difficulty.swift */; };
+		02D33F781B9B4F1800C235EA /* LivesDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F771B9B4F1800C235EA /* LivesDisplay.swift */; };
+		02D33F7A1B9B9E6700C235EA /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02D33F791B9B9E6700C235EA /* GameKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		02D33F7D1B9BA01E00C235EA /* GCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F7C1B9BA01E00C235EA /* GCHelper.m */; };
+		02D33F871B9BC05A00C235EA /* Unlockables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F861B9BC05A00C235EA /* Unlockables.swift */; };
+		02D33F891B9BDBF100C235EA /* BuyShirtButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F881B9BDBF100C235EA /* BuyShirtButton.swift */; };
 		5B121030197484FA004C1E1D /* LaundryLaunchREActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B12102F197484FA004C1E1D /* LaundryLaunchREActivity.m */; };
 		5B121038197487F2004C1E1D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B737893E1807617C0076A88C /* AppDelegate.m */; };
 		7A046D7919E84ED5004C4763 /* MainScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A046D7519E84C36004C4763 /* MainScene.swift */; };
@@ -65,7 +73,7 @@
 		927F61B9196C771E000F43EF /* iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F590E188484E7003F4D28 /* iPhone@2x.png */; };
 		927F61BA196C771E000F43EF /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = B737896D180762440076A88C /* Default.png */; };
 		927F61BB196C771E000F43EF /* iPad-old.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F5907188484E7003F4D28 /* iPad-old.png */; };
-		9644C6031B92D79F004D9BC8 /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9644C6021B92D79F004D9BC8 /* Handle.swift */; };
+		9644C6031B92D79F004D9BC8 /* BouncerHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9644C6021B92D79F004D9BC8 /* BouncerHandle.swift */; };
 		96A9901B1B92EB2000B40AA7 /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A9901A1B92EB2000B40AA7 /* Options.swift */; };
 		96AA23B51B8E8C760033C26B /* Bouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AA23B41B8E8C760033C26B /* Bouncer.swift */; };
 		96AA23BB1B8E8CB90033C26B /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AA23BA1B8E8CB90033C26B /* GameState.swift */; };
@@ -162,8 +170,17 @@
 
 /* Begin PBXFileReference section */
 		022A696E1B9680E90004BDEB /* CCActionAnimateRainbow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CCActionAnimateRainbow.swift; sourceTree = "<group>"; };
-		02D33F6A1B97EEF300C235EA /* Settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Settings.plist; sourceTree = "<group>"; };
+		02D33F6A1B97EEF300C235EA /* Settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Settings.plist; path = ../../Settings.plist; sourceTree = "<group>"; };
 		02D33F6E1B9A3AD700C235EA /* FreeParticles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreeParticles.swift; sourceTree = "<group>"; };
+		02D33F711B9A7FC800C235EA /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		02D33F731B9A833800C235EA /* Jargon.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Jargon.plist; sourceTree = "<group>"; };
+		02D33F751B9A968200C235EA /* Difficulty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Difficulty.swift; sourceTree = "<group>"; };
+		02D33F771B9B4F1800C235EA /* LivesDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivesDisplay.swift; sourceTree = "<group>"; };
+		02D33F791B9B9E6700C235EA /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		02D33F7B1B9BA01E00C235EA /* GCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCHelper.h; sourceTree = "<group>"; };
+		02D33F7C1B9BA01E00C235EA /* GCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCHelper.m; sourceTree = "<group>"; };
+		02D33F861B9BC05A00C235EA /* Unlockables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unlockables.swift; sourceTree = "<group>"; };
+		02D33F881B9BDBF100C235EA /* BuyShirtButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyShirtButton.swift; sourceTree = "<group>"; };
 		5B12100919748273004C1E1D /* libEGL.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libEGL.so; path = /usr/lib/armv7a/libEGL.so; sourceTree = SDKROOT; };
 		5B12100F197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
 		5B121011197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
@@ -189,7 +206,7 @@
 		7BF6AF9F1A425F9800FFF9BA /* JavaFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaFoundation.framework; path = "../../../../../../../Library/SBAndroid/Application Support/Developer/Shared/Xcode/Platforms/Android.platform/Developer/SDKs/SBAndroid.sdk/System/Library/Frameworks/JavaFoundation.framework"; sourceTree = "<group>"; };
 		8392007918EE8E3300B6C429 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		927F61BF196C771E000F43EF /* LaundryLaunchRE2 Android.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LaundryLaunchRE2 Android.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9644C6021B92D79F004D9BC8 /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
+		9644C6021B92D79F004D9BC8 /* BouncerHandle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BouncerHandle.swift; sourceTree = "<group>"; };
 		96A9901A1B92EB2000B40AA7 /* Options.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
 		96AA23B41B8E8C760033C26B /* Bouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bouncer.swift; sourceTree = "<group>"; };
 		96AA23BA1B8E8CB90033C26B /* GameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
@@ -280,6 +297,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02D33F7A1B9B9E6700C235EA /* GameKit.framework in Frameworks */,
 				7A97911819E631CD001FFC4D /* libcocos2d.a in Frameworks */,
 				8392007A18EE8E3300B6C429 /* GLKit.framework in Frameworks */,
 				B77F1B3217B978D7009739AE /* QuartzCore.framework in Frameworks */,
@@ -471,6 +489,9 @@
 			children = (
 				96AFCD101B925DFA009319E5 /* AfterDeathMenu.swift */,
 				96A9901A1B92EB2000B40AA7 /* Options.swift */,
+				02D33F751B9A968200C235EA /* Difficulty.swift */,
+				02D33F861B9BC05A00C235EA /* Unlockables.swift */,
+				02D33F881B9BDBF100C235EA /* BuyShirtButton.swift */,
 			);
 			name = Menus;
 			sourceTree = "<group>";
@@ -481,15 +502,18 @@
 				7A40362019DDEF0D007B6E8F /* Platforms */,
 				7A046D7519E84C36004C4763 /* MainScene.swift */,
 				96AA23B41B8E8C760033C26B /* Bouncer.swift */,
-				9644C6021B92D79F004D9BC8 /* Handle.swift */,
+				9644C6021B92D79F004D9BC8 /* BouncerHandle.swift */,
 				96AA23BA1B8E8CB90033C26B /* GameState.swift */,
+				02D33F711B9A7FC800C235EA /* Data.swift */,
 				96AA23BC1B8E8CF20033C26B /* Inflow.swift */,
 				96AA23BE1B8E8D240033C26B /* Receptacle.swift */,
 				96AA23C01B8E8D5E0033C26B /* Shirt.swift */,
 				96FB4D4B1B8EEA780042FCCA /* Quarter.swift */,
 				96AFCD0C1B9238DD009319E5 /* Dispensable.swift */,
+				02D33F771B9B4F1800C235EA /* LivesDisplay.swift */,
+				02D33F7B1B9BA01E00C235EA /* GCHelper.h */,
+				02D33F7C1B9BA01E00C235EA /* GCHelper.m */,
 				02D33F701B9A3AED00C235EA /* Effect Misc */,
-				02D33F6A1B97EEF300C235EA /* Settings.plist */,
 				96A990171B92EAE500B40AA7 /* Menus */,
 				D352B48019EC608A00829775 /* MetalShaders */,
 			);
@@ -542,6 +566,7 @@
 		B77F1B3017B978D7009739AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				02D33F791B9B9E6700C235EA /* GameKit.framework */,
 				BC5399D31A44DCC90063F482 /* AndroidKit.framework */,
 				BC5399D41A44DCC90063F482 /* CoreJava.framework */,
 				BC5399D51A44DCC90063F482 /* GLActivityKit.framework */,
@@ -570,6 +595,8 @@
 		B77F1B4617B978D7009739AE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				02D33F6A1B97EEF300C235EA /* Settings.plist */,
+				02D33F731B9A833800C235EA /* Jargon.plist */,
 				7A40366119DDF8C2007B6E8F /* Platforms */,
 				5B12100D197483EE004C1E1D /* res */,
 				B73789911807667A0076A88C /* Icons */,
@@ -657,7 +684,7 @@
 		B77F1B2617B978D7009739AE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = Apportable;
 				TargetAttributes = {
 					7A4035FE19DDEE84007B6E8F = {
@@ -786,6 +813,7 @@
 				B71F5913188484E7003F4D28 /* iPad.png in Resources */,
 				B71F5912188484E7003F4D28 /* iPad-old@2x.png in Resources */,
 				B71F5916188484E7003F4D28 /* iPhone-old@2x.png in Resources */,
+				02D33F741B9A833800C235EA /* Jargon.plist in Resources */,
 				B737893B180761570076A88C /* Published-iOS in Resources */,
 				B71F591A188484E7003F4D28 /* Settings@2x.png in Resources */,
 				B7378976180762440076A88C /* Default-Landscape~ipad.png in Resources */,
@@ -869,12 +897,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02D33F781B9B4F1800C235EA /* LivesDisplay.swift in Sources */,
 				96AFCD0D1B9238DD009319E5 /* Dispensable.swift in Sources */,
 				96FB4D4C1B8EEA780042FCCA /* Quarter.swift in Sources */,
 				96A9901B1B92EB2000B40AA7 /* Options.swift in Sources */,
 				96AA23C11B8E8D5E0033C26B /* Shirt.swift in Sources */,
 				96AA23BD1B8E8CF20033C26B /* Inflow.swift in Sources */,
 				B73789871807631A0076A88C /* main.m in Sources */,
+				02D33F891B9BDBF100C235EA /* BuyShirtButton.swift in Sources */,
 				022A696F1B9680E90004BDEB /* CCActionAnimateRainbow.swift in Sources */,
 				7A046D7919E84ED5004C4763 /* MainScene.swift in Sources */,
 				02D33F6F1B9A3AD700C235EA /* FreeParticles.swift in Sources */,
@@ -883,7 +913,11 @@
 				96AA23BB1B8E8CB90033C26B /* GameState.swift in Sources */,
 				96AA23B51B8E8C760033C26B /* Bouncer.swift in Sources */,
 				5B121038197487F2004C1E1D /* AppDelegate.m in Sources */,
-				9644C6031B92D79F004D9BC8 /* Handle.swift in Sources */,
+				02D33F871B9BC05A00C235EA /* Unlockables.swift in Sources */,
+				02D33F761B9A968200C235EA /* Difficulty.swift in Sources */,
+				02D33F7D1B9BA01E00C235EA /* GCHelper.m in Sources */,
+				9644C6031B92D79F004D9BC8 /* BouncerHandle.swift in Sources */,
+				02D33F721B9A7FC800C235EA /* Data.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1110,6 +1144,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DEBUG,
@@ -1143,6 +1178,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					NDEBUG,
 					"NS_BLOCK_ASSERTIONS=1",

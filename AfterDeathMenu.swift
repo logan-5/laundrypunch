@@ -12,16 +12,22 @@ class AfterDeathMenu: CCNode {
 
     weak var scoreLabel: CCLabelTTF!
     weak var scoreScoreLabel: CCLabelTTF!
+    weak var highScoreLabel: CCLabelTTF!
     weak var stinkyLabel: CCLabelTTF!
     weak var restartButton: CCButton!
-    weak var optionsLabel: CCLabelTTF!
     weak var optionsButton: CCButton!
+    weak var leaderboardsButton: CCButton!
+    weak var achievementsButton: CCButton!
+    weak var unlockablesButton: CCButton!
+    weak var creditsLabel: CCLabelTTF!
     weak var scoreFireworks: CCParticleSystem?
-    private(set) var gold: Int = GameState.sharedState.goldShirts
-    private(set) var score: Int = 0
-    private var targetScore: Int = 0
+    private(set) var gold: Int64 = GameState.sharedState.goldShirts
+    private(set) var score: Int64 = 0
+    private var targetScore: Int64 = 0
     private var scoreUpdateTimer: NSTimer?
-    private var scoreUpdateStep: Int = 1
+    private var scoreUpdateStep: Int64 = 1
+    private var ready = false
+    private var scoreDisplayed = false
    
     func didLoadFromCCB() -> Void {
         self.cascadeOpacityEnabled = true
@@ -30,16 +36,35 @@ class AfterDeathMenu: CCNode {
         self.runAction( fadeIn )
         
         self.userInteractionEnabled = true
-        displayScore()
         scoreScoreLabel.runAction( CCActionAnimateRainbow.instantiate() )
+
+        highScoreLabel.string = Data.sharedData.modeName + " best:\n" + String( Data.sharedData.score )
+
+        creditsLabel.string = "© 2015 logan r smith // noisecode.net"
     }
     
     func restartButtonPressed() -> Void {
         GameState.sharedState.restart()
     }
     
-    func optionsButtonPressed() -> Void {
-        self.addChild( CCBReader.load( "OptionsMenu" ) )
+//    func optionsButtonPressed() -> Void {
+//        self.addChild( CCBReader.load( "OptionsMenu" ) )
+//    }
+
+    func difficultyMenu () -> Void {
+        self.addChild( CCBReader.load( "DifficultyMenu" ) as CCNode )
+    }
+
+    func leaderboardsButtonPressed() -> Void {
+        GCHelper.defaultHelper().showLeaderboardOnViewController( CCDirector.sharedDirector() )
+    }
+
+    func achievementsButtonPressed() -> Void {
+        GCHelper.defaultHelper().showLeaderboardOnViewController( CCDirector.sharedDirector() )
+    }
+
+    func unlockablesButtonPressed() -> Void {
+        self.addChild( CCBReader.load( "UnlockablesMenu" ) )
     }
     
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
@@ -99,5 +124,10 @@ class AfterDeathMenu: CCNode {
             }
         }
         scoreScoreLabel.string = String( score )
+    }
+
+    override func update(delta: CCTime) {
+        if !ready { ready = true; return }
+        if !scoreDisplayed { displayScore(); scoreDisplayed = true }
     }
 }

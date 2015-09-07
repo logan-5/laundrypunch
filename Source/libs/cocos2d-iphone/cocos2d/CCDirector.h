@@ -35,6 +35,8 @@
 #import "CCRenderer.h"
 #import "CCDirectorView.h"
 
+#import "GameKit/GameKit.h"
+
 /**
  Possible OpenGL projections used by CCDirector.
  */
@@ -99,7 +101,7 @@ typedef NS_ENUM(NSUInteger, CCDirectorProjection) {
   - `GL_COLOR_ARRAY` is enabled
   - `GL_TEXTURE_COORD_ARRAY` is enabled
 */
-@interface CCDirector : CC_VIEWCONTROLLER
+@interface CCDirector : CC_VIEWCONTROLLER <GKLocalPlayerListener>
 {
 	// internal timer
 	NSTimeInterval _animationInterval;

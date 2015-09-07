@@ -10,12 +10,18 @@ import UIKit
 
 class Bouncer: CCNode {
     
-    weak var handle: Handle!
+    weak var handle: BouncerHandle!
+    weak var glove: CCNode!
+    weak var sensor: CCNode!
     
     func didLoadFromCCB() -> Void {
         self.rotation = -90
         self.physicsBody.elasticity = 3.35
         self.physicsBody.collisionType = "bouncer"
+        self.physicsBody.collisionGroup = "bouncer"
+        sensor.physicsBody.collisionGroup = "bouncer"
+        sensor.physicsBody.collisionType = "animateSensor"
+        sensor.physicsBody.sensor = true
     }
     
     func updateAngle( position: CGPoint ) -> Void {
@@ -29,5 +35,9 @@ class Bouncer: CCNode {
         if self.physicsBody.type == CCPhysicsBodyType.Dynamic {
             self.physicsBody.affectedByGravity = false
         }
+    }
+
+    func animateGlove() {
+        glove.animationManager.runAnimationsForSequenceNamed( "Punch" )
     }
 }

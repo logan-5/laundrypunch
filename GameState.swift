@@ -12,52 +12,71 @@ func probabilityOf( probability: Double ) -> Bool {
     return Double(CCRANDOM_0_1()) < probability
 }
 
-class GameState: NSObject {
+public class GameState: NSObject {
     class var sharedState: GameState {
         get { return sharedInstance.sharedState }
     }
     private struct sharedInstance { static let sharedState = GameState() }
     
-    enum Mode {
-        case Easy
-        case Hard
-        case Efficiency
+    public enum Mode: String {
+        case Easy = "Easy"
+        case Medium = "Medium"
+        case Hard = "Hard"
+        case Efficiency = "Efficiency"
     }
     struct Lives {
         static let Easy = 5
-        static let Hard = 0
+        static let Medium = 0
+        static let Hard = 3
         static let Efficiency = 10
     }
-    private(set) var mode: Mode! // linker errors without '!'. I thought it'd work.  I must not understand
-    private(set) var score: Int = 0
-    private var targetScore: Int = 0
+    public var mode: Mode {
+        get { return Data.sharedData.mode }
+        set {
+            Data.sharedData.mode = newValue
+            //setLives()
+        }
+    }
+    func getModeString() -> String {
+        return mode.rawValue
+    }
+    
+    private(set) var score: Int64 = 0
+    private var targetScore: Int64 = 0
     private var scoreUpdateTimer: NSTimer?
-    var goldShirts: Int = 0
-    private var finalScore: Int = 0
+    var goldShirts: Int64 = 0
+    private var finalScore: Int64 = 0
     private(set) var lives: Int = 0
     private(set) var lost = false
-//    private var quarterFrequency: UInt32 = 10 // best case scenario, with a 30% chance of being 1.5* this
-//    private(set) var nextQuarter: UInt32 = 0
-    private var _quarterProbability = 0.4//0.16
+    private var _quarterProbability = 0.16
     func quarterProbability() -> Bool { return probabilityOf( _quarterProbability ) } // for lazy people
-    
+
+    private(set) var lowFXMode = false // ease up on the effects for slower devices (iPhone 4)
+
     weak var scene: MainScene?
     weak var lastLaunchedObject: Dispensable?
     private(set) var emitRate: Float = 0
     let INITIAL_EMIT_RATE: Float = 2 // in seconds
-    let EFFICIENCY_EMIT_RATE: Float = 0.2
+    let EFFICIENCY_EMIT_RATE: Float = 0.8
     override init() {
-        mode = Mode.Hard
+        switch UIDevice.currentDevice().systemVersion.compare("8.0.0", options: NSStringCompareOptions.NumericSearch) {
+        case .OrderedSame, .OrderedDescending:
+            lowFXMode = false
+        case .OrderedAscending:
+            lowFXMode = true
+        } // thank you NSHipster
         super.init()
         refresh()
     }
     
     func setLives() -> Int {
-        switch mode! {
+        switch mode {
         case .Efficiency:
             lives = Lives.Efficiency
         case .Hard:
             lives = Lives.Hard
+        case .Medium:
+            lives = Lives.Medium
         case .Easy:
             fallthrough
         default:
@@ -70,44 +89,28 @@ class GameState: NSObject {
         return mode == Mode.Efficiency ? EFFICIENCY_EMIT_RATE : INITIAL_EMIT_RATE
     }
     
-//    func success() -> Void {
-//        println( "Success" )
-//        switch mode! { // why is '!' necessary here?
-//        case Mode.Easy:
-//            ++score
-//        }
-//        scene!.updateScoreLabel()
-//    }
-//    
     func failure() -> Void {
-        //println( "Failure" )
-//        switch mode! { // and here
-//        case Mode.Easy:
-//            --score
-//        }
-//        scene!.updateScoreLabel()
         --lives
-        scene!.updateLivesLabel()
         if lives < 0 {
             scene!.gameOver()
             endGame()
         }
     }
 
-    func cashIn( amount: Int ) -> Void {
+    func cashIn( amount: Int64 ) -> Void {
         if amount <= 0 { return }
         targetScore += amount
         if scoreUpdateTimer == nil {
             scoreUpdateTimer = NSTimer.scheduledTimerWithTimeInterval( 0.04, target: self, selector: "incrementScore", userInfo: nil, repeats: true )
         }
         if scene!.scoreEffect == nil { scene!.scoreEffect?.stopSystem() }
-        let effect = CCBReader.load( "Effects/RainbowFireworks" ) as! CCParticleSystem
+        let effect = CCBReader.load( scene!.nextEffect ) as! CCParticleSystem
         scene!.scoreEffect = effect
         effect.position = scene!.scoreLabel.position
         effect.autoRemoveOnFinish = true
         scene!.addChild( effect )
         if mode != Mode.Efficiency {
-            emitRate -= 0.05
+            emitRate -= 0.075
         }
     }
 
@@ -116,35 +119,27 @@ class GameState: NSObject {
             if ++score >= targetScore {
                 s.invalidate()
                 scoreUpdateTimer = nil
-                if scene!.scoreEffect != nil { scene!.scoreEffect?.stopSystem() }//scene!.scoreEffect!.removeFromParent() }
+                if scene!.scoreEffect != nil { scene!.scoreEffect?.stopSystem() }
             }
         }
         scene!.updateScoreLabel()
     }
-    
-//    func getNextQuarterTime() -> UInt32 {
-//        nextQuarter = quarterFrequency
-//        if CCRANDOM_0_1() < 0.3 {
-//            nextQuarter += quarterFrequency / 2
-//        }
-//        return nextQuarter
-//        // I hate Swift. can't do jack without getting pedantic af
-//        // even the dreaded C++ doesn't split hairs between "int" and "unsigned 32-bit int"
-//    }
-    
+
     func endGame() -> Void {
         lost = true
-        finalScore = score * goldShirts
+        finalScore = score * Int64(goldShirts + 1)
+        Data.sharedData.score = finalScore
+        GCHelper.defaultHelper().reportScore( finalScore, forLeaderboardID:mode.rawValue )
     }
     
     func restart() -> Void {
+        refresh()
         let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as! CCAction
         let reset = CCActionCallBlock.actionWithBlock( { () -> Void in
             let newScene = CCBReader.loadAsScene( "MainScene" )
             CCDirector.sharedDirector().replaceScene( newScene )
             GameState.sharedState.refresh()
             GameState.sharedState.scene!.updateScoreLabel()
-            GameState.sharedState.scene!.updateLivesLabel()
         }) as! CCAction
         scene!.overlay.runAction( CCActionSequence.actionWithArray([fadeIn, reset]) as! CCAction )
     }
@@ -154,11 +149,7 @@ class GameState: NSObject {
         setLives()
         score = 0
         goldShirts = 0
+        targetScore = 0
         lost = false
-    }
-    
-    func setMode( newMode: Mode ) -> Void {
-        mode = newMode;
-        refresh()
     }
 }

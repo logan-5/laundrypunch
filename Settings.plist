@@ -2,7 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Personal High Score</key>
+	<key>Total Score</key>
+	<integer>0</integer>
+	<key>Unlocked Shirts</key>
+	<array>
+		<string>tee</string>
+	</array>
+	<key>Easy High Score</key>
+	<integer>0</integer>
+	<key>Medium High Score</key>
+	<integer>0</integer>
+	<key>Hard High Score</key>
+	<integer>0</integer>
+	<key>Efficiency High Score</key>
 	<integer>0</integer>
 	<key>Game Mode</key>
 	<string>Hard</string>

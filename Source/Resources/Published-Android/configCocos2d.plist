@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CCSetupScreenMode</key>
-	<string>CCScreenModeFixed</string>
+	<string>CCScreenModeFlexible</string>
 	<key>CCSetupScreenOrientation</key>
 	<string>CCScreenOrientationPortrait</string>
 	<key>CCSetupTabletScale2X</key>

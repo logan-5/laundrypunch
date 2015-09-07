@@ -969,7 +969,7 @@ CGAffineTransformMakeRigid(CGPoint translate, CGFloat radians)
         
 		if(physics == nil)
         {
-            CCLOGWARN(@"Failed to find a parent CCPhysicsNode for this CCPhysicsBody. The CCPhysicsBody requires it be the child of a CCPhysicsNode when onEnter is called.");
+            //CCLOGWARN(@"Failed to find a parent CCPhysicsNode for this CCPhysicsBody. The CCPhysicsBody requires it be the child of a CCPhysicsNode when onEnter is called.");
             _physicsBody = nil;
             return;
         }

@@ -16,7 +16,21 @@ class CCActionAnimateRainbow {
         let tintCyan = CCActionTintTo.actionWithDuration( tintSpeed, color: CCColor.cyanColor() ) as! CCActionTintTo
         let tintMagenta = CCActionTintTo.actionWithDuration( tintSpeed, color: CCColor.magentaColor() ) as! CCActionTintTo
         let tintYellow = CCActionTintTo.actionWithDuration( tintSpeed, color: CCColor.yellowColor() ) as! CCActionTintTo
-        let s = CCActionSequence.actionWithArray([tintCyan, tintMagenta, tintYellow]) as! CCActionInterval
+        let a = [tintCyan, tintMagenta, tintYellow]
+        let i = Int(arc4random_uniform( 2 ))
+        let b = [a[i % 2], a[(i+1) % 2], a[(i+2) % 2]]
+        let s = CCActionSequence.actionWithArray(b) as! CCActionInterval
+        return CCActionRepeatForever.actionWithAction( s ) as! CCAction
+    }
+
+    class func instantiate( var speed: Double ) -> CCAction {
+        let tintCyan = CCActionTintTo.actionWithDuration( speed, color: CCColor.cyanColor() ) as! CCActionTintTo
+        let tintMagenta = CCActionTintTo.actionWithDuration( speed, color: CCColor.magentaColor() ) as! CCActionTintTo
+        let tintYellow = CCActionTintTo.actionWithDuration( speed, color: CCColor.yellowColor() ) as! CCActionTintTo
+        let a = [tintCyan, tintMagenta, tintYellow]
+        let i = Int(arc4random_uniform( 2 ))
+        let b = [a[i % 2], a[(i+1) % 2], a[(i+2) % 2]]
+        let s = CCActionSequence.actionWithArray(b) as! CCActionInterval
         return CCActionRepeatForever.actionWithAction( s ) as! CCAction
     }
 }

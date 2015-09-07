@@ -7,93 +7,132 @@
 		<key>clothesSprites/girlshirt.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{1558, 1}, {367, 484}}</string>
+			<string>{{1, 261}, {128, 128}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
-			<true/>
+			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0, 0}, {367, 484}}</string>
+			<string>{{0, 0}, {128, 128}}</string>
 			<key>sourceSize</key>
-			<string>{367, 484}</string>
+			<string>{128, 128}</string>
 		</dict>
 		<key>clothesSprites/girlstank.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{446, 1}, {270, 531}}</string>
+			<string>{{131, 1}, {128, 128}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0, 0}, {270, 531}}</string>
+			<string>{{0, 0}, {128, 128}}</string>
 			<key>sourceSize</key>
-			<string>{270, 531}</string>
+			<string>{128, 128}</string>
+		</dict>
+		<key>clothesSprites/lastshirt.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{261, 131}, {128, 128}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {128, 128}}</string>
+			<key>sourceSize</key>
+			<string>{128, 128}</string>
 		</dict>
 		<key>clothesSprites/lsbuttondown.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{1, 1}, {443, 532}}</string>
+			<string>{{1, 131}, {128, 128}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0, 0}, {443, 532}}</string>
+			<string>{{0, 0}, {128, 128}}</string>
 			<key>sourceSize</key>
-			<string>{443, 532}</string>
+			<string>{128, 128}</string>
+		</dict>
+		<key>clothesSprites/pirate.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{131, 131}, {128, 128}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {128, 128}}</string>
+			<key>sourceSize</key>
+			<string>{128, 128}</string>
 		</dict>
 		<key>clothesSprites/polo.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{1, 535}, {484, 526}}</string>
-			<key>offset</key>
-			<string>{0, 0}</string>
-			<key>rotated</key>
-			<true/>
-			<key>sourceColorRect</key>
-			<string>{{0, 0}, {484, 526}}</string>
-			<key>sourceSize</key>
-			<string>{484, 526}</string>
-		</dict>
-		<key>clothesSprites/ssbuttondown.png</key>
-		<dict>
-			<key>frame</key>
-			<string>{{529, 534}, {484, 526}}</string>
-			<key>offset</key>
-			<string>{0, 0}</string>
-			<key>rotated</key>
-			<true/>
-			<key>sourceColorRect</key>
-			<string>{{0, 0}, {484, 526}}</string>
-			<key>sourceSize</key>
-			<string>{484, 526}</string>
-		</dict>
-		<key>clothesSprites/stripper.png</key>
-		<dict>
-			<key>frame</key>
-			<string>{{718, 1}, {340, 526}}</string>
+			<string>{{261, 1}, {128, 128}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0, 0}, {340, 526}}</string>
+			<string>{{0, 0}, {128, 128}}</string>
 			<key>sourceSize</key>
-			<string>{340, 526}</string>
+			<string>{128, 128}</string>
+		</dict>
+		<key>clothesSprites/ssbuttondown.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{261, 261}, {128, 128}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {128, 128}}</string>
+			<key>sourceSize</key>
+			<string>{128, 128}</string>
+		</dict>
+		<key>clothesSprites/stripper.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{131, 261}, {128, 128}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {128, 128}}</string>
+			<key>sourceSize</key>
+			<string>{128, 128}</string>
+		</dict>
+		<key>clothesSprites/superhero.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{391, 1}, {128, 128}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {128, 128}}</string>
+			<key>sourceSize</key>
+			<string>{128, 128}</string>
 		</dict>
 		<key>clothesSprites/tee.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{1057, 529}, {484, 499}}</string>
+			<string>{{1, 1}, {128, 128}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
-			<true/>
+			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0, 0}, {484, 499}}</string>
+			<string>{{0, 0}, {128, 128}}</string>
 			<key>sourceSize</key>
-			<string>{484, 499}</string>
+			<string>{128, 128}</string>
 		</dict>
 	</dict>
 	<key>metadata</key>
@@ -101,7 +140,7 @@
 		<key>format</key>
 		<integer>2</integer>
 		<key>size</key>
-		<string>{2048, 1024}</string>
+		<string>{1024, 512}</string>
 		<key>textureFileName</key>
 		<string>clothesSprites.png</string>
 	</dict>

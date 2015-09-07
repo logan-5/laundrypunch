@@ -9,8 +9,9 @@
 	</dict>
 	<key>spriteFrameFiles</key>
 	<array>
-		<string>clothesSprites.plist</string>
 		<string>miscSprites.plist</string>
+		<string>clothesSprites.plist</string>
+		<string>springs.plist</string>
 	</array>
 </dict>
 </plist>

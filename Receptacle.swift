@@ -20,6 +20,13 @@ class Receptacle: CCNode {
     var luckyQuarter: Quarter?
     private var oldPosition = CGPointZero
     private var doNotDisturb = false
+    private var ready = false
+    private var positionReady = false
+
+    // for hard mode
+    private var initialPosition: CGPoint!
+    private var positionLastFrame: CGPoint!
+    private var movement: CCAction?
     
     func didLoadFromCCB() -> Void {
         shirtColor = Shirt.Color.randomColor()
@@ -60,6 +67,31 @@ class Receptacle: CCNode {
         sprite!.position = ccp( self.contentSize.width / 2, self.contentSize.height / 2 )
         sprite!.rotation = 180 + self.rotation
         //sprite!.position = ccp( 0, sprite.contentSize.width / CGFloat(sprite!.scale) )
+
+        ready = true
+    }
+
+    func setUpMovement() {
+        if GameState.sharedState.mode != GameState.Mode.Hard || movement != nil { return }
+
+        let moveDistance: CGFloat = 25 /// GameState.sharedState.scene!.contentSizeInPoints.height // in either direction
+
+        var upperDestination = ccp( moveDistance, 0 )
+        var lowerDestination = ccpMult( upperDestination, -1 )
+        upperDestination = ccpRotateByAngle( upperDestination, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
+        lowerDestination = ccpRotateByAngle( lowerDestination, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
+        upperDestination = ccpAdd( upperDestination, initialPosition )
+        lowerDestination = ccpAdd( lowerDestination, initialPosition )
+
+        var moveUp: CCActionInterval = CCActionMoveTo.actionWithDuration( 1, position: upperDestination ) as! CCActionMoveTo
+        moveUp = CCActionEaseSineInOut.actionWithAction( moveUp ) as! CCActionInterval
+        let wait = CCActionDelay.actionWithDuration( 0.2 ) as! CCActionDelay
+        var moveDown: CCActionInterval = CCActionMoveTo.actionWithDuration( 1, position: lowerDestination ) as! CCActionMoveTo
+        moveDown = CCActionEaseSineInOut.actionWithAction( moveDown ) as! CCActionInterval
+        let wait2 = wait.copyWithZone( nil ) as! CCActionDelay
+        let sequence = CCActionSequence.actionWithArray( [moveUp, wait, moveDown, wait2] ) as! CCActionSequence
+        movement = CCActionRepeatForever( action: sequence ) as CCActionRepeatForever
+        self.runAction( movement )
     }
     
     func receiveItem( item: Dispensable ) -> Void {
@@ -73,10 +105,11 @@ class Receptacle: CCNode {
         var destination = ccp( 0, CGFloat( -shirtStackOffset * Float( shirts.count ) ) )
         destination = ccpRotateByAngle( destination, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
         destination = ccpAdd( destination, self.position )
+        destination = ccpSub( destination, item.position )
 
-        var move: CCAction = CCActionMoveTo.actionWithDuration( CCTime(receiveTime), position: destination ) as! CCActionMoveTo
+        var move: CCAction = CCActionMoveBy.actionWithDuration( CCTime(receiveTime), position: destination ) as! CCActionMoveBy
         var rotate: CCAction = CCActionRotateTo.actionWithDuration( CCTime(receiveTime), angle: self.rotation ) as! CCActionRotateTo
-        move = CCActionEaseSineOut.actionWithAction( move as! CCActionMoveTo ) as! CCActionEaseSineOut
+        move = CCActionEaseSineOut.actionWithAction( move as! CCActionMoveBy ) as! CCActionEaseSineOut
         rotate = CCActionEaseSineOut.actionWithAction( rotate as! CCActionRotateTo ) as! CCActionEaseSineOut
         let store: CCAction = CCActionCallBlock.actionWithBlock { () -> Void in
             if let s = item as? Shirt {
@@ -85,18 +118,30 @@ class Receptacle: CCNode {
         } as! CCActionCallBlock
         item.runAction( move )
         item.runAction( CCActionSequence.actionWithArray( [rotate, store] ) as! CCActionSequence )
+
+//        if GameState.sharedState.mode == GameState.Mode.Hard {
+//            // the movement onto a moving basket looks okay, but it would look even better shrouded by a particle effect
+//            let particlePosition = ccpMidpoint( self.position, item.position )
+//            //particlePosition = self.convertToNodeSpace( particlePosition )
+//            let particles = CCBReader.load( "Effects/RainbowSmell" ) as! CCParticleSystem
+//            particles.autoRemoveOnFinish = true
+//            particles.position = particlePosition
+//            self.parent.addChild( particles )
+//        }
     }
-    
+
     func killShirt() -> Void {
         if shirts.count == 0 { return }
-        let shirt = shirts.removeLast() as! Shirt
-        shirt.physicsBody.affectedByGravity = true
-        shirt.fall()
+        if let shirt = shirts.removeLast() as? Shirt {
+            shirt.physicsBody.affectedByGravity = true
+            shirt.fall()
+        }
     }
     
     func doLaundry( goldCoin: Bool ) -> Void {
         if doNotDisturb { return }
         doNotDisturb = true
+        if movement != nil { self.stopAction( movement ); movement = nil }
         // animate
         var offScreen = ccp( 0, ( self.contentSize.height + CGFloat( shirtStackOffset * Float( shirts.count ) ) ) )
         offScreen = ccpRotateByAngle( offScreen, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
@@ -120,8 +165,10 @@ class Receptacle: CCNode {
                 for shirt in self.shirts {
                     if let q = shirt as? Quarter {
                         self.luckyQuarter = q
-                        if probabilityOf( Receptacle.lucky ) { self.regurgitateQuarter() }
-                        continue
+                        if probabilityOf( Receptacle.lucky ) {
+                            self.regurgitateQuarter()
+                            continue
+                        }
                     }
                     shirt.removeFromParent()
                 }
@@ -138,6 +185,7 @@ class Receptacle: CCNode {
             }
         }), comeBack, CCActionCallBlock.actionWithBlock({ () -> Void in
             self.doNotDisturb = false
+            self.setUpMovement()
         }) as! CCActionCallBlock]) as! CCActionSequence
 
         self.runAction( sequence )
@@ -180,19 +228,21 @@ class Receptacle: CCNode {
         label.runAction( CCActionSequence.actionWithArray([delay, fadeOut, remove]) as! CCActionSequence )
     }
 
-    func countPointsAndCreateString() -> ( points: Int, string: String ) {
-        var points: Int = 0
+    func countPointsAndCreateString() -> ( points: Int64, string: String ) {
+        var points: Int64 = 0
         var string: String = ""
         var prefix: String = ""
-        var golds: Int = 0
+        var golds: Int64 = 0
 
-        var modifier: Int = 0
+        var modifier: Int64 = 0
 
+        GameState.sharedState.scene!.nextEffect = "Effects/RainbowFireworks"
         for shirt in shirts {
             if let s = shirt as? Shirt {
                 if s.isRainbow {
                     modifier += 2
                 } else if s.isGold {
+                    GameState.sharedState.scene!.nextEffect = "Effects/GoldExplosion"
                     ++GameState.sharedState.goldShirts
                     ++golds
                 } else {
@@ -235,6 +285,26 @@ class Receptacle: CCNode {
             smileyEffect.autoRemoveOnFinish = true
             self.addChild( smileyEffect )
             s /= 2
-        } while s > 2
+        } while s > 2 && !GameState.sharedState.lowFXMode
+    }
+
+    override func update(delta: CCTime) {
+        if !ready { return }
+        if self.parent != nil && !positionReady {
+            positionReady = true
+            let pos = self.position
+            self.positionType = CCPositionTypeMake( CCPositionUnit.Points, CCPositionUnit.Points, CCPositionReferenceCorner.BottomLeft )
+            self.position = ccp(pos.x * self.parent.contentSizeInPoints.width, pos.y * self.parent.contentSizeInPoints.height)
+
+            initialPosition = self.position
+            positionLastFrame = self.position
+        }
+        setUpMovement()
+        if !doNotDisturb && !CGPointEqualToPoint( positionLastFrame, self.position ) {
+            for shirt in shirts {
+                shirt.position.y = self.position.y
+            }
+        }
+        positionLastFrame = self.position
     }
 }

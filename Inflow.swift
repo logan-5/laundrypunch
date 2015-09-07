@@ -17,7 +17,7 @@ class Inflow: CCNode {
     let quarterThreshold: UInt32 = 30 // launch a quarter if no quarter has been launched in this long
     
     func didLoadFromCCB() -> Void {
-        emitPoint = CGPointMake( self.position.x, self.position.y - self.contentSize.height )
+        emitPoint = CGPointMake( self.contentSizeInPoints.width / 2, self.positionInPoints.y )
         self.zOrder = 2
 //        GameState.sharedState.getNextQuarterTime()
         
@@ -63,7 +63,9 @@ class Inflow: CCNode {
         }
         GameState.sharedState.scene!.myPhysicsNode.addChild( object )
         GameState.sharedState.lastLaunchedObject = object
-        object.position = self.parent.convertToNodeSpace( emitPoint )
+        //object.positionType = CCPositionTypeMake( CCPositionUnit.Normalized, CCPositionUnit.Normalized, CCPositionReferenceCorner.BottomLeft)
+        object.position = self.convertToWorldSpace( emitPoint )
+//        println( object.position )
         emittedFirstShirt = true
         self.setUpLaunch()
     }
@@ -76,7 +78,7 @@ class Inflow: CCNode {
         var object: Dispensable = CCBReader.load( probabilityOf( 0.5 ) ? "DeathSadFace" : "DeathHappyFace" ) as! Dispensable
         GameState.sharedState.scene!.myPhysicsNode.addChild( object )
         GameState.sharedState.lastLaunchedObject = object
-        object.position = self.parent.convertToNodeSpace( emitPoint )
+        object.position = self.convertToWorldSpace( emitPoint )
     }
     
     override func update( delta: CCTime ) -> Void {

@@ -35,6 +35,8 @@ class Shirt: Dispensable {
     static let goldProbability: Double = 0.05
     private(set) var isGold: Bool = probabilityOf( Shirt.goldProbability )
     var rainbowAnimation: CCAction?
+
+    var displayDying = false
     
     weak var sprite: CCNode?
     var shirtColor: Color!
@@ -46,7 +48,8 @@ class Shirt: Dispensable {
         bounceSpeed = 600
         super.didLoadFromCCB()
         shirtColor = Shirt.Color.randomColor()
-        self.physicsBody.collisionType = "shirt";
+        self.physicsBody.collisionType = "shirt"
+        self.physicsBody.collisionGroup = "shirt"
         
         // choose sprite
         let shirtSprite = CCSprite.spriteWithImageNamed( getShirtSprite() ) as! CCSprite
@@ -60,15 +63,17 @@ class Shirt: Dispensable {
         self.cascadeColorEnabled = true
         if isRainbow {
             rainbowAnimation = CCActionAnimateRainbow.instantiate()
-            self.sprite!.runAction( rainbowAnimation )
+            self.runAction( rainbowAnimation )
         } else if isGold {
-            let sparkle = CCBReader.load( "Effects/GoldSparkle" ) as! FreeParticles
-            sparkle.particlePositionType = CCParticleSystemPositionType.Free
-            GameState.sharedState.scene!.addChild( sparkle )
-            sparkle.object = self
-            sparkle.ready = true
+            if !GameState.sharedState.lowFXMode {
+                let sparkle = CCBReader.load( "Effects/GoldSparkle" ) as! FreeParticles
+                sparkle.particlePositionType = CCParticleSystemPositionType.Free
+                GameState.sharedState.scene!.addChild( sparkle )
+                sparkle.object = self
+                sparkle.ready = true
+                println( "gold" ) // thought I saw some golds with no sparkle
+            }
 
-            println( "gold" ) // thought I saw some golds with no sparkle
         } else {
             var tintColor: CCColor!
             switch shirtColor! {
@@ -85,14 +90,17 @@ class Shirt: Dispensable {
             default:
                 tintColor = CCColor.purpleColor()
             }
-            self.sprite!.color = tintColor
+            self.color = tintColor
         }
     }
     
     func getShirtSprite() -> String {
-        let numberOfItems = Float( clothesSprites.count ) // types in Swift are a freakin' disaster
+        /*let numberOfItems = Float( clothesSprites.count ) // types in Swift are a freakin' disaster
         let upperBound = UInt32( min( max( Float( GameState.sharedState.score ) / 3, 1 ), numberOfItems - 1 ) )
-        return "clothesSprites/" + clothesSprites[Int( arc4random_uniform( upperBound ) )] + ".png" // file extension apparently required in Swift
+        return "clothesSprites/" + clothesSprites[Int( arc4random_uniform( upperBound ) )] + ".png" // file extension apparently required in Swift*/
+        let shirts = Data.sharedData.unlockedShirts
+        let shirt = (shirts.objectAtIndex(Int(arc4random_uniform( UInt32(shirts.count) ))) as! String)
+        return "clothesSprites/" + shirt + ".png"
     }
 
 //    func stack( color: Color ) -> Void {
