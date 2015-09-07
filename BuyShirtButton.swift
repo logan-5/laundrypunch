@@ -25,8 +25,8 @@ class BuyShirtButton: CCNode {
     }
 
     func buyShirt() {
-            self.unlocked = true
-            Data.sharedData.unlockShirt( spriteName!, price: price )
+        self.unlocked = true
+        Data.sharedData.unlockShirt( spriteName!, price: price )
     }
 
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {

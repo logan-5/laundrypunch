@@ -123,6 +123,7 @@ class AfterDeathMenu: CCNode {
         if let s = scoreUpdateTimer {
             score = min( targetScore, score + scoreUpdateStep )
             if score >= targetScore {
+                score = targetScore
                 s.invalidate()
                 scoreUpdateTimer = nil
                 if scoreFireworks != nil {
