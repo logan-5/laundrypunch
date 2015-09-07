@@ -119,6 +119,8 @@ class Receptacle: CCNode {
         item.runAction( move )
         item.runAction( CCActionSequence.actionWithArray( [rotate, store] ) as! CCActionSequence )
 
+        GameState.sharedState.audioEngine?.playEffect( "audioFiles/whoosh.caf" )
+
 //        if GameState.sharedState.mode == GameState.Mode.Hard {
 //            // the movement onto a moving basket looks okay, but it would look even better shrouded by a particle effect
 //            let particlePosition = ccpMidpoint( self.position, item.position )
@@ -189,13 +191,20 @@ class Receptacle: CCNode {
         }) as! CCActionCallBlock]) as! CCActionSequence
 
         self.runAction( sequence )
+
+        GameState.sharedState.audioEngine?.playEffect( "audioFiles/flush.caf" )
+        GameState.sharedState.audioEngine?.playEffect( "audioFiles/chaching.caf" )
     }
 
     func regurgitateQuarter() {
         let q = luckyQuarter!
         q.physicsBody.affectedByGravity = true
         q.physicsBody.sensor = false
-        q.physicsBody.applyForce( ccp( 180 * ( self.position.y / CCDirector.sharedDirector().viewSize().height ) * (GameState.sharedState.scene!.bouncer.position.x - q.position.x ) , 18_000 * CCDirector.sharedDirector().viewSize().height / self.position.y ) )
+
+        let viewHeight = CCDirector.sharedDirector().viewSize().height
+        let xForce = 180 * ( self.positionInPoints.y / viewHeight ) * (GameState.sharedState.scene!.bouncer.positionInPoints.x - q.positionInPoints.x )
+        let yForce = 18_000 * viewHeight / self.positionInPoints.y
+        q.physicsBody.applyForce( ccp( xForce , yForce ) )
         q.physicsBody.collisionType = "restoredQuarter"
     }
 

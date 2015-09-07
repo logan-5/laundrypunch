@@ -28,6 +28,9 @@ class AfterDeathMenu: CCNode {
     private var scoreUpdateStep: Int64 = 1
     private var ready = false
     private var scoreDisplayed = false
+
+    var chaChingSound = GameState.sharedState.audioEngine?.playEffect( "audioFiles/chaching.caf", loop: true )
+
    
     func didLoadFromCCB() -> Void {
         self.cascadeOpacityEnabled = true
@@ -77,7 +80,7 @@ class AfterDeathMenu: CCNode {
     func displayScore() -> Void {
         score = 0
         targetScore = GameState.sharedState.score
-        if targetScore > 0 {
+        if targetScore > 0 && scoreUpdateTimer == nil {
             scoreUpdateTimer = NSTimer.scheduledTimerWithTimeInterval( 0.04, target: self, selector: "incrementScore", userInfo: nil, repeats: true )
             if targetScore > 50 {
                 scoreUpdateStep = targetScore / 50
@@ -90,6 +93,7 @@ class AfterDeathMenu: CCNode {
             self.addChild( fireWorks )
         } else {
             scoreScoreLabel.string = String( 0 )
+            chaChingSound?.stop()
         }
     }
 
@@ -108,6 +112,8 @@ class AfterDeathMenu: CCNode {
         goldExplosion.position = scoreScoreLabel.positionInPoints
         self.addChild( goldExplosion )
 
+        GameState.sharedState.audioEngine?.playEffect( "audioFiles/explosion.caf" )
+
         score += targetScore
         scoreScoreLabel.string = String( score )
         goldShirtEffectManager()
@@ -119,7 +125,10 @@ class AfterDeathMenu: CCNode {
             if score >= targetScore {
                 s.invalidate()
                 scoreUpdateTimer = nil
-                scoreFireworks!.stopSystem()
+                if scoreFireworks != nil {
+                    scoreFireworks!.stopSystem()
+                }
+                chaChingSound?.stop()
                 goldShirtEffectManager()
             }
         }

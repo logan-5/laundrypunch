@@ -10,7 +10,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     private(set) weak var restartButton: CCButton!
     private(set) weak var dieButton: CCButton!
     weak var scoreEffect: CCParticleSystem?
-    private(set) weak var overlay: CCNodeGradient!
+    private(set) weak var background: CCSprite!
+    private(set) weak var overlay: CCSprite!
     var nextEffect: String!
     var hasBeenTouched = false
     
@@ -19,6 +20,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         GCHelper.defaultHelper().authenticateLocalUserOnViewController( CCDirector.sharedDirector(), setCallbackObject: self, withPauseSelector: "pause" )
         GCHelper.defaultHelper().registerListener( CCDirector.sharedDirector() )
         GameState.sharedState.scene = self
+        println( "loaded main scene" )
         self.userInteractionEnabled = false
         myPhysicsNode.collisionDelegate = self
         updateScoreLabel()
@@ -27,6 +29,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         dieButton.background.margin = 0
         modeLabel.string = Data.sharedData.modeName + " mode"
         modeLabel.runAction( CCActionAnimateRainbow.instantiate( 1.5 ) )
+
+        background.scale = Float(CCDirector.sharedDirector().viewSizeInPixels().width / background.contentSizeInPoints.width)
+        overlay.scale = Float(CCDirector.sharedDirector().viewSizeInPixels().width / overlay.contentSizeInPoints.width)
         overlay.zOrder = 100
         let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as! CCAction
         overlay.runAction( fadeOut )
@@ -65,7 +70,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
 //    }
 
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, animateSensor: CCNode!, wildcard: CCNode!) -> ObjCBool {
-        bouncer.animateGlove()
+        if !GameState.sharedState.lost {
+            bouncer.animateGlove()
+        }
         return false
     }
     
@@ -126,6 +133,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
                 receptacle.killShirt()
             }
             runFailParticles( shirt.position )
+            GameState.sharedState.audioEngine?.playEffect( "audioFiles/explosion.caf" )
         }
         return false
     }
@@ -213,9 +221,12 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
 
     func restartButtonPressed() {
         GameState.sharedState.restart()
+        GameState.sharedState.audioEngine?.playEffect( "audioFiles/flush.caf" )
     }
 
     func dieButtonPressed() {
         gameOver( 0 )
+        GameState.sharedState.endGame()
+        GameState.sharedState.audioEngine?.playEffect( "audioFiles/explosion.caf" )
     }
 }

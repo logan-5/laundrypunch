@@ -25,14 +25,15 @@ class BuyShirtButton: CCNode {
     }
 
     func buyShirt() {
-        if ready && !unlocked && Data.sharedData.totalScore >= price {
             self.unlocked = true
             Data.sharedData.unlockShirt( spriteName!, price: price )
-        }
     }
 
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
-        buyShirt()
+        if ready && !unlocked && Data.sharedData.totalScore >= price {
+            buyShirt()
+            GameState.sharedState.audioEngine?.playEffect( "audioFiles/explosion.caf" )
+        }
     }
 
     override func update(delta: CCTime) {

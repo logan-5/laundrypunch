@@ -13,17 +13,19 @@ class FreeParticles: CCParticleSystem {
     // fakes a parent-child ccnode relationship between particles and an object
     weak var object: CCNode?
     var ready = false
-
-    func didLoadFromCCB() -> Void {
-        self.autoRemoveOnFinish = true
-    }
+    var stopped = false
 
     override func update(delta: CCTime) {
-        if ready && object == nil {
+        super.update( delta )
+        if !ready && object != nil {
+            ready = true
+            self.autoRemoveOnFinish = true
+            return
+        } else if ready && object == nil && !stopped {
             self.stopSystem()
-        } else if ready {
+            stopped = true
+        } else if ready && !stopped {
             self.position = object!.position
         }
-        super.update( delta )
     }
 }

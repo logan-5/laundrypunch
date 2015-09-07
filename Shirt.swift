@@ -34,6 +34,7 @@ class Shirt: Dispensable {
     private(set) var isRainbow: Bool = probabilityOf( Shirt._rainbowProbability )
     static let goldProbability: Double = 0.05
     private(set) var isGold: Bool = probabilityOf( Shirt.goldProbability )
+    weak var sparkler: FreeParticles?
     var rainbowAnimation: CCAction?
 
     var displayDying = false
@@ -65,13 +66,12 @@ class Shirt: Dispensable {
             rainbowAnimation = CCActionAnimateRainbow.instantiate()
             self.runAction( rainbowAnimation )
         } else if isGold {
-            if !GameState.sharedState.lowFXMode {
+            if !GameState.sharedState.lowFXMode && GameState.sharedState.scene != nil {
                 let sparkle = CCBReader.load( "Effects/GoldSparkle" ) as! FreeParticles
                 sparkle.particlePositionType = CCParticleSystemPositionType.Free
                 GameState.sharedState.scene!.addChild( sparkle )
                 sparkle.object = self
-                sparkle.ready = true
-                println( "gold" ) // thought I saw some golds with no sparkle
+                sparkler = sparkle
             }
 
         } else {
@@ -91,6 +91,12 @@ class Shirt: Dispensable {
                 tintColor = CCColor.purpleColor()
             }
             self.color = tintColor
+        }
+
+        if isGold {
+            GameState.sharedState.audioEngine?.playEffect( "audioFiles/sparkle.caf" )
+        } else {
+            GameState.sharedState.audioEngine?.playEffect( "audioFiles/whoosh.caf" )
         }
     }
     
@@ -125,6 +131,13 @@ class Shirt: Dispensable {
 //            if let t = tint {
 //                self.sprite!.runAction( t )
 //            }
+//        }
+//    }
+
+    // for debugging only
+//    override func update(delta: CCTime) {
+//        if isGold && sparkler == nil {
+//            println( "aha!" )
 //        }
 //    }
 }

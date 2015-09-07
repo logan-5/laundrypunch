@@ -15,23 +15,24 @@ class Inflow: CCNode {
     var canceled = false
     var quarterCounter: UInt32 = 0
     let quarterThreshold: UInt32 = 30 // launch a quarter if no quarter has been launched in this long
+    var ready = false
     
     func didLoadFromCCB() -> Void {
         emitPoint = CGPointMake( self.contentSizeInPoints.width / 2, self.positionInPoints.y )
         self.zOrder = 2
 //        GameState.sharedState.getNextQuarterTime()
         
-        // launch a shirt
-        let emitRate = CCTime( GameState.sharedState.emitRate )
-        let delay = CCActionDelay.actionWithDuration( emitRate ) as! CCActionDelay
-        let launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as! CCActionCallFunc
-        launchingAction = CCActionSequence.actionWithArray( [delay, launch] ) as! CCActionSequence
-        self.runAction( launchingAction )
+//        // launch a shirt
+//        let emitRate = CCTime( GameState.sharedState.emitRate )
+//        let delay = CCActionDelay.actionWithDuration( emitRate ) as! CCActionDelay
+//        let launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as! CCActionCallFunc
+//        launchingAction = CCActionSequence.actionWithArray( [delay, launch] ) as! CCActionSequence
+//        self.runAction( launchingAction )
     }
     
     func setUpLaunch() -> Void {
         let stillLaunching: Bool = launchingAction != nil && !launchingAction!.isDone()
-        let initialDelays: Bool = !GameState.sharedState.scene!.hasBeenTouched || !emittedFirstShirt
+        let initialDelays: Bool = !GameState.sharedState.scene!.hasBeenTouched && emittedFirstShirt
         if stillLaunching || initialDelays {
             return
         }
@@ -82,7 +83,8 @@ class Inflow: CCNode {
     }
     
     override func update( delta: CCTime ) -> Void {
-        if ( launchingAction == nil || launchingAction!.isDone() || GameState.sharedState.lastLaunchedObject == nil ) && !canceled {
+        if !ready && GameState.sharedState.scene != nil { ready = true; return }
+        else if ready && ( launchingAction == nil || launchingAction!.isDone() || GameState.sharedState.lastLaunchedObject == nil ) && !canceled {
             self.setUpLaunch()
         }
     }

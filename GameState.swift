@@ -53,6 +53,7 @@ public class GameState: NSObject {
 
     private(set) var lowFXMode = false // ease up on the effects for slower devices (iPhone 4)
 
+    private(set) weak var audioEngine = OALSimpleAudio.sharedInstance()
     weak var scene: MainScene?
     weak var lastLaunchedObject: Dispensable?
     private(set) var emitRate: Float = 0
@@ -65,6 +66,13 @@ public class GameState: NSObject {
         case .OrderedAscending:
             lowFXMode = true
         } // thank you NSHipster
+
+        audioEngine?.preloadEffect( "audioFiles/punch.caf" )
+        audioEngine?.preloadEffect( "audioFiles/whoosh.caf" )
+        audioEngine?.preloadEffect( "audioFiles/explosion.caf" )
+        audioEngine?.preloadEffect( "audioFiles/sparkle.caf" )
+        audioEngine?.preloadEffect( "audioFiles/flush.caf" )
+
         super.init()
         refresh()
     }

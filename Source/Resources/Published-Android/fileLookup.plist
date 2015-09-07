@@ -3,7 +3,20 @@
 <plist version="1.0">
 <dict>
 	<key>filenames</key>
-	<dict/>
+	<dict>
+		<key>audioFiles/chaching.wav</key>
+		<string>audioFiles/chaching.ogg</string>
+		<key>audioFiles/explosion.wav</key>
+		<string>audioFiles/explosion.ogg</string>
+		<key>audioFiles/flush.wav</key>
+		<string>audioFiles/flush.ogg</string>
+		<key>audioFiles/punch.wav</key>
+		<string>audioFiles/punch.ogg</string>
+		<key>audioFiles/sparkle.wav</key>
+		<string>audioFiles/sparkle.ogg</string>
+		<key>audioFiles/whoosh.wav</key>
+		<string>audioFiles/whoosh.ogg</string>
+	</dict>
 	<key>metadata</key>
 	<dict>
 		<key>version</key>
