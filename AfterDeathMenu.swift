@@ -41,7 +41,7 @@ class AfterDeathMenu: CCNode {
         self.userInteractionEnabled = true
         scoreScoreLabel.runAction( CCActionAnimateRainbow.instantiate() )
 
-        highScoreLabel.string = Data.sharedData.modeName + " best:\n" + String( Data.sharedData.score )
+        highScoreLabel.string = Data.sharedData.modeName + " best:\n" + String.localizedStringWithFormat( "%@", NSNumber( longLong: Data.sharedData.score ) )
 
         creditsLabel.string = "© 2015 logan r smith // noisecode.net"
     }
@@ -92,7 +92,7 @@ class AfterDeathMenu: CCNode {
             fireWorks.position = scoreScoreLabel.positionInPoints
             self.addChild( fireWorks )
         } else {
-            scoreScoreLabel.string = String( 0 )
+            scoreScoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: score ) )
             chaChingSound?.stop()
         }
     }
@@ -115,7 +115,7 @@ class AfterDeathMenu: CCNode {
         GameState.sharedState.audioEngine?.playEffect( "audioFiles/explosion.caf" )
 
         score += targetScore
-        scoreScoreLabel.string = String( score )
+        scoreScoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: score ) )
         goldShirtEffectManager()
     }
 
@@ -133,7 +133,7 @@ class AfterDeathMenu: CCNode {
                 goldShirtEffectManager()
             }
         }
-        scoreScoreLabel.string = String( score )
+        scoreScoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: score ) )
     }
 
     override func update(delta: CCTime) {

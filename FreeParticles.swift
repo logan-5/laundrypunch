@@ -28,4 +28,12 @@ class FreeParticles: CCParticleSystem {
             self.position = object!.position
         }
     }
+
+    // for debugging
+    override func onExit() {
+        super.onExit()
+        if object != nil {
+            var i = 1
+        }
+    }
 }

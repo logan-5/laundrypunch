@@ -36,6 +36,7 @@ class Shirt: Dispensable {
     private(set) var isGold: Bool = probabilityOf( Shirt.goldProbability )
     weak var sparkler: FreeParticles?
     var rainbowAnimation: CCAction?
+    static var shirtContentSize: CGSize!
 
     var displayDying = false
     
@@ -43,6 +44,7 @@ class Shirt: Dispensable {
     var shirtColor: Color!
     
     override func didLoadFromCCB() -> Void {
+        Shirt.shirtContentSize = self.contentSizeInPoints
         initialXVelocity = 0
         initialYVelocity = -8
         maxInitialAngularMomentum = 10
@@ -73,7 +75,6 @@ class Shirt: Dispensable {
                 sparkle.object = self
                 sparkler = sparkle
             }
-
         } else {
             var tintColor: CCColor!
             switch shirtColor! {

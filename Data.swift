@@ -61,7 +61,8 @@ class Data: NSObject {
         defaults.setValue( NSNumber(longLong: totalScore - price), forKey: "Total Score" )
 
         GCHelper.defaultHelper().reportAchievementIdentifier( name, percentComplete: 100 )
-        GCHelper.defaultHelper().reportAchievementIdentifier( "unlockAllShirts", percentComplete: Float(shirts.count) / 10.0 )
+        let percentOfAllShirts = Float(shirts.count) / 10.0
+        GCHelper.defaultHelper().reportAchievementIdentifier( "unlockAllShirts", percentComplete: percentOfAllShirts )
     }
 
     func isUnlocked( shirtName: String ) -> Bool {

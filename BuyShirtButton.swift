@@ -49,8 +49,11 @@ class BuyShirtButton: CCNode {
             sprite.scale = Float(self.contentSizeInPoints.width / maxSize)
             sprite.anchorPoint = ccp( 0.5, 0 )
             sprite.position = ccp( self.contentSizeInPoints.width / 2, 0 )
-            label.string = String(price)
             if Data.sharedData.isUnlocked( spriteName! ) { unlock() }
+            if !unlocked {
+                let numberString = String.localizedStringWithFormat( "%@", NSNumber( longLong: price ) ) // crashes without explicit conversion to NSNumber.  why?
+                label.string = numberString
+            }
 
             self.userInteractionEnabled = true
         }
@@ -66,6 +69,7 @@ class BuyShirtButton: CCNode {
     }
 
     func unlock() {
+        unlocked = true
         label.removeFromParent()
         rainbowAction = CCActionAnimateRainbow.instantiate( 1.2 )
         sprite.runAction( rainbowAction )

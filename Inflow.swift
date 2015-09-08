@@ -61,6 +61,7 @@ class Inflow: CCNode {
             object = CCBReader.load( "Quarter" ) as! Quarter
         } else {
             object = CCBReader.load( "Shirt" ) as! Shirt
+            AchievementManager.sharedManager.notifyShirtLaunch()
         }
         GameState.sharedState.scene!.myPhysicsNode.addChild( object )
         GameState.sharedState.lastLaunchedObject = object

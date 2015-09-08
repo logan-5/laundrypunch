@@ -25,10 +25,10 @@ public class GameState: NSObject {
         case Efficiency = "Efficiency"
     }
     struct Lives {
-        static let Easy = 5
+        static let Easy = 5//0
         static let Medium = 0
         static let Hard = 3
-        static let Efficiency = 10
+        static let Efficiency = 10//10000/10
     }
     public var mode: Mode {
         get { return Data.sharedData.mode }
@@ -159,5 +159,6 @@ public class GameState: NSObject {
         goldShirts = 0
         targetScore = 0
         lost = false
+        AchievementManager.sharedManager.resetAll()
     }
 }

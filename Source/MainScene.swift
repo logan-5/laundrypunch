@@ -70,7 +70,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
 //    }
 
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, animateSensor: CCNode!, wildcard: CCNode!) -> ObjCBool {
-        if !GameState.sharedState.lost {
+        if !GameState.sharedState.lost && ( wildcard.physicsBody.collisionType != "storedShirt" ) {
             bouncer.animateGlove()
         }
         return false
@@ -165,7 +165,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     func updateScoreLabel() -> Void {
-        scoreLabel.string = String( GameState.sharedState.score )
+        if scoreLabel != nil {
+            scoreLabel.string = String( GameState.sharedState.score )
+        }
     }
 
     func gameOver() {
@@ -198,6 +200,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             let finish = CCActionCallBlock.actionWithBlock { () -> Void in
                 var adMenu = CCBReader.load( "AfterDeathMenu" ) as! AfterDeathMenu
                 self.addChild( adMenu )
+                self.schedule( "killSelf", interval: 3.0 )
                 } as! CCActionCallBlock
             self.runAction( CCActionSequence.actionWithArray([delay2, finish]) as! CCActionSequence )
 
@@ -228,5 +231,17 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         gameOver( 0 )
         GameState.sharedState.endGame()
         GameState.sharedState.audioEngine?.playEffect( "audioFiles/explosion.caf" )
+    }
+
+    func killSelf() {
+        self.stopAllActions()
+        for node in self.children as! [CCNode] {
+            if let n = node as? AfterDeathMenu {
+            } else {
+                if node != overlay {
+                    node.removeFromParent()
+                }
+            }
+        }
     }
 }

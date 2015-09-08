@@ -32,6 +32,7 @@
 		02D33FA11B9D7E9B00C235EA /* iPad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02D33FA01B9D7E9B00C235EA /* iPad@2x.png */; };
 		02D33FA31B9D822100C235EA /* Images-2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02D33FA21B9D822100C235EA /* Images-2.xcassets */; };
 		02D33FA51B9D8C1C00C235EA /* iPadReal.png in Resources */ = {isa = PBXBuildFile; fileRef = 02D33FA41B9D8C1C00C235EA /* iPadReal.png */; };
+		02D33FA71B9E5E5900C235EA /* AchievementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33FA61B9E5E5900C235EA /* AchievementManager.swift */; };
 		5B121030197484FA004C1E1D /* LaundryLaunchREActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B12102F197484FA004C1E1D /* LaundryLaunchREActivity.m */; };
 		5B121038197487F2004C1E1D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B737893E1807617C0076A88C /* AppDelegate.m */; };
 		7A046D7919E84ED5004C4763 /* MainScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A046D7519E84C36004C4763 /* MainScene.swift */; };
@@ -167,6 +168,7 @@
 		02D33FA01B9D7E9B00C235EA /* iPad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iPad@2x.png"; path = "../../../../../Documents/iPad@2x.png"; sourceTree = "<group>"; };
 		02D33FA21B9D822100C235EA /* Images-2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Images-2.xcassets"; path = "LaundryLaunchRE2 iOS/Images-2.xcassets"; sourceTree = SOURCE_ROOT; };
 		02D33FA41B9D8C1C00C235EA /* iPadReal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iPadReal.png; path = ../../../../../Documents/iPadReal.png; sourceTree = "<group>"; };
+		02D33FA61B9E5E5900C235EA /* AchievementManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AchievementManager.swift; sourceTree = "<group>"; };
 		5B12100919748273004C1E1D /* libEGL.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libEGL.so; path = /usr/lib/armv7a/libEGL.so; sourceTree = SDKROOT; };
 		5B12100F197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
 		5B121011197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
@@ -485,6 +487,7 @@
 				02D33F771B9B4F1800C235EA /* LivesDisplay.swift */,
 				02D33F7B1B9BA01E00C235EA /* GCHelper.h */,
 				02D33F7C1B9BA01E00C235EA /* GCHelper.m */,
+				02D33FA61B9E5E5900C235EA /* AchievementManager.swift */,
 				02D33F701B9A3AED00C235EA /* Effect Misc */,
 				96A990171B92EAE500B40AA7 /* Menus */,
 				D352B48019EC608A00829775 /* MetalShaders */,
@@ -862,6 +865,7 @@
 				02D33F7D1B9BA01E00C235EA /* GCHelper.m in Sources */,
 				9644C6031B92D79F004D9BC8 /* BouncerHandle.swift in Sources */,
 				02D33F721B9A7FC800C235EA /* Data.swift in Sources */,
+				02D33FA71B9E5E5900C235EA /* AchievementManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

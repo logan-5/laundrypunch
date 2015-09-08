@@ -74,7 +74,7 @@ class Unlockables: CCNode {
         shirt8.price = 5000
 
         shirt9.spriteName = "lastshirt"
-        shirt9.price = 8000
+        shirt9.price = 10_000
     }
 
 /*

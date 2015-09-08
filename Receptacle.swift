@@ -14,7 +14,7 @@ class Receptacle: CCNode {
     private(set) var receptacleColor: String!
     private(set) var shirtColor: Shirt.Color!
     private(set) var shirts: [CCNode] = Array()
-    let shirtStackOffset: Float = 5
+    static let stackOffset: Float = 5
     let receiveTime: Float = 0.3 // seconds
     static let lucky: Double = 0.1
     var luckyQuarter: Quarter?
@@ -102,7 +102,7 @@ class Receptacle: CCNode {
         item.physicsBody.collisionType = "stacked"
         item.stacked = true
         shirts.append( item )
-        var destination = ccp( 0, CGFloat( -shirtStackOffset * Float( shirts.count ) ) )
+        var destination = ccp( 0, CGFloat( -Receptacle.stackOffset * Float( shirts.count ) ) )
         destination = ccpRotateByAngle( destination, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
         destination = ccpAdd( destination, self.position )
         destination = ccpSub( destination, item.position )
@@ -114,6 +114,8 @@ class Receptacle: CCNode {
         let store: CCAction = CCActionCallBlock.actionWithBlock { () -> Void in
             if let s = item as? Shirt {
                 s.stackedPosition = s.position
+                s.physicsBody.collisionType = "storedShirt"
+                AchievementManager.sharedManager.notifyStackSize( self.shirts.count )
             }
         } as! CCActionCallBlock
         item.runAction( move )
@@ -141,11 +143,11 @@ class Receptacle: CCNode {
     }
     
     func doLaundry( goldCoin: Bool ) -> Void {
-        if doNotDisturb { return }
+        if doNotDisturb || GameState.sharedState.lost { return }
         doNotDisturb = true
         if movement != nil { self.stopAction( movement ); movement = nil }
         // animate
-        var offScreen = ccp( 0, ( self.contentSize.height + CGFloat( shirtStackOffset * Float( shirts.count ) ) ) )
+        var offScreen = ccp( 0, ( self.contentSize.height + CGFloat( Receptacle.stackOffset * Float( shirts.count ) ) ) )
         offScreen = ccpRotateByAngle( offScreen, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
 
         var moveOffScreen: CCAction = CCActionMoveBy.actionWithDuration( 0.3, position: offScreen ) as! CCActionMoveBy
@@ -212,6 +214,7 @@ class Receptacle: CCNode {
         // cash in
         var p = countPointsAndCreateString()
         GameState.sharedState.cashIn( p.points )
+        AchievementManager.sharedManager.notifyCashedInColor( self.shirtColor, plus: p.points )
 
         // set up numerical animation
         let label: CCLabelTTF = CCLabelTTF.labelWithString( p.string, fontName: "Courier", fontSize: 18 )
