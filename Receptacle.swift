@@ -211,6 +211,7 @@ class Receptacle: CCNode {
     }
 
     func cashInLoad() -> Void {
+        if GameState.sharedState.lost { return }
         // cash in
         var p = countPointsAndCreateString()
         GameState.sharedState.cashIn( p.points )

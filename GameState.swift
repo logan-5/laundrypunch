@@ -118,7 +118,7 @@ public class GameState: NSObject {
         effect.autoRemoveOnFinish = true
         scene!.addChild( effect )
         if mode != Mode.Efficiency {
-            emitRate -= 0.075
+            emitRate -= 0.03
         }
     }
 
