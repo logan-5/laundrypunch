@@ -12,6 +12,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     weak var scoreEffect: CCParticleSystem?
     private(set) weak var background: CCSprite!
     private(set) weak var overlay: CCSprite!
+    private(set) var endGameFalling = false
     var nextEffect: String!
     var hasBeenTouched = false
     
@@ -193,6 +194,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         inflow.cancel()
         let delay = CCActionDelay.actionWithDuration( delay ) as! CCActionDelay
         let effect = CCActionCallBlock.actionWithBlock { () -> Void in
+            self.endGameFalling = true
             for node in self.myPhysicsNode.children as! [CCNode] {
                 if let i = node as? Inflow {
                     // skip the inflow
@@ -253,6 +255,16 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             if let n = node as? AfterDeathMenu {
             } else {
                 if node != overlay {
+                    node.removeFromParent()
+                }
+            }
+        }
+    }
+
+    override func update(delta: CCTime) {
+        if endGameFalling && ( myPhysicsNode != nil ) {
+            for node in myPhysicsNode.children {
+                if node.positionInPoints.y < -node.contentSizeInPoints.height {
                     node.removeFromParent()
                 }
             }
