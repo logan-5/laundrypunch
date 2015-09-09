@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Receptacle.swift"
-            timestampString = "463456912.096578"
+            timestampString = "463465156.190847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "227"
-            endingLineNumber = "227"
+            startingLineNumber = "228"
+            endingLineNumber = "228"
             landmarkName = "cashInLoad()"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Receptacle.swift"
-            timestampString = "463456912.096578"
+            timestampString = "463465156.190847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "271"
-            endingLineNumber = "271"
+            startingLineNumber = "272"
+            endingLineNumber = "272"
             landmarkName = "countPointsAndCreateString()"
             landmarkType = "5">
          </BreakpointContent>
@@ -516,11 +516,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Receptacle.swift"
-            timestampString = "463294100.881215"
+            timestampString = "463465156.190847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "setUpMovement()"
             landmarkType = "5">
          </BreakpointContent>
@@ -548,23 +548,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Receptacle.swift"
-            timestampString = "463456912.096578"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
-            landmarkName = "update(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Receptacle.swift"
-            timestampString = "463456912.096578"
+            timestampString = "463465156.190847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "318"
@@ -580,11 +564,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Receptacle.swift"
-            timestampString = "463456912.096578"
+            timestampString = "463465156.190847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "321"
-            endingLineNumber = "321"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
             landmarkName = "update(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -884,23 +868,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Receptacle.swift"
-            timestampString = "463445040.037692"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
-            landmarkName = "setUpMovement()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Receptacle.swift"
-            timestampString = "463445040.809984"
+            timestampString = "463465156.190847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "76"
@@ -916,11 +884,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Receptacle.swift"
-            timestampString = "463445041.868065"
+            timestampString = "463465156.190847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
+            landmarkName = "setUpMovement()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Receptacle.swift"
+            timestampString = "463465156.190847"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
             landmarkName = "setUpMovement()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1108,11 +1092,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AfterDeathMenu.swift"
-            timestampString = "463456719.61854"
+            timestampString = "463469058.802207"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
             landmarkName = "update(_:)"
             landmarkType = "5">
          </BreakpointContent>

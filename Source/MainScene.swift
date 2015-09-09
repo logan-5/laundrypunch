@@ -148,7 +148,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
                 receptacle.killShirt()
             }
             runFailParticles( shirt.position )
-            GameState.sharedState.audioEngine?.playEffect( "audioFiles/explosion.caf" )
+            GameState.sharedState.playSound( "audioFiles/explosion.caf" )
         }
         return false
     }
@@ -240,13 +240,13 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
 
     func restartButtonPressed() {
         GameState.sharedState.restart()
-        GameState.sharedState.audioEngine?.playEffect( "audioFiles/flush.caf" )
+        GameState.sharedState.playSound( "audioFiles/flush.caf" )
     }
 
     func dieButtonPressed() {
         gameOver( 0 )
         GameState.sharedState.endGame()
-        GameState.sharedState.audioEngine?.playEffect( "audioFiles/explosion.caf" )
+        GameState.sharedState.playSound( "audioFiles/explosion.caf" )
     }
 
     func killSelf() {

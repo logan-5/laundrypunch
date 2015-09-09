@@ -39,6 +39,6 @@ class Bouncer: CCNode {
 
     func animateGlove() {
         glove.animationManager.runAnimationsForSequenceNamed( "Punch" )
-        GameState.sharedState.audioEngine?.playEffect( "audioFiles/punch.caf" )
+        GameState.sharedState.playSound( "audioFiles/punch.caf" )
     }
 }

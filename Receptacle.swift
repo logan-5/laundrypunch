@@ -22,6 +22,7 @@ class Receptacle: CCNode {
     private var doNotDisturb = false
     private var ready = false
     private var positionReady = false
+    private var shouldMove = GameState.sharedState.mode == GameState.Mode.Hard
 
     // for hard mode
     private var initialPosition: CGPoint!
@@ -72,7 +73,7 @@ class Receptacle: CCNode {
     }
 
     func setUpMovement() {
-        if GameState.sharedState.mode != GameState.Mode.Hard || movement != nil { return }
+        if !shouldMove || movement != nil { return }
 
         let moveDistance: CGFloat = 25 /// GameState.sharedState.scene!.contentSizeInPoints.height // in either direction
 
@@ -121,9 +122,9 @@ class Receptacle: CCNode {
         item.runAction( move )
         item.runAction( CCActionSequence.actionWithArray( [rotate, store] ) as! CCActionSequence )
 
-        GameState.sharedState.audioEngine?.playEffect( "audioFiles/whoosh.caf" )
+        GameState.sharedState.playSound( "audioFiles/whoosh.caf" )
 
-//        if GameState.sharedState.mode == GameState.Mode.Hard {
+//        if shouldMove {
 //            // the movement onto a moving basket looks okay, but it would look even better shrouded by a particle effect
 //            let particlePosition = ccpMidpoint( self.position, item.position )
 //            //particlePosition = self.convertToNodeSpace( particlePosition )
@@ -194,8 +195,8 @@ class Receptacle: CCNode {
 
         self.runAction( sequence )
 
-        GameState.sharedState.audioEngine?.playEffect( "audioFiles/flush.caf" )
-        GameState.sharedState.audioEngine?.playEffect( "audioFiles/chaching.caf" )
+        GameState.sharedState.playSound( "audioFiles/flush.caf" )
+        GameState.sharedState.playSound( "audioFiles/chaching.caf" )
     }
 
     func regurgitateQuarter() {
@@ -313,11 +314,11 @@ class Receptacle: CCNode {
             positionLastFrame = self.position
         }
         setUpMovement()
-        if !doNotDisturb && !CGPointEqualToPoint( positionLastFrame, self.position ) {
+        if !doNotDisturb && shouldMove && !CGPointEqualToPoint( positionLastFrame, self.position ) {
             for shirt in shirts {
                 shirt.position.y = self.position.y
             }
+            positionLastFrame = self.position
         }
-        positionLastFrame = self.position
     }
 }

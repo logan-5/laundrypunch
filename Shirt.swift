@@ -95,9 +95,9 @@ class Shirt: Dispensable {
         }
 
         if isGold {
-            GameState.sharedState.audioEngine?.playEffect( "audioFiles/sparkle.caf" )
+            GameState.sharedState.playSound( "audioFiles/sparkle.caf" )
         } else {
-            GameState.sharedState.audioEngine?.playEffect( "audioFiles/whoosh.caf" )
+            GameState.sharedState.playSound( "audioFiles/whoosh.caf" )
         }
     }
     

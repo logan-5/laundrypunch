@@ -30,10 +30,9 @@ class Dispensable: CCNode {
     }
     
     override func update(delta: CCTime) -> Void {
-        if !ready { return }
+        if !ready || stacked { return }
         let pos = self.parent.parent.convertToNodeSpace( self.position )
-        if  !stacked &&
-            ( pos.x < -radius ||
+        if ( pos.x < -radius ||
             pos.x > radius + CCDirector.sharedDirector().viewSize().width ||
             pos.y < -radius ||
             pos.y > radius + CCDirector.sharedDirector().viewSize().height ) {
@@ -46,6 +45,7 @@ class Dispensable: CCNode {
         self.physicsBody.sensor = true
         self.physicsBody.velocity = CGPointZero
         self.physicsBody.collisionType = "faller"
+        stacked = false
     }
 
 }

@@ -80,4 +80,13 @@ class Data: NSObject {
             return Int64( ( defaults.valueForKey( "Total Score" ) as! NSNumber).integerValue )
         }
     }
+
+    var soundOn: Bool {
+        get {
+            return defaults.boolForKey( "Sound" )
+        }
+        set {
+            defaults.setBool( newValue, forKey: "Sound" )
+        }
+    }
 }

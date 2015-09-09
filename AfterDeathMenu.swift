@@ -19,6 +19,7 @@ class AfterDeathMenu: CCNode {
     weak var leaderboardsButton: CCButton!
     weak var achievementsButton: CCButton!
     weak var unlockablesButton: CCButton!
+    weak var soundButton: CCButton!
     weak var creditsLabel: CCLabelTTF!
     weak var scoreFireworks: CCParticleSystem?
     private(set) var gold: Int64 = GameState.sharedState.goldShirts
@@ -29,7 +30,7 @@ class AfterDeathMenu: CCNode {
     private var ready = false
     private var scoreDisplayed = false
 
-    var chaChingSound = GameState.sharedState.audioEngine?.playEffect( "audioFiles/chaching.caf", loop: true )
+    var chaChingSound = GameState.sharedState.playSound( "audioFiles/chaching.caf", loop: true )
 
    
     func didLoadFromCCB() -> Void {
@@ -43,6 +44,7 @@ class AfterDeathMenu: CCNode {
 
         highScoreLabel.string = Data.sharedData.modeName + " best:\n" + String.localizedStringWithFormat( "%@", NSNumber( longLong: Data.sharedData.score ) )
 
+        setSoundButtonText()
         creditsLabel.string = "© 2015 logan r smith // noisecode.net"
     }
     
@@ -68,6 +70,15 @@ class AfterDeathMenu: CCNode {
 
     func unlockablesButtonPressed() -> Void {
         self.addChild( CCBReader.load( "UnlockablesMenu" ) )
+    }
+
+    func soundButtonPressed() -> Void {
+        Data.sharedData.soundOn = Data.sharedData.soundOn == false
+        setSoundButtonText()
+    }
+
+    func setSoundButtonText() {
+        soundButton.label.string = Data.sharedData.soundOn ? "sound on" : "muted"
     }
     
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
@@ -112,7 +123,7 @@ class AfterDeathMenu: CCNode {
         goldExplosion.position = scoreScoreLabel.positionInPoints
         self.addChild( goldExplosion )
 
-        GameState.sharedState.audioEngine?.playEffect( "audioFiles/explosion.caf" )
+        GameState.sharedState.playSound( "audioFiles/explosion.caf" )
 
         score += targetScore
         scoreScoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: score ) )

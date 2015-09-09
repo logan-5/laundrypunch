@@ -161,4 +161,15 @@ public class GameState: NSObject {
         lost = false
         AchievementManager.sharedManager.resetAll()
     }
+
+    func playSound( name: String ) -> ALSoundSource? {
+        return playSound( name, loop: false )
+    }
+
+    func playSound( name: String, loop: Bool ) -> ALSoundSource? {
+        if Data.sharedData.soundOn {
+            return audioEngine?.playEffect( name, loop: loop )
+        }
+        return nil
+    }
 }
