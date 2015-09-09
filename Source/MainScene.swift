@@ -70,7 +70,21 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
 //    }
 
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, animateSensor: CCNode!, wildcard: CCNode!) -> ObjCBool {
-        if !GameState.sharedState.lost && ( wildcard.physicsBody.collisionType != "storedShirt" ) {
+//        println( wildcard.physicsBody.collisionType )
+//        if wildcard.physicsBody.collisionType == "storedShirt"{
+//            println( "test" )
+//            println( "test" )
+//            println( "test" )
+//            println( "test" )
+//            println( "test" )
+//            println( "test" )
+//            println( "test" )
+//            println( "test" )
+//            println( "test" )
+//            println( "test" )
+//
+//        }
+        if !GameState.sharedState.lost && ( wildcard.physicsBody.collisionType == "shirt" || wildcard.physicsBody.collisionType == "quarter" || wildcard.physicsBody.collisionType == "restoredQuarter" ) {
             bouncer.animateGlove()
         }
         return false

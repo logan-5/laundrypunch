@@ -141,9 +141,9 @@ public class GameState: NSObject {
     }
     
     func restart() -> Void {
-        refresh()
         let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as! CCAction
         let reset = CCActionCallBlock.actionWithBlock( { () -> Void in
+            self.refresh()
             let newScene = CCBReader.loadAsScene( "MainScene" )
             CCDirector.sharedDirector().replaceScene( newScene )
             GameState.sharedState.refresh()

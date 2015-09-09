@@ -19,6 +19,7 @@ class AchievementManager: NSObject {
 
     var launchedShirts: Int64 = 0
     var firstColor: Shirt.Color?
+    var colorChanged = false
 
     func resetAll() {
         launchedShirts = 0
@@ -27,23 +28,25 @@ class AchievementManager: NSObject {
 
     func notifyShirtLaunch() {
         ++launchedShirts
-        println( launchedShirts )
-        if launchedShirts == 51 && GameState.sharedState.score == 0 {
-            gc.reportAchievementIdentifier( "procrastination1", percentComplete: 100 )
+        if launchedShirts == 50 && GameState.sharedState.score == 0 {
+            gc.reportAchievementIdentifier( "procrastinator1", percentComplete: 100 )
         }
     }
 
     func notifyCashedInColor( color: Shirt.Color, plus: Int64 ) {
         if firstColor == nil {
             firstColor = color
-        } else if color == firstColor && GameState.sharedState.score + plus >= 50 {
-            gc.reportAchievementIdentifier( "procrastination2", percentComplete: 100 )
+        }
+        if !colorChanged && color != firstColor {
+            colorChanged = true
+        } else if !colorChanged && GameState.sharedState.score + plus >= 50 {
+            gc.reportAchievementIdentifier( "procrastinator2", percentComplete: 100 )
         }
     }
 
     func notifyStackSize( size: Int ) {
         if ( CGFloat(Float(Shirt.shirtContentSize.width) + Float(size) * Receptacle.stackOffset )) >= GameState.sharedState.scene!.contentSizeInPoints.width {
-            gc.reportAchievementIdentifier( "procrastination3", percentComplete: 100 )
+            gc.reportAchievementIdentifier( "procrastinator3", percentComplete: 100 )
         }
     }
 }
