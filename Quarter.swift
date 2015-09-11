@@ -12,7 +12,7 @@ class Quarter: Dispensable {
     
     weak var sprite: CCSprite!
     static private let goldProbability: Double = 0.1
-    private(set) var gold: Bool = probabilityOf( goldProbability )
+    private(set) var gold: Bool = probabilityOf( goldProbability * ( GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0 ) )
     
     override func didLoadFromCCB() -> Void {
         initialXVelocity = 0

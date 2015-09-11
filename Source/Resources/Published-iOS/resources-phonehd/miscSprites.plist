@@ -46,7 +46,7 @@
 		<key>miscSprites/glove.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{517, 1}, {256, 256}}</string>
+			<string>{{259, 1}, {256, 256}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
@@ -72,6 +72,19 @@
 		<key>miscSprites/menu.png</key>
 		<dict>
 			<key>frame</key>
+			<string>{{43, 981}, {40, 40}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {40, 40}}</string>
+			<key>sourceSize</key>
+			<string>{40, 40}</string>
+		</dict>
+		<key>miscSprites/pause.png</key>
+		<dict>
+			<key>frame</key>
 			<string>{{1, 981}, {40, 40}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
@@ -85,7 +98,7 @@
 		<key>miscSprites/quarter.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{259, 1}, {256, 256}}</string>
+			<string>{{517, 1}, {256, 256}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>
@@ -98,7 +111,20 @@
 		<key>miscSprites/restart.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{43, 981}, {40, 40}}</string>
+			<string>{{85, 981}, {40, 40}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {40, 40}}</string>
+			<key>sourceSize</key>
+			<string>{40, 40}</string>
+		</dict>
+		<key>miscSprites/unpause.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{43, 837}, {40, 40}}</string>
 			<key>offset</key>
 			<string>{0, 0}</string>
 			<key>rotated</key>

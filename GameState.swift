@@ -46,6 +46,7 @@ public class GameState: NSObject {
     private var finalScore: Int64 = 0
     private(set) var lives: Int = 0
     private(set) var lost = false
+    var emittedFirstShirt = false
     private var _quarterProbability = 0.16
     func quarterProbability() -> Bool { return probabilityOf( _quarterProbability ) } // for lazy people
 
@@ -88,12 +89,18 @@ public class GameState: NSObject {
             scoreUpdateTimer = NSTimer.scheduledTimerWithTimeInterval( 0.04, target: self, selector: "incrementScore", userInfo: nil, repeats: true )
         }
         if scene!.scoreEffect == nil { scene!.scoreEffect?.stopSystem() }
-        let effect = CCBReader.load( scene!.nextEffect ) as! CCParticleSystem
+        let effect = CCBReader.load( scene!.nextEffect ?? "Effects/RainbowFireworks" ) as! CCParticleSystem
         scene!.scoreEffect = effect
-        effect.position = scene!.scoreLabel.position
+        effect.position = scene!.scoreLabel.positionInPoints
         effect.autoRemoveOnFinish = true
         scene!.addChild( effect )
         emitRate -= modeInfo.emitRateDecay
+    }
+
+    func stackShirt() -> Void {
+        if modeInfo.scoringModel == ScoringModel.PerShirt {
+            cashIn( 1 )
+        }
     }
 
     func incrementScore() -> Void {
@@ -216,4 +223,20 @@ struct ModeInfo {
             }
         }
     }
+
+    var scoringModel: ScoringModel {
+        get {
+            switch mode {
+            case .Easy:
+                return ScoringModel.PerShirt
+            default:
+                return ScoringModel.PerCashIn
+            }
+        }
+    }
+}
+
+enum ScoringModel {
+    case PerShirt
+    case PerCashIn
 }

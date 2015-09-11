@@ -117,6 +117,7 @@ class Receptacle: CCNode {
                 s.stackedPosition = s.position
                 s.physicsBody.collisionType = "storedShirt"
                 AchievementManager.sharedManager.notifyStackSize( self.shirts.count )
+                GameState.sharedState.stackShirt()
             }
         } as! CCActionCallBlock
         item.runAction( move )
@@ -222,7 +223,7 @@ class Receptacle: CCNode {
         let label: CCLabelTTF = CCLabelTTF.labelWithString( p.string, fontName: "Courier", fontSize: 18 )
         label.cascadeColorEnabled = true; label.cascadeOpacityEnabled = true
         label.opacity = 0
-        GameState.sharedState.scene?.addChild( label )
+        GameState.sharedState.scene?.particleLayer.addChild( label )
         var x: CGFloat
         if self.position.x > GameState.sharedState.scene!.contentSize.width / 2 {
             x = GameState.sharedState.scene!.contentSize.width - 100
@@ -267,7 +268,11 @@ class Receptacle: CCNode {
         if golds > 0 {
             prefix = String( golds ) + " gold "
         }
+
+        // create a string of the format:
+        // [# gold] +[score] [x [modifiers]]
         string = prefix + "+" + String( points ) + ( modifier > 0 ? " x " + String( modifier ) : "" )
+
         if modifier > 0 { points *= modifier }
         return ( points, string )
     }
@@ -276,30 +281,46 @@ class Receptacle: CCNode {
         let rotation: Float = 0 // don't get why this works. adapts correctly to differently-rotated receptacles with no extra code
         // maybe adding a child to a rotated parent rotates the child too?
         // or does something or other to its rotation. I guess probably
-        
-        // big problems here. can't change particleeffect.totalParticles dynamically. no compiler error, but runtime crashes.  have to resort to hacks.
-        var s = 3 * self.shirts.count
+
+        var onlyRainbow = true
+        var onlyGold = true
+        var shirts: Int = 0
+        for shirt in self.shirts {
+            if let s = shirt as? Shirt {
+                ++shirts
+                if !s.isRainbow { onlyRainbow = false }
+                if s.isGold { onlyGold = false }
+            }
+        }
+
+        if onlyRainbow { return }
+        // big problems here. can't change particleEffect.totalParticles dynamically. no compiler error, but runtime crashes.  have to resort to hacks.
+        var s = 3 * shirts
         do {
-            let successSmellBackground = CCBReader.load( "Effects/SuccessSmellBackground" ) as! CCParticleSystem
-            successSmellBackground.rotation = rotation
-            successSmellBackground.particlePositionType = CCParticleSystemPositionType.Relative
-            successSmellBackground.autoRemoveOnFinish = true
-            self.addChild( successSmellBackground )
-            
-            let successSmell = CCBReader.load( "Effects/SuccessSmell" ) as! CCParticleSystem
-            successSmell.rotation = rotation
-            successSmell.particlePositionType = CCParticleSystemPositionType.Relative
-            successSmell.autoRemoveOnFinish = true
-            self.addChild( successSmell )
-            
-            let smileyEffect = CCBReader.load( "Effects/Success" ) as! CCParticleSystem
-            smileyEffect.totalParticles = UInt( 30 * self.shirts.count )
-            smileyEffect.rotation = -self.rotation
-            smileyEffect.particlePositionType = CCParticleSystemPositionType.Relative
-            smileyEffect.autoRemoveOnFinish = true
-            self.addChild( smileyEffect )
-            s /= 2
-        } while s > 2 && !GameState.sharedState.lowFXMode
+            if s > 2 {
+                let successSmellBackground = CCBReader.load( "Effects/SuccessSmellBackground" ) as! CCParticleSystem
+                successSmellBackground.rotation = rotation
+                successSmellBackground.particlePositionType = CCParticleSystemPositionType.Relative
+                successSmellBackground.autoRemoveOnFinish = true
+                self.addChild( successSmellBackground )
+                
+                let successSmell = CCBReader.load( "Effects/SuccessSmell" ) as! CCParticleSystem
+                successSmell.rotation = rotation
+                successSmell.particlePositionType = CCParticleSystemPositionType.Relative
+                successSmell.autoRemoveOnFinish = true
+                self.addChild( successSmell )
+                
+                let smileyEffect = CCBReader.load( "Effects/Success" ) as! CCParticleSystem
+                smileyEffect.totalParticles = UInt( 30 * self.shirts.count )
+                smileyEffect.rotation = -self.rotation
+                smileyEffect.particlePositionType = CCParticleSystemPositionType.Relative
+                smileyEffect.autoRemoveOnFinish = true
+                self.addChild( smileyEffect )
+                s /= 2
+            } else {
+                break
+            }
+        } while !GameState.sharedState.lowFXMode || onlyGold
     }
 
     override func update(delta: CCTime) {

@@ -28,7 +28,7 @@ class Shirt: Dispensable {
         }
     }
     
-    let isRainbow = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) )
+    let isRainbow = true//probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
     let isGold: Bool = probabilityOf( 0.03 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) )
     weak var sparkler: FreeParticles?
     var rainbowAnimation: CCAction?
@@ -60,7 +60,7 @@ class Shirt: Dispensable {
         sprite!.anchorPoint = CGPointZero
         
         self.cascadeColorEnabled = true
-        if isRainbow {
+        if isRainbow && (GameState.sharedState.scene != nil) {
             rainbowAnimation = CCActionAnimateRainbow.instantiate()
             self.runAction( rainbowAnimation )
         } else if isGold {

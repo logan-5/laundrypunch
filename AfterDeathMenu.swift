@@ -43,6 +43,7 @@ class AfterDeathMenu: CCNode {
         scoreScoreLabel.runAction( CCActionAnimateRainbow.instantiate() )
 
         highScoreLabel.string = Data.sharedData.modeName + " best:\n" + String.localizedStringWithFormat( "%@", NSNumber( longLong: Data.sharedData.score ) )
+        highScoreLabel.opacity = 0
 
         setSoundButtonText()
         creditsLabel.string = "© 2015 logan r smith // noisecode.net"
@@ -105,6 +106,7 @@ class AfterDeathMenu: CCNode {
         } else {
             scoreScoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: score ) )
             chaChingSound?.stop()
+            goldShirtEffectManager()
         }
     }
 
@@ -113,6 +115,9 @@ class AfterDeathMenu: CCNode {
             var delay = CCActionDelay.actionWithDuration( 0.22 ) as! CCActionDelay
             var effect = CCActionCallFunc.actionWithTarget( self, selector: "goldShirtEffect" ) as! CCActionCallFunc
             self.runAction( CCActionSequence.actionWithArray([delay, effect] ) as! CCActionSequence )
+        } else {
+            var fadeIn = CCActionFadeIn.actionWithDuration( 0.4 ) as! CCActionFadeIn
+            highScoreLabel.runAction( fadeIn )
         }
     }
 

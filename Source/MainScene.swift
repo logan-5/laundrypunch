@@ -9,6 +9,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     private(set) weak var modeLabel: CCLabelTTF!
     private(set) weak var restartButton: CCButton!
     private(set) weak var dieButton: CCButton!
+    private(set) weak var pauseButton: CCButton!
+    private(set) weak var particleLayer: CCNode!
     weak var scoreEffect: CCParticleSystem?
     private(set) weak var background: CCSprite!
     private(set) weak var overlay: CCSprite!
@@ -17,8 +19,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     var hasBeenTouched = false
     
     func didLoadFromCCB() -> Void {
-        pause()
-        GCHelper.defaultHelper().authenticateLocalUserOnViewController( CCDirector.sharedDirector(), setCallbackObject: self, withPauseSelector: "pause" )
+        GCHelper.defaultHelper().authenticateLocalUserOnViewController( CCDirector.sharedDirector(), setCallbackObject: self, withPauseSelector: nil )
         GCHelper.defaultHelper().registerListener( CCDirector.sharedDirector() )
         GameState.sharedState.scene = self
         println( "loaded main scene" )
@@ -55,8 +56,30 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
 //        } // dumb. makes the %'s in sb
     }
 
+    override func addChild(node: CCNode!) {
+        if let p = node as? CCParticleSystem {
+            if particleLayer != nil {
+                particleLayer.addChild( node )
+                return
+            }
+        }
+        super.addChild( node )
+    }
+
     func pause() {
-        //self.paused = self.paused == false
+        if GameState.sharedState.lost { return }
+        myPhysicsNode.paused = !myPhysicsNode.paused
+        particleLayer.paused = myPhysicsNode.paused
+        
+        if !myPhysicsNode.paused {
+            pauseButton.cascadeOpacityEnabled = true
+            pauseButton.enabled = false
+            var fadeIn = CCActionFadeIn.actionWithDuration( 2 ) as! CCActionFadeIn
+            var enable = CCActionCallBlock.actionWithBlock({ () -> Void in
+                self.pauseButton.enabled = true
+            }) as! CCActionCallBlock
+            pauseButton.runAction( CCActionSequence.actionWithArray([fadeIn, enable]) as! CCActionSequence )
+        }
     }
     
 //    override func touchBegan( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
@@ -134,6 +157,10 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         return false
     }
 
+    func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, quarter: CCNode!, quarter quarter2: CCNode!) -> ObjCBool {
+        return false
+    }
+
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, shirt shirt1: CCNode!, shirt shirt2: CCNode!) -> ObjCBool {
         return false
     }
@@ -158,25 +185,22 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         let failEffectSmell = CCBReader.load( "Effects/FailureSmell" ) as! CCParticleSystem
         failEffectSmell.autoRemoveOnFinish = true
         failEffectSmell.position = position
-        self.addChild( failEffectSmell )
+        addChild( failEffectSmell )
         
         let failEffect = CCBReader.load( "Effects/Failure" ) as! CCParticleSystem
         failEffect.autoRemoveOnFinish = true
         failEffect.position = position
         let particles = 1.0 / Float( max(GameState.sharedState.lives, 1) ) * 80.0
         failEffect.totalParticles = UInt( 20 + UInt( max( particles, 80.0 ) ) )
-        self.addChild( failEffect )
+        addChild( failEffect )
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, quarter: Quarter!, receptacle: Receptacle!) -> ObjCBool {
         if GameState.sharedState.lost { return false }
-        if receptacle.shirts.count > 0 {
-            quarter.physicsBody.collisionType = "usedQuarter"
-            receptacle.receiveItem( quarter )
-            receptacle.doLaundry( quarter.gold )
-        } else {
-            quarter.fall()
-        }
+        quarter.physicsBody.collisionType = "usedQuarter"
+        receptacle.receiveItem( quarter )
+        receptacle.doLaundry( quarter.gold )
+
         return false
     }
     
