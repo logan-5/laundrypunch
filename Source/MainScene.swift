@@ -37,6 +37,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as! CCAction
         overlay.runAction( fadeOut )
 
+        myPhysicsNode.gravity = GameState.sharedState.modeInfo.worldGravity
         //let oldContentSize = self.contentSizeInPoints
         //self.contentSize = CCDirector.sharedDirector().viewSize()
         //self.position = CGPointZero

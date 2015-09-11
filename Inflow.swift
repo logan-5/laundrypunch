@@ -56,7 +56,7 @@ class Inflow: CCNode {
 //            GameState.sharedState.getNextQuarterTime()
 //            object = CCBReader.load( "Quarter" ) as! Quarter
 //        }
-        if quarterCounter++ > quarterThreshold || GameState.sharedState.quarterProbability() {
+        if emittedFirstShirt && (quarterCounter++ > quarterThreshold || GameState.sharedState.quarterProbability()) {
             quarterCounter = 0
             object = CCBReader.load( "Quarter" ) as! Quarter
         } else {
@@ -85,7 +85,7 @@ class Inflow: CCNode {
     
     override func update( delta: CCTime ) -> Void {
         if !ready && GameState.sharedState.scene != nil { ready = true; return }
-        else if ready && ( launchingAction == nil || launchingAction!.isDone() || GameState.sharedState.lastLaunchedObject == nil ) && !canceled {
+        else if ready && ( launchingAction == nil || launchingAction!.isDone() || (emittedFirstShirt && GameState.sharedState.lastLaunchedObject == nil) ) && !canceled {
             self.setUpLaunch()
         }
     }

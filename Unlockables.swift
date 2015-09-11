@@ -123,6 +123,6 @@ class Unlockables: CCNode {
     }
 
     func updateShirtsToSpend() {
-        amountToSpendLabel.string = String( Data.sharedData.totalScore )
+        amountToSpendLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: Data.sharedData.totalScore ) )
     }
 }

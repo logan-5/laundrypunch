@@ -28,12 +28,8 @@ class Shirt: Dispensable {
         }
     }
     
-    let clothesSprites = ["tee", "polo", "girlstank", "ssbuttondown", "girlshirt", "lsbuttondown", "stripper"]
-    static let _rainbowProbability: Double = 0.04
-    func rainbowProbability() -> Bool { return probabilityOf( Shirt._rainbowProbability ) }
-    private(set) var isRainbow: Bool = probabilityOf( Shirt._rainbowProbability )
-    static let goldProbability: Double = 0.03
-    private(set) var isGold: Bool = probabilityOf( Shirt.goldProbability )
+    let isRainbow = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) )
+    let isGold: Bool = probabilityOf( 0.03 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) )
     weak var sparkler: FreeParticles?
     var rainbowAnimation: CCAction?
     static var shirtContentSize: CGSize!

@@ -16,13 +16,13 @@ class Receptacle: CCNode {
     private(set) var shirts: [CCNode] = Array()
     static let stackOffset: Float = 5
     let receiveTime: Float = 0.3 // seconds
-    static let lucky: Double = 0.1
+    let lucky: Double = 0.1 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0)
     var luckyQuarter: Quarter?
     private var oldPosition = CGPointZero
     private var doNotDisturb = false
     private var ready = false
     private var positionReady = false
-    private var shouldMove = GameState.sharedState.mode == GameState.Mode.Hard
+    private var shouldMove = false//GameState.sharedState.mode == GameState.Mode.Hard
 
     // for hard mode
     private var initialPosition: CGPoint!
@@ -170,7 +170,7 @@ class Receptacle: CCNode {
                 for shirt in self.shirts {
                     if let q = shirt as? Quarter {
                         self.luckyQuarter = q
-                        if probabilityOf( Receptacle.lucky ) {
+                        if probabilityOf( self.lucky ) {
                             self.regurgitateQuarter()
                             continue
                         }

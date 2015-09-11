@@ -13,7 +13,8 @@ class Bouncer: CCNode {
     weak var handle: BouncerHandle!
     weak var glove: CCNode!
     weak var sensor: CCNode!
-    
+    weak var guide: CCNode!
+
     func didLoadFromCCB() -> Void {
         self.rotation = -90
         self.physicsBody.elasticity = 3.35
@@ -22,6 +23,7 @@ class Bouncer: CCNode {
         sensor.physicsBody.collisionGroup = "bouncer"
         sensor.physicsBody.collisionType = "animateSensor"
         sensor.physicsBody.sensor = true
+        guide.visible = GameState.sharedState.modeInfo.shouldShowGuide
     }
     
     func updateAngle( position: CGPoint ) -> Void {

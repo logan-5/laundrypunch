@@ -24,12 +24,7 @@ public class GameState: NSObject {
         case Hard = "Hard"
         case Efficiency = "Efficiency"
     }
-    struct Lives {
-        static let Easy = 5//0
-        static let Medium = 0
-        static let Hard = 3
-        static let Efficiency = 10//10000/10
-    }
+
     public var mode: Mode {
         get { return Data.sharedData.mode }
         set {
@@ -37,10 +32,13 @@ public class GameState: NSObject {
             //setLives()
         }
     }
+
     func getModeString() -> String {
         return mode.rawValue
-    }
-    
+    } // for Objective-C compatibility.  didn't seem to work without this
+
+    private(set) var modeInfo: ModeInfo!
+
     private(set) var score: Int64 = 0
     private var targetScore: Int64 = 0
     private var scoreUpdateTimer: NSTimer?
@@ -57,8 +55,6 @@ public class GameState: NSObject {
     weak var scene: MainScene?
     weak var lastLaunchedObject: Dispensable?
     private(set) var emitRate: Float = 0
-    let INITIAL_EMIT_RATE: Float = 2 // in seconds
-    let EFFICIENCY_EMIT_RATE: Float = 0.8
     override init() {
         switch UIDevice.currentDevice().systemVersion.compare("8.0.0", options: NSStringCompareOptions.NumericSearch) {
         case .OrderedSame, .OrderedDescending:
@@ -74,32 +70,12 @@ public class GameState: NSObject {
         audioEngine?.preloadEffect( "audioFiles/flush.caf" )
 
         super.init()
+
         refresh()
     }
     
-    func setLives() -> Int {
-        switch mode {
-        case .Efficiency:
-            lives = Lives.Efficiency
-        case .Hard:
-            lives = Lives.Hard
-        case .Medium:
-            lives = Lives.Medium
-        case .Easy:
-            fallthrough
-        default:
-            lives = Lives.Easy
-        }
-        return lives
-    }
-
-    func getEmitRate() -> Float {
-        return mode == Mode.Efficiency ? EFFICIENCY_EMIT_RATE : INITIAL_EMIT_RATE
-    }
-    
     func failure() -> Void {
-        --lives
-        if lives < 0 {
+        if --lives < 0 {
             scene!.gameOver()
             endGame()
         }
@@ -117,9 +93,7 @@ public class GameState: NSObject {
         effect.position = scene!.scoreLabel.position
         effect.autoRemoveOnFinish = true
         scene!.addChild( effect )
-        if mode != Mode.Efficiency {
-            emitRate -= 0.03
-        }
+        emitRate -= modeInfo.emitRateDecay
     }
 
     func incrementScore() -> Void {
@@ -153,8 +127,9 @@ public class GameState: NSObject {
     }
     
     func refresh() -> Void {
-        emitRate = getEmitRate()
-        setLives()
+        modeInfo = ModeInfo( mode: mode )
+        emitRate = modeInfo.initialEmitRate
+        lives = modeInfo.initialLives
         score = 0
         goldShirts = 0
         targetScore = 0
@@ -171,5 +146,74 @@ public class GameState: NSObject {
             return audioEngine?.playEffect( name, loop: loop )
         }
         return nil
+    }
+}
+
+struct ModeInfo {
+    var mode: GameState.Mode
+
+    var initialLives: Int {
+        get {
+            switch mode {
+            case .Hard:
+                return 0
+            case .Efficiency:
+                return 10
+            default:
+                return 5
+            }
+        }
+    }
+
+    var initialEmitRate: Float {
+        get {
+            switch mode {
+            case .Easy:
+                return 3
+            case .Efficiency:
+                return 0.8
+            default:
+                return 2
+            }
+        }
+    }
+
+    var emitRateDecay: Float {
+        get {
+            switch mode {
+            case .Easy:
+                fallthrough
+            case .Efficiency:
+                return 0
+            default:
+                return 0.03
+            }
+        }
+    }
+
+    var specialEventsActive: Bool {
+        get { return mode != .Easy }
+    }
+
+    var shouldShowGuide: Bool {
+        get {
+            switch mode {
+            case .Easy:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+
+    var worldGravity: CGPoint {
+        get {
+            switch mode {
+            case .Easy:
+                return ccp( 0, -500 )
+            default:
+                return ccp( 0, -600 )
+            }
+        }
     }
 }
