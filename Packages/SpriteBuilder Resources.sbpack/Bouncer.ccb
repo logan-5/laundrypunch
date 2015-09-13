@@ -170,11 +170,11 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>-54.494598388671875</real>
-							<real>40</real>
+							<real>-5.4494600296020508</real>
+							<real>0.5</real>
 							<integer>0</integer>
-							<integer>0</integer>
-							<integer>0</integer>
+							<integer>2</integer>
+							<integer>2</integer>
 						</array>
 					</dict>
 					<dict>
@@ -247,11 +247,11 @@
 						</array>
 						<array>
 							<real>0.0</real>
-							<real>80</real>
+							<real>60</real>
 						</array>
 						<array>
 							<real>75</real>
-							<real>80</real>
+							<real>60</real>
 						</array>
 						<array>
 							<real>75</real>
@@ -267,11 +267,11 @@
 							</array>
 							<array>
 								<real>75</real>
-								<real>80</real>
+								<real>60</real>
 							</array>
 							<array>
 								<real>0.0</real>
-								<real>80</real>
+								<real>60</real>
 							</array>
 							<array>
 								<real>0.0</real>
@@ -312,7 +312,7 @@
 						<key>value</key>
 						<array>
 							<real>75</real>
-							<real>80</real>
+							<real>60</real>
 							<integer>0</integer>
 							<integer>0</integer>
 						</array>
@@ -375,11 +375,11 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>161</real>
-							<real>40</real>
+							<real>16.100000381469727</real>
+							<real>0.5</real>
 							<integer>0</integer>
-							<integer>0</integer>
-							<integer>0</integer>
+							<integer>2</integer>
+							<integer>2</integer>
 						</array>
 					</dict>
 					<dict>
@@ -466,8 +466,6 @@
 						<array/>
 					</dict>
 				</array>
-				<key>selected</key>
-				<true/>
 			</dict>
 		</array>
 		<key>customClass</key>
@@ -499,7 +497,7 @@
 			<key>dynamic</key>
 			<false/>
 			<key>elasticity</key>
-			<real>1</real>
+			<real>0.30000001192092896</real>
 			<key>friction</key>
 			<real>0.30000001192092896</real>
 			<key>points</key>
@@ -510,11 +508,11 @@
 				</array>
 				<array>
 					<real>0.0</real>
-					<real>80</real>
+					<real>60</real>
 				</array>
 				<array>
 					<real>10</real>
-					<real>80</real>
+					<real>60</real>
 				</array>
 				<array>
 					<real>10</real>
@@ -530,11 +528,11 @@
 					</array>
 					<array>
 						<real>10</real>
-						<real>80</real>
+						<real>60</real>
 					</array>
 					<array>
 						<real>0.0</real>
-						<real>80</real>
+						<real>60</real>
 					</array>
 					<array>
 						<real>0.0</real>
@@ -575,7 +573,7 @@
 				<key>value</key>
 				<array>
 					<real>10</real>
-					<real>80</real>
+					<real>60</real>
 					<integer>0</integer>
 					<integer>0</integer>
 				</array>
@@ -605,6 +603,8 @@
 				</array>
 			</dict>
 		</array>
+		<key>selected</key>
+		<true/>
 	</dict>
 	<key>notes</key>
 	<array/>

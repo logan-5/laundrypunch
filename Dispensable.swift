@@ -20,6 +20,10 @@ class Dispensable: CCNode {
     var stackedPosition: CGPoint?
     var stacked = false
 
+    static let trickShotTime = 1.4
+    var trickShotTimer: NSTimer?
+    private(set) var trickShot = false
+
     func didLoadFromCCB() -> Void {
         self.physicsBody.velocity = ccp( initialXVelocity, initialYVelocity )
         self.physicsBody.angularVelocity = CGFloat( CCRANDOM_0_1() * maxInitialAngularMomentum * ( CCRANDOM_MINUS1_1() > 0 ? 1 : -1 ) )
@@ -48,4 +52,18 @@ class Dispensable: CCNode {
         stacked = false
     }
 
+    func startTrickShotTimer() {
+        trickShot = false
+        trickShotTimer?.invalidate()
+        trickShotTimer = NSTimer.scheduledTimerWithTimeInterval( Dispensable.trickShotTime, target: self, selector: "setTrickShot", userInfo: nil, repeats: false )
+    }
+
+    func setTrickShot() {
+        trickShot = true
+    }
+
+    func stack() {
+        trickShotTimer?.invalidate()
+        trickShotTimer = nil
+    }
 }

@@ -14,6 +14,7 @@ class Receptacle: CCNode {
     private(set) var receptacleColor: String!
     private(set) var shirtColor: Shirt.Color!
     private(set) var shirts: [CCNode] = Array()
+    private(set) var hasReceivedShirt = false
     static let stackOffset: Float = 5
     let receiveTime: Float = 0.3 // seconds
     let lucky: Double = 0.1 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0)
@@ -24,6 +25,8 @@ class Receptacle: CCNode {
     private var positionReady = false
     private var shouldMove = false//GameState.sharedState.mode == GameState.Mode.Hard
 
+    var moveOffScreen: CCAction?
+
     // for hard mode
     private var initialPosition: CGPoint!
     private var positionLastFrame: CGPoint!
@@ -32,7 +35,8 @@ class Receptacle: CCNode {
     func didLoadFromCCB() -> Void {
         shirtColor = Shirt.Color.randomColor()
         self.physicsBody.collisionType = "receptacle"
-        
+        GameState.sharedState.receptacles.append( self )
+
         switch receptacleColor {
         case "red":
             shirtColor = Shirt.Color.Red
@@ -96,6 +100,7 @@ class Receptacle: CCNode {
     }
     
     func receiveItem( item: Dispensable ) -> Void {
+        hasReceivedShirt = true
         item.physicsBody.sensor = true
         item.physicsBody.affectedByGravity = false
         item.physicsBody.velocity = CGPointZero
@@ -107,7 +112,9 @@ class Receptacle: CCNode {
         destination = ccpRotateByAngle( destination, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
         destination = ccpAdd( destination, self.position )
         destination = ccpSub( destination, item.position )
+        if item.trickShot { GameState.sharedState.trickShot( self ) }
 
+        item.stack()
         var move: CCAction = CCActionMoveBy.actionWithDuration( CCTime(receiveTime), position: destination ) as! CCActionMoveBy
         var rotate: CCAction = CCActionRotateTo.actionWithDuration( CCTime(receiveTime), angle: self.rotation ) as! CCActionRotateTo
         move = CCActionEaseSineOut.actionWithAction( move as! CCActionMoveBy ) as! CCActionEaseSineOut
@@ -117,7 +124,7 @@ class Receptacle: CCNode {
                 s.stackedPosition = s.position
                 s.physicsBody.collisionType = "storedShirt"
                 AchievementManager.sharedManager.notifyStackSize( self.shirts.count )
-                GameState.sharedState.stackShirt()
+                GameState.sharedState.stackShirt( self, item: s, forPoints: true )
             }
         } as! CCActionCallBlock
         item.runAction( move )
@@ -125,6 +132,15 @@ class Receptacle: CCNode {
 
         GameState.sharedState.playSound( "audioFiles/whoosh.caf" )
 
+        if doNotDisturb {
+            item.runAction( moveOffScreen?.copyWithZone( nil ) as! CCAction )
+            return
+        }
+
+        if let q = item as? Quarter {
+            doLaundry( q )
+            GameState.sharedState.stackShirt( self, item: q, forPoints: false )
+        }
 //        if shouldMove {
 //            // the movement onto a moving basket looks okay, but it would look even better shrouded by a particle effect
 //            let particlePosition = ccpMidpoint( self.position, item.position )
@@ -136,6 +152,7 @@ class Receptacle: CCNode {
 //        }
     }
 
+
     func killShirt() -> Void {
         if shirts.count == 0 { return }
         if let shirt = shirts.removeLast() as? Shirt {
@@ -144,7 +161,8 @@ class Receptacle: CCNode {
         }
     }
     
-    func doLaundry( goldCoin: Bool ) -> Void {
+    func doLaundry( quarter: Quarter ) -> Void {
+        var goldCoin = quarter.gold
         if doNotDisturb || GameState.sharedState.lost { return }
         doNotDisturb = true
         if movement != nil { self.stopAction( movement ); movement = nil }
@@ -152,18 +170,18 @@ class Receptacle: CCNode {
         var offScreen = ccp( 0, ( self.contentSize.height + CGFloat( Receptacle.stackOffset * Float( shirts.count ) ) ) )
         offScreen = ccpRotateByAngle( offScreen, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
 
-        var moveOffScreen: CCAction = CCActionMoveBy.actionWithDuration( 0.3, position: offScreen ) as! CCActionMoveBy
-        moveOffScreen = CCActionEaseSineInOut.actionWithAction( moveOffScreen as! CCActionMoveBy ) as! CCAction
+        moveOffScreen = (CCActionEaseSineInOut.actionWithAction( CCActionMoveBy.actionWithDuration( 0.3, position: offScreen ) as! CCActionMoveBy ) as! CCAction)
+
         for shirt in shirts {
-            let moveShirt = moveOffScreen.copyWithZone( nil ) as! CCAction
+            let moveShirt = moveOffScreen!.copyWithZone( nil ) as! CCAction
             shirt.runAction( moveShirt )
         }
         oldPosition = self.position
         var comeBack: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: oldPosition ) as! CCActionMoveTo
         comeBack = CCActionEaseSineInOut.actionWithAction( comeBack as! CCActionMoveTo ) as! CCAction
-        var sequence = CCActionSequence.actionWithArray([moveOffScreen, CCActionCallBlock.actionWithBlock({ () -> Void in
+        var sequence = CCActionSequence.actionWithArray([moveOffScreen!, CCActionCallBlock.actionWithBlock({ () -> Void in
             self.setUpSuccessParticleEffects()
-            self.cashInLoad()
+            self.cashInLoad( quarter.regurgitated )
 
             if !goldCoin {
                 // gold coins cash in the stack but don't destroy it
@@ -192,6 +210,8 @@ class Receptacle: CCNode {
         }), comeBack, CCActionCallBlock.actionWithBlock({ () -> Void in
             self.doNotDisturb = false
             self.setUpMovement()
+            self.quarterKillSweep()
+            GameState.sharedState.checkIfFinished()
         }) as! CCActionCallBlock]) as! CCActionSequence
 
         self.runAction( sequence )
@@ -200,33 +220,53 @@ class Receptacle: CCNode {
         GameState.sharedState.playSound( "audioFiles/chaching.caf" )
     }
 
+    func quarterKillSweep() {
+        // destroy any stray quarters that may still be there
+        for node in GameState.sharedState.scene!.myPhysicsNode.children {
+            if let q = node as? Quarter {
+                if q.physicsBody.collisionType == "stacked" {
+                    for var i = 0; i < shirts.count; ++i {
+                        if shirts[i] == q {
+                            shirts.removeAtIndex( i )
+                        }
+                    }
+                    var sequence = CCActionSequence.actionWithArray([moveOffScreen!.copyWithZone( nil ) as! CCAction, CCActionCallBlock.actionWithBlock({ () -> Void in
+                        q.removeFromParent()
+                    }) as! CCActionCallBlock]) as! CCActionSequence
+                    q.runAction( sequence )
+                }
+            }
+        }
+    }
+
     func regurgitateQuarter() {
         let q = luckyQuarter!
         q.physicsBody.affectedByGravity = true
         q.physicsBody.sensor = false
 
         let viewHeight = CCDirector.sharedDirector().viewSize().height
-        let xForce = 180 * ( self.positionInPoints.y / viewHeight ) * (GameState.sharedState.scene!.bouncer.positionInPoints.x - q.positionInPoints.x )
+        let xForce = 90 /* ( viewHeight / self.positionInPoints.y ) */ * (GameState.sharedState.scene!.bouncer.positionInPoints.x - q.positionInPoints.x )
         let yForce = 18_000 * viewHeight / self.positionInPoints.y
         q.physicsBody.applyForce( ccp( xForce , yForce ) )
         q.physicsBody.collisionType = "restoredQuarter"
+        q.regurgitated = true
     }
 
-    func cashInLoad() -> Void {
+    func cashInLoad( regurgitated: Bool ) -> Void {
         if GameState.sharedState.lost { return }
         // cash in
-        var p = countPointsAndCreateString()
+        var p = countPointsAndCreateString( regurgitated )
         GameState.sharedState.cashIn( p.points )
         AchievementManager.sharedManager.notifyCashedInColor( self.shirtColor, plus: p.points )
 
         // set up numerical animation
-        let label: CCLabelTTF = CCLabelTTF.labelWithString( p.string, fontName: "Courier", fontSize: 18 )
+        let label: CCLabelTTF = CCLabelTTF.labelWithString( p.string, fontName: "Courier", fontSize: 20 )
         label.cascadeColorEnabled = true; label.cascadeOpacityEnabled = true
         label.opacity = 0
         GameState.sharedState.scene?.particleLayer.addChild( label )
         var x: CGFloat
         if self.position.x > GameState.sharedState.scene!.contentSize.width / 2 {
-            x = GameState.sharedState.scene!.contentSize.width - 100
+            x = GameState.sharedState.scene!.contentSizeInPoints.width - 100
         } else {
             x = 100
         }
@@ -243,7 +283,7 @@ class Receptacle: CCNode {
         label.runAction( CCActionSequence.actionWithArray([delay, fadeOut, remove]) as! CCActionSequence )
     }
 
-    func countPointsAndCreateString() -> ( points: Int64, string: String ) {
+    func countPointsAndCreateString( regurgitated: Bool ) -> ( points: Int64, golds: Int64, string: String ) {
         var points: Int64 = 0
         var string: String = ""
         var prefix: String = ""
@@ -269,12 +309,15 @@ class Receptacle: CCNode {
             prefix = String( golds ) + " gold "
         }
 
+        var reg = regurgitated && points > 0
+        if reg { modifier = max( modifier * 3, 3 ) }
+
         // create a string of the format:
         // [# gold] +[score] [x [modifiers]]
-        string = prefix + "+" + String( points ) + ( modifier > 0 ? " x " + String( modifier ) : "" )
+        string = prefix + "+" + String( points ) + ( modifier > 0 ? " x " + String( modifier ) : "" ) + ( reg ? " combo!" : "" )
 
         if modifier > 0 { points *= modifier }
-        return ( points, string )
+        return ( points, golds, string )
     }
     
     func setUpSuccessParticleEffects() -> Void {

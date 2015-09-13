@@ -1167,7 +1167,7 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>0.67734372615814209</real>
+									<real>0.63984376192092896</real>
 									<real>0.84178036451339722</real>
 									<integer>0</integer>
 									<integer>2</integer>
@@ -1493,7 +1493,7 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>0.85050392150878906</real>
+									<real>0.72373652458190918</real>
 									<real>0.84178036451339722</real>
 									<integer>0</integer>
 									<integer>2</integer>
@@ -1988,8 +1988,8 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>0.76741421222686768</real>
-							<real>0.84178036451339722</real>
+							<real>0.83945071697235107</real>
+							<real>0.83074283599853516</real>
 							<integer>0</integer>
 							<integer>2</integer>
 							<integer>2</integer>
@@ -2013,9 +2013,9 @@
 						<string>ScaleLock</string>
 						<key>value</key>
 						<array>
-							<real>1</real>
-							<real>1</real>
-							<false/>
+							<real>1.5</real>
+							<real>1.5</real>
+							<true/>
 							<integer>0</integer>
 						</array>
 					</dict>
@@ -2102,7 +2102,7 @@
 						<key>value</key>
 						<array>
 							<string></string>
-							<string>ccbResources/ccbButtonHighlighted.png</string>
+							<string></string>
 						</array>
 					</dict>
 					<dict>
@@ -2289,8 +2289,6 @@
 						</array>
 					</dict>
 				</array>
-				<key>selected</key>
-				<true/>
 			</dict>
 			<dict>
 				<key>UUID</key>
@@ -2389,7 +2387,7 @@
 						<key>value</key>
 						<array>
 							<real>0.5</real>
-							<real>0.092957749962806702</real>
+							<real>0.097242608666419983</real>
 							<integer>0</integer>
 							<integer>2</integer>
 							<integer>2</integer>
@@ -2425,6 +2423,8 @@
 						<string>Handle.ccb</string>
 					</dict>
 				</array>
+				<key>selected</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>UUID</key>

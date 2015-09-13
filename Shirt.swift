@@ -28,8 +28,8 @@ class Shirt: Dispensable {
         }
     }
     
-    let isRainbow = true//probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
-    let isGold: Bool = probabilityOf( 0.03 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) )
+    let isRainbow = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
+    let isGold: Bool = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
     weak var sparkler: FreeParticles?
     var rainbowAnimation: CCAction?
     static var shirtContentSize: CGSize!
@@ -95,6 +95,7 @@ class Shirt: Dispensable {
         } else {
             GameState.sharedState.playSound( "audioFiles/whoosh.caf" )
         }
+
     }
     
     func getShirtSprite() -> String {
@@ -130,6 +131,8 @@ class Shirt: Dispensable {
 //            }
 //        }
 //    }
+
+
 
     // for debugging only
 //    override func update(delta: CCTime) {

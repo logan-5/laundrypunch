@@ -13,7 +13,9 @@ class BouncerHandle: CCNode {
     weak var highlights: CCNode!
     var ready = false
     var bouncerSet = false
-   
+    var initialY: CGFloat!
+    let minY: CGFloat = 0
+
     func didLoadFromCCB() -> Void {
         self.userInteractionEnabled = true
         
@@ -28,7 +30,9 @@ class BouncerHandle: CCNode {
     override func touchBegan( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
         GameState.sharedState.scene!.hasBeenTouched = true
 
-        self.position = ccp( touch.locationInNode( self.parent ).x, self.position.y )
+        let touchPoint = touch.locationInNode( self.parent )
+        let y = max(min(touchPoint.y, initialY), minY)
+        self.position = ccp( touchPoint.x, y )
         bouncer?.updateAngle( self.position )
     }
 
@@ -42,6 +46,7 @@ class BouncerHandle: CCNode {
             let pos = self.position
             self.positionType = CCPositionTypeMake( CCPositionUnit.Points, CCPositionUnit.Points, CCPositionReferenceCorner.BottomLeft )
             self.position = ccp(pos.x * self.parent.contentSizeInPoints.width, pos.y * self.parent.contentSizeInPoints.height)
+            initialY = self.position.y
         }
         if !bouncerSet && self.parent != nil {
             bouncer = GameState.sharedState.scene!.bouncer as Bouncer

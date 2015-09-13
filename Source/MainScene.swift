@@ -39,21 +39,6 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         overlay.runAction( fadeOut )
 
         myPhysicsNode.gravity = GameState.sharedState.modeInfo.worldGravity
-        //let oldContentSize = self.contentSizeInPoints
-        //self.contentSize = CCDirector.sharedDirector().viewSize()
-        //self.position = CGPointZero
-        //myPhysicsNode.contentSize = self.contentSize
-
-//        for node in self.children {
-//            let n = node as! CCNode
-//            let yPercent = n.position.y / oldContentSize.height
-//            n.position = ccp( n.position.x, yPercent * self.contentSize.height )
-//        } // dumb. makes the %'s in sb
-//        for node in myPhysicsNode.children {
-//            let n = node as! CCNode
-//            let yPercent = n.position.y / oldContentSize.height
-//            n.position = ccp( n.position.x, yPercent * self.contentSize.height )
-//        } // dumb. makes the %'s in sb
     }
 
     override func addChild(node: CCNode!) {
@@ -74,6 +59,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         if !myPhysicsNode.paused {
             pauseButton.cascadeOpacityEnabled = true
             pauseButton.enabled = false
+            pauseButton.opacity = 0
             var fadeIn = CCActionFadeIn.actionWithDuration( 2 ) as! CCActionFadeIn
             var enable = CCActionCallBlock.actionWithBlock({ () -> Void in
                 self.pauseButton.enabled = true
@@ -81,34 +67,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             pauseButton.runAction( CCActionSequence.actionWithArray([fadeIn, enable]) as! CCActionSequence )
         }
     }
-    
-//    override func touchBegan( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
-//        hasBeenTouched = true
-//        
-//        if GameState.sharedState.lastLaunchedObject == nil {
-//            inflow.launch()
-//        }
-//    }
-//    
-//    override func touchMoved( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
-//        self.touchBegan( touch, withEvent: event )
-//    }
 
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, animateSensor: CCNode!, wildcard: CCNode!) -> ObjCBool {
-//        println( wildcard.physicsBody.collisionType )
-//        if wildcard.physicsBody.collisionType == "storedShirt"{
-//            println( "test" )
-//            println( "test" )
-//            println( "test" )
-//            println( "test" )
-//            println( "test" )
-//            println( "test" )
-//            println( "test" )
-//            println( "test" )
-//            println( "test" )
-//            println( "test" )
-//
-//        }
         if !GameState.sharedState.lost && ( wildcard.physicsBody.collisionType == "shirt" || wildcard.physicsBody.collisionType == "quarter" || wildcard.physicsBody.collisionType == "restoredQuarter" ) {
             bouncer.animateGlove()
         }
@@ -120,7 +80,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         var shirtNewVelocity = ccp( shirtSpeed, 0 )
         shirtNewVelocity = ccpRotateByAngle( shirtNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
         shirt.physicsBody.velocity = ccp( -shirtNewVelocity.x, shirtNewVelocity.y )
-        
+        shirt.startTrickShotTimer()
+
         return true
     }
     
@@ -129,6 +90,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         var quarterNewVelocity = ccp( quarterSpeed, 0 )
         quarterNewVelocity = ccpRotateByAngle( quarterNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
         quarter.physicsBody.velocity = ccp( -quarterNewVelocity.x, quarterNewVelocity.y )
+        quarter.startTrickShotTimer()
+
         return true
     }
 
@@ -138,6 +101,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         var quarterNewVelocity = ccp( quarterSpeed, 0 )
         quarterNewVelocity = ccpRotateByAngle( quarterNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
         restoredQuarter.physicsBody.velocity = ccp( -quarterNewVelocity.x, quarterNewVelocity.y )
+        restoredQuarter.startTrickShotTimer()
+
         return true
     }
 
@@ -199,7 +164,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         if GameState.sharedState.lost { return false }
         quarter.physicsBody.collisionType = "usedQuarter"
         receptacle.receiveItem( quarter )
-        receptacle.doLaundry( quarter.gold )
+        //receptacle.doLaundry( quarter.gold )
 
         return false
     }
@@ -270,6 +235,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
 
     func dieButtonPressed() {
         gameOver( 0 )
+        myPhysicsNode.paused = false
+        particleLayer.paused = false
         GameState.sharedState.endGame()
         GameState.sharedState.playSound( "audioFiles/explosion.caf" )
     }
