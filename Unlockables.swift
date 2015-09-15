@@ -124,5 +124,11 @@ class Unlockables: CCNode {
 
     func updateShirtsToSpend() {
         amountToSpendLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: Data.sharedData.totalScore ) )
+        if amountToSpendLabel.texture != nil {
+            let l = amountToSpendLabel.texture.contentSize().width
+            if  l > ( self.contentSizeInPoints.width ) {
+                amountToSpendLabel.scale = Float(( self.contentSizeInPoints.width ) / amountToSpendLabel.texture.contentSize().width)
+            }
+        }
     }
 }

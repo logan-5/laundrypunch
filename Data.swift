@@ -25,7 +25,7 @@ class Data: NSObject {
         path = NSBundle.mainBundle().pathForResource( "Jargon", ofType: "plist" )
         jargon = NSDictionary( contentsOfFile: path! )!
 
-        defaults.registerDefaults( settings! as [NSObject : AnyObject] )
+        defaults.registerDefaults( settings! as! [String : AnyObject] )
         super.init()
     }
 
@@ -55,7 +55,7 @@ class Data: NSObject {
     }
     
     func unlockShirt( name: String, price: Int64 ) -> Void {
-        var shirts = unlockedShirts.mutableCopy() as! NSMutableArray
+        let shirts = unlockedShirts.mutableCopy() as! NSMutableArray
         shirts.addObject( name )
         defaults.setValue( shirts, forKey: "Unlocked Shirts" )
         defaults.setValue( NSNumber(longLong: totalScore - price), forKey: "Total Score" )
@@ -66,7 +66,6 @@ class Data: NSObject {
     }
 
     func isUnlocked( shirtName: String ) -> Bool {
-        var unlocked = false
         for shirt in unlockedShirts {
             if let s = shirt as? String {
                 if s == shirtName { return true }

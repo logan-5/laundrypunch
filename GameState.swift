@@ -108,7 +108,7 @@ public class GameState: NSObject {
             scene!.addChild( effect )
         //}
         if speedUp {
-            emitRate -= modeInfo.emitRateDecay
+            emitRate = max( emitRate - modeInfo.emitRateDecay, modeInfo.minEmitRate )
         }
     }
 
@@ -141,14 +141,14 @@ public class GameState: NSObject {
     func stackShirt( receptacle: Receptacle, item: Dispensable, forPoints: Bool ) -> Void {
         if lost { return }
 
-        if let q = item as? Quarter {
+        if let _ = item as? Quarter {
             inARow = 1
             lastColor = nil
         } else {
             if lastColor == nil {
                 lastColor = receptacle.shirtColor
             } else if lastColor == receptacle.shirtColor {
-                if ++inARow % 3 == 0 {
+                if ++inARow > 2 {
                     cashIn( inARow, speedUp: false )
                     setUpComboTextAnimation( String(inARow) + " in a row!\n+" + String(inARow) )
                 }
@@ -158,6 +158,11 @@ public class GameState: NSObject {
             }
         }
 
+        if forPoints && modeInfo.scoringModel == ScoringModel.PerShirt {
+            cashIn( 1 )
+        }
+
+        if !modeInfo.allowAdvancedCombos { return }
         if waitingForCombo {
             waitingForCombo = false
             //comboTimer?.invalidate(); comboTimer = nil
@@ -166,10 +171,6 @@ public class GameState: NSObject {
             firstReceptacle = receptacle
             comboTimer = NSTimer.scheduledTimerWithTimeInterval( 0.5, target: self, selector: "invalidateCombo", userInfo: nil, repeats: false )
             waitingForCombo = true
-        }
-
-        if forPoints && modeInfo.scoringModel == ScoringModel.PerShirt {
-            cashIn( 1 )
         }
     }
 
@@ -184,6 +185,7 @@ public class GameState: NSObject {
         label.opacity = 0
         GameState.sharedState.scene?.particleLayer.addChild( label )
         label.position = ccp( scene!.contentSizeInPoints.width / 2, scene!.contentSizeInPoints.height / 2 )
+        label.horizontalAlignment = CCTextAlignment.Center
         if rainbow { label.runAction( CCActionAnimateRainbow.instantiate() ) }
         label.runAction( CCActionFadeIn.actionWithDuration( 0.3 ) as! CCActionFadeIn )
         let moveUp: CCAction = CCActionMoveBy.actionWithDuration( 2.5, position: ccp( CGFloat(CCRANDOM_MINUS1_1() * 20), receptacles[0].contentSize.height * 2 ) ) as! CCActionMoveBy
@@ -197,26 +199,27 @@ public class GameState: NSObject {
     }
 
     func combo( r1: Receptacle, r2: Receptacle ) {
+        if !modeInfo.allowAdvancedCombos { return }
         if lost { return }
 
         // bounce combos that involve a quarter hitting an empty bin
         if r1.shirts.count == 1 {
-            if let q = r1.shirts[0] as? Quarter { return }
+            if let _ = r1.shirts[0] as? Quarter { return }
         }
         if r2.shirts.count == 1 {
-            if let q = r2.shirts[0] as? Quarter { return }
+            if let _ = r2.shirts[0] as? Quarter { return }
         }
 
         var points: Int64
         var golds: Int64
         if r1 != r2 {
-            var r1Result = r1.countPointsAndCreateString( false )
-            var r2Result = r2.countPointsAndCreateString( false )
+            let r1Result = r1.countPointsAndCreateString( false )
+            let r2Result = r2.countPointsAndCreateString( false )
 
             points = r1Result.points + r2Result.points
             golds = r1Result.golds + r2Result.golds
         } else {
-            var r1Result = r1.countPointsAndCreateString( false )
+            let r1Result = r1.countPointsAndCreateString( false )
             points = r1Result.points
             golds = r1Result.golds
         }
@@ -243,6 +246,7 @@ public class GameState: NSObject {
             }
             allReceptaclesHaveReceivedShirts = all
             if !allReceptaclesHaveReceivedShirts { return }
+            else { println( "all received shirts" ) } // debugging only
         }
 
         for r in receptacles {
@@ -256,23 +260,24 @@ public class GameState: NSObject {
         let result = score * 2
         if result <= 0 { return }
         var goldString = ""
-        if goldShirts > 0 && goldShirts < 10 {
+        if goldShirts > 0 && goldShirts < 3 {
             goldShirts *= 2
             goldString = "gold x 2"
         } else if goldShirts > 0 {
-            goldShirts += 10
-            goldString = "gold + 10"
+            goldShirts += 5
+            goldString = "gold + 5"
         }
         cashIn( result, speedUp: false )
-        let resultString = "incredible! finished laundry!\n+score x 3\n" + goldString
+        let resultString = "incredible!\nfinished laundry!\n+score x 3\n" + goldString
 
         setUpComboTextAnimation( resultString )
     }
 
     func trickShot( receptacle: Receptacle ) {
-        if receptacle.shirts.count == 0 { return }
+        if !modeInfo.allowAdvancedCombos { return }
+        if receptacle.shirts.count <= 0 { return }
         var rainbow = false
-        var insane = receptacle.shirts.count > 6
+        let insane = receptacle.shirts.count > 9
         let quarter = receptacle.shirts[0] as? Quarter
         if receptacle.shirts.count == 1 && quarter != nil {
             rainbow = false
@@ -300,7 +305,7 @@ public class GameState: NSObject {
             self.refresh()
             let newScene = CCBReader.loadAsScene( "MainScene" )
             CCDirector.sharedDirector().replaceScene( newScene )
-            GameState.sharedState.refresh()
+            //GameState.sharedState.refresh()
             GameState.sharedState.scene!.updateScoreLabel()
         }) as! CCAction
         scene!.overlay.runAction( CCActionSequence.actionWithArray([fadeIn, reset]) as! CCAction )
@@ -308,6 +313,8 @@ public class GameState: NSObject {
     
     func refresh() -> Void {
         invalidateCombo()
+        allReceptaclesHaveReceivedShirts = false
+        receptacles.removeAll(keepCapacity: true)
         emittedFirstShirt = false
         modeInfo = ModeInfo( mode: mode )
         emitRate = modeInfo.initialEmitRate
@@ -369,6 +376,15 @@ struct ModeInfo {
                 return 0
             default:
                 return 0.03
+            }
+        }
+    }
+
+    var minEmitRate: Float {
+        get {
+            switch mode {
+            default:
+                return 1
             }
         }
     }

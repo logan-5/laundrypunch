@@ -45,7 +45,7 @@ class BouncerHandle: CCNode {
             ready = true
             let pos = self.position
             self.positionType = CCPositionTypeMake( CCPositionUnit.Points, CCPositionUnit.Points, CCPositionReferenceCorner.BottomLeft )
-            self.position = ccp(pos.x * self.parent.contentSizeInPoints.width, pos.y * self.parent.contentSizeInPoints.height)
+            self.position = ccp(pos.x * self.parent!.contentSizeInPoints.width, pos.y * self.parent!.contentSizeInPoints.height)
             initialY = self.position.y
         }
         if !bouncerSet && self.parent != nil {

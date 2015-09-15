@@ -97,7 +97,7 @@ class AfterDeathMenu: CCNode {
             if targetScore > 50 {
                 scoreUpdateStep = targetScore / 50
             }
-            var fireWorks = CCBReader.load( "Effects/RainbowFireworks" ) as! CCParticleSystem
+            let fireWorks = CCBReader.load( "Effects/RainbowFireworks" ) as! CCParticleSystem
             scoreFireworks = fireWorks
             fireWorks.autoRemoveOnFinish = true
             //fireWorks.positionType = scoreScoreLabel.positionType
@@ -112,8 +112,8 @@ class AfterDeathMenu: CCNode {
 
     func goldShirtEffectManager() {
         if gold-- > 0 {
-            var delay = CCActionDelay.actionWithDuration( 0.22 ) as! CCActionDelay
-            var effect = CCActionCallFunc.actionWithTarget( self, selector: "goldShirtEffect" ) as! CCActionCallFunc
+            let delay = CCActionDelay.actionWithDuration( 0.22 ) as! CCActionDelay
+            let effect = CCActionCallFunc.actionWithTarget( self, selector: "goldShirtEffect" ) as! CCActionCallFunc
             self.runAction( CCActionSequence.actionWithArray([delay, effect] ) as! CCActionSequence )
         } else {
             if GameState.sharedState.oldHighScore != Data.sharedData.score {
@@ -123,7 +123,7 @@ class AfterDeathMenu: CCNode {
     }
 
     func goldShirtEffect() {
-        var goldExplosion = CCBReader.load( "Effects/GoldExplosion" ) as! CCParticleSystem
+        let goldExplosion = CCBReader.load( "Effects/GoldExplosion" ) as! CCParticleSystem
         goldExplosion.autoRemoveOnFinish = true
         //fireWorks.positionType = scoreScoreLabel.positionType
         goldExplosion.position = scoreScoreLabel.positionInPoints
@@ -151,6 +151,12 @@ class AfterDeathMenu: CCNode {
             }
         }
         scoreScoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: score ) )
+        if scoreScoreLabel.texture != nil {
+            let l = scoreScoreLabel.texture.contentSize().width
+            if  l > ( self.contentSizeInPoints.width ) {
+                scoreScoreLabel.scale = Float(( self.contentSizeInPoints.width ) / scoreScoreLabel.texture.contentSize().width)
+            }
+        }
     }
 
     override func update(delta: CCTime) {

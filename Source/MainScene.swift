@@ -22,7 +22,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         GCHelper.defaultHelper().authenticateLocalUserOnViewController( CCDirector.sharedDirector(), setCallbackObject: self, withPauseSelector: nil )
         GCHelper.defaultHelper().registerListener( CCDirector.sharedDirector() )
         GameState.sharedState.scene = self
-        println( "loaded main scene" )
+        print( "loaded main scene" )
         self.userInteractionEnabled = false
         myPhysicsNode.collisionDelegate = self
         updateScoreLabel()
@@ -42,8 +42,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
 
     override func addChild(node: CCNode!) {
-        if let p = node as? CCParticleSystem {
-            if particleLayer != nil {
+        if let _ = node as? CCParticleSystem {
+            if particleLayer != nil && !GameState.sharedState.lost {
                 particleLayer.addChild( node )
                 return
             }
@@ -60,8 +60,8 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             pauseButton.cascadeOpacityEnabled = true
             pauseButton.enabled = false
             pauseButton.opacity = 0
-            var fadeIn = CCActionFadeIn.actionWithDuration( 2 ) as! CCActionFadeIn
-            var enable = CCActionCallBlock.actionWithBlock({ () -> Void in
+            let fadeIn = CCActionFadeIn.actionWithDuration( 2 ) as! CCActionFadeIn
+            let enable = CCActionCallBlock.actionWithBlock({ () -> Void in
                 self.pauseButton.enabled = true
             }) as! CCActionCallBlock
             pauseButton.runAction( CCActionSequence.actionWithArray([fadeIn, enable]) as! CCActionSequence )
@@ -76,7 +76,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     func ccPhysicsCollisionPostSolve( pair:CCPhysicsCollisionPair!, shirt:Shirt!, bouncer:Bouncer! ) -> ObjCBool {
-        var shirtSpeed = shirt.bounceSpeed //ccpLength( shirt.physicsBody.velocity )
+        let shirtSpeed = shirt.bounceSpeed //ccpLength( shirt.physicsBody.velocity )
         var shirtNewVelocity = ccp( shirtSpeed, 0 )
         shirtNewVelocity = ccpRotateByAngle( shirtNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
         shirt.physicsBody.velocity = ccp( -shirtNewVelocity.x, shirtNewVelocity.y )
@@ -86,7 +86,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     func ccPhysicsCollisionPostSolve( pair:CCPhysicsCollisionPair!, quarter:Quarter!, bouncer:Bouncer! ) -> ObjCBool {
-        var quarterSpeed = quarter.bounceSpeed
+        let quarterSpeed = quarter.bounceSpeed
         var quarterNewVelocity = ccp( quarterSpeed, 0 )
         quarterNewVelocity = ccpRotateByAngle( quarterNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
         quarter.physicsBody.velocity = ccp( -quarterNewVelocity.x, quarterNewVelocity.y )
@@ -97,7 +97,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
 
     func ccPhysicsCollisionPostSolve(pair: CCPhysicsCollisionPair!, restoredQuarter: Quarter!, bouncer: Bouncer!) -> ObjCBool {
         restoredQuarter.physicsBody.collisionType = "quarter"
-        var quarterSpeed = restoredQuarter.bounceSpeed
+        let quarterSpeed = restoredQuarter.bounceSpeed
         var quarterNewVelocity = ccp( quarterSpeed, 0 )
         quarterNewVelocity = ccpRotateByAngle( quarterNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
         restoredQuarter.physicsBody.velocity = ccp( -quarterNewVelocity.x, quarterNewVelocity.y )
@@ -171,7 +171,13 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
     func updateScoreLabel() -> Void {
         if scoreLabel != nil {
-            scoreLabel.string = String( GameState.sharedState.score )
+            scoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: GameState.sharedState.score ) )
+            if scoreLabel.texture != nil {
+            let l = scoreLabel.texture.contentSize().width
+                if  l > ( self.contentSizeInPoints.width / 4 ) {
+                    scoreLabel.scale = Float(( self.contentSizeInPoints.width / 4 ) / scoreLabel.texture.contentSize().width)
+                }
+            }
         }
     }
 
@@ -186,7 +192,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         let effect = CCActionCallBlock.actionWithBlock { () -> Void in
             self.endGameFalling = true
             for node in self.myPhysicsNode.children as! [CCNode] {
-                if let i = node as? Inflow {
+                if let _ = node as? Inflow {
                     // skip the inflow
                 } else {
                     if node.physicsBody != nil {
@@ -204,7 +210,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
             }
             let delay2 = CCActionDelay.actionWithDuration( 1.5 ) as! CCActionDelay
             let finish = CCActionCallBlock.actionWithBlock { () -> Void in
-                var adMenu = CCBReader.load( "AfterDeathMenu" ) as! AfterDeathMenu
+                let adMenu = CCBReader.load( "AfterDeathMenu" ) as! AfterDeathMenu
                 self.addChild( adMenu )
                 self.schedule( "killSelf", interval: 3.0 )
                 } as! CCActionCallBlock
@@ -216,10 +222,10 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
 
             // launch faces
             var delayTime = 0.025
-            var numberOfFaces = arc4random_uniform( 12 ) + 10
+            let numberOfFaces = arc4random_uniform( 12 ) + 10
             for var i: UInt32 = 0; i < numberOfFaces; ++i, delayTime *= 1.5 {
-                var launchFaceDelay = CCActionDelay.actionWithDuration( delayTime ) as! CCActionDelay
-                var launchFace = CCActionCallBlock.actionWithBlock({ () -> Void in
+                let launchFaceDelay = CCActionDelay.actionWithDuration( delayTime ) as! CCActionDelay
+                let launchFace = CCActionCallBlock.actionWithBlock({ () -> Void in
                     self.inflow.launchDeathFace()
                 }) as! CCActionCallBlock
                 self.runAction( CCActionSequence.actionWithArray([launchFaceDelay, launchFace] ) as! CCActionSequence )
@@ -244,7 +250,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     func killSelf() {
         self.stopAllActions()
         for node in self.children as! [CCNode] {
-            if let n = node as? AfterDeathMenu {
+            if let _ = node as? AfterDeathMenu {
             } else {
                 if node != overlay {
                     node.removeFromParent()

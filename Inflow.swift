@@ -9,24 +9,22 @@
 import UIKit
 
 class Inflow: CCNode {
+    weak var nozzle: CCSprite!
     var emitPoint: CGPoint!
     var launchingAction: CCAction?
     var canceled = false
     var quarterCounter: UInt32 = 0
-    let quarterThreshold: UInt32 = 30 // launch a quarter if no quarter has been launched in this long
+    let quarterThreshold: UInt32 = 20 // launch a quarter if no quarter has been launched in this long
+
+    var nextUp: Dispensable!
+    var onDeck: Dispensable!
+
     var ready = false
     
     func didLoadFromCCB() -> Void {
         emitPoint = CGPointMake( self.contentSizeInPoints.width / 2, self.positionInPoints.y )
         self.zOrder = 2
-//        GameState.sharedState.getNextQuarterTime()
-        
-//        // launch a shirt
-//        let emitRate = CCTime( GameState.sharedState.emitRate )
-//        let delay = CCActionDelay.actionWithDuration( emitRate ) as! CCActionDelay
-//        let launch = CCActionCallFunc.actionWithTarget( self, selector: "launch" ) as! CCActionCallFunc
-//        launchingAction = CCActionSequence.actionWithArray( [delay, launch] ) as! CCActionSequence
-//        self.runAction( launchingAction )
+        nozzle.zOrder = 2
     }
     
     func setUpLaunch() -> Void {
@@ -48,13 +46,7 @@ class Inflow: CCNode {
             launchingAction = nil
         }
         var object: Dispensable
-//        if quarterCounter!++ < GameState.sharedState.nextQuarter {
-//            object = CCBReader.load( "Shirt" ) as! Shirt
-//        } else {
-//            quarterCounter = 0
-//            GameState.sharedState.getNextQuarterTime()
-//            object = CCBReader.load( "Quarter" ) as! Quarter
-//        }
+
         if GameState.sharedState.emittedFirstShirt && (quarterCounter++ > quarterThreshold || GameState.sharedState.quarterProbability()) {
             quarterCounter = 0
             object = CCBReader.load( "Quarter" ) as! Quarter
@@ -80,11 +72,7 @@ class Inflow: CCNode {
     }
 
     func launchDeathFace() -> Void {
-//        if let l = launchingAction {
-//            self.stopAction( l )
-//            launchingAction = nil
-//        }
-        var object: Dispensable = CCBReader.load( probabilityOf( 0.5 ) ? "DeathSadFace" : "DeathHappyFace" ) as! Dispensable
+        let object: Dispensable = CCBReader.load( probabilityOf( 0.5 ) ? "DeathSadFace" : "DeathHappyFace" ) as! Dispensable
         GameState.sharedState.scene!.myPhysicsNode.addChild( object )
         GameState.sharedState.lastLaunchedObject = object
         object.position = self.convertToWorldSpace( emitPoint )

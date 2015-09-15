@@ -33,7 +33,7 @@ class FreeParticles: CCParticleSystem {
     override func onExit() {
         super.onExit()
         if object != nil {
-            var i = 1
+            _ = 1
         }
     }
 }

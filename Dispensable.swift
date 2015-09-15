@@ -19,6 +19,7 @@ class Dispensable: CCNode {
     var ready = false
     var stackedPosition: CGPoint?
     var stacked = false
+    //var comeBack: CCAction!
 
     static let trickShotTime = 1.4
     var trickShotTimer: NSTimer?
@@ -35,7 +36,7 @@ class Dispensable: CCNode {
     
     override func update(delta: CCTime) -> Void {
         if !ready || stacked { return }
-        let pos = self.parent.parent.convertToNodeSpace( self.position )
+        let pos = self.parent!.parent!.convertToNodeSpace( self.position )
         if ( pos.x < -radius ||
             pos.x > radius + CCDirector.sharedDirector().viewSize().width ||
             pos.y < -radius ||

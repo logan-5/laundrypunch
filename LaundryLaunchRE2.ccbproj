@@ -171,6 +171,13 @@
 		</dict>
 		<key>miscSprites</key>
 		<dict>
+			<key>isDirty</key>
+			<true/>
+			<key>isSmartSpriteSheet</key>
+			<true/>
+		</dict>
+		<key>particleSprites</key>
+		<dict>
 			<key>isSmartSpriteSheet</key>
 			<true/>
 		</dict>

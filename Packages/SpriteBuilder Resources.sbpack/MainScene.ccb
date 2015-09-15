@@ -250,7 +250,7 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>0.421875</real>
+									<real>0.5</real>
 									<real>0.80000001192092896</real>
 									<integer>0</integer>
 									<integer>2</integer>
@@ -279,6 +279,8 @@
 								<string>Inflow.ccb</string>
 							</dict>
 						</array>
+						<key>selected</key>
+						<true/>
 					</dict>
 					<dict>
 						<key>UUID</key>
@@ -727,8 +729,8 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>0.26625767350196838</real>
-									<real>0.88904160261154175</real>
+									<real>0.23008871078491211</real>
+									<real>0.89073961973190308</real>
 									<integer>0</integer>
 									<integer>2</integer>
 									<integer>2</integer>
@@ -765,7 +767,7 @@
 								<string>Text</string>
 								<key>value</key>
 								<array>
-									<string>Sample Text</string>
+									<string>0</string>
 									<false/>
 								</array>
 							</dict>
@@ -947,8 +949,8 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>0.74140626192092896</real>
-									<real>0.95824939012527466</real>
+									<real>0.76123654842376709</real>
+									<real>0.92339569330215454</real>
 									<integer>0</integer>
 									<integer>2</integer>
 									<integer>2</integer>
@@ -2423,8 +2425,6 @@
 						<string>Handle.ccb</string>
 					</dict>
 				</array>
-				<key>selected</key>
-				<true/>
 			</dict>
 			<dict>
 				<key>UUID</key>

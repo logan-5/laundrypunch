@@ -27,7 +27,7 @@ class Bouncer: CCNode {
     }
     
     func updateAngle( position: CGPoint ) -> Void {
-        var direction = ccpSub( position, self.positionInPoints )
+        let direction = ccpSub( position, self.positionInPoints )
         var angle = Float( ccpToAngle( direction ) )
         angle = 180 - CC_RADIANS_TO_DEGREES( angle )
         self.rotation = angle

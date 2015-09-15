@@ -1764,7 +1764,7 @@
 						<string>String</string>
 						<key>value</key>
 						<array>
-							<string>back</string>
+							<string>okay</string>
 							<false/>
 						</array>
 					</dict>
@@ -1974,6 +1974,8 @@
 						</array>
 					</dict>
 				</array>
+				<key>selected</key>
+				<true/>
 			</dict>
 		</array>
 		<key>customClass</key>
@@ -2046,8 +2048,6 @@
 				</array>
 			</dict>
 		</array>
-		<key>selected</key>
-		<true/>
 	</dict>
 	<key>notes</key>
 	<array/>

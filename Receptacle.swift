@@ -13,7 +13,7 @@ class Receptacle: CCNode {
     weak var sprite: CCNode!
     private(set) var receptacleColor: String!
     private(set) var shirtColor: Shirt.Color!
-    private(set) var shirts: [CCNode] = Array()
+    private(set) var shirts: [Dispensable] = Array()
     private(set) var hasReceivedShirt = false
     static let stackOffset: Float = 5
     let receiveTime: Float = 0.3 // seconds
@@ -100,7 +100,6 @@ class Receptacle: CCNode {
     }
     
     func receiveItem( item: Dispensable ) -> Void {
-        hasReceivedShirt = true
         item.physicsBody.sensor = true
         item.physicsBody.affectedByGravity = false
         item.physicsBody.velocity = CGPointZero
@@ -140,6 +139,8 @@ class Receptacle: CCNode {
         if let q = item as? Quarter {
             doLaundry( q )
             GameState.sharedState.stackShirt( self, item: q, forPoints: false )
+        } else {
+            hasReceivedShirt = true
         }
 //        if shouldMove {
 //            // the movement onto a moving basket looks okay, but it would look even better shrouded by a particle effect
@@ -162,9 +163,9 @@ class Receptacle: CCNode {
     }
     
     func doLaundry( quarter: Quarter ) -> Void {
-        var goldCoin = quarter.gold
         if doNotDisturb || GameState.sharedState.lost { return }
         doNotDisturb = true
+        let goldCoin = quarter.gold
         if movement != nil { self.stopAction( movement ); movement = nil }
         // animate
         var offScreen = ccp( 0, ( self.contentSize.height + CGFloat( Receptacle.stackOffset * Float( shirts.count ) ) ) )
@@ -173,13 +174,14 @@ class Receptacle: CCNode {
         moveOffScreen = (CCActionEaseSineInOut.actionWithAction( CCActionMoveBy.actionWithDuration( 0.3, position: offScreen ) as! CCActionMoveBy ) as! CCAction)
 
         for shirt in shirts {
-            let moveShirt = moveOffScreen!.copyWithZone( nil ) as! CCAction
+            let moveShirt = moveOffScreen!.copyWithZone( nil ) as! CCActionFiniteTime
+            //shirt.comeBack = ( (moveShirt.copyWithZone( nil ) as! CCActionFiniteTime).reverse() )
             shirt.runAction( moveShirt )
         }
         oldPosition = self.position
         var comeBack: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: oldPosition ) as! CCActionMoveTo
         comeBack = CCActionEaseSineInOut.actionWithAction( comeBack as! CCActionMoveTo ) as! CCAction
-        var sequence = CCActionSequence.actionWithArray([moveOffScreen!, CCActionCallBlock.actionWithBlock({ () -> Void in
+        let sequence = CCActionSequence.actionWithArray([moveOffScreen!, CCActionCallBlock.actionWithBlock({ () -> Void in
             self.setUpSuccessParticleEffects()
             self.cashInLoad( quarter.regurgitated )
 
@@ -198,13 +200,28 @@ class Receptacle: CCNode {
                 }
                 self.shirts.removeAll( keepCapacity: true )
             } else {
-                // but if it is, just remove the coin
-                self.shirts.removeLast().removeFromParent()
-                // and bring the shirts back
-                for shirt in self.shirts {
-                    var c: CCAction = CCActionMoveTo.actionWithDuration( 0.3, position: (shirt as! Dispensable).stackedPosition! ) as! CCActionMoveTo
-                    //c = CCActionEaseSineInOut.actionWithAction( comeBack as! CCActionMoveTo ) as! CCAction
-                    shirt.runAction( c )
+                // but if it is, just remove the coin(s)
+                var removeList: [Int] = Array()
+                for var i = 0; i < self.shirts.count; ++i {
+                    if let _ = self.shirts[i] as? Shirt { } else {
+                        removeList.append( i )
+                    }
+                }
+                for n in removeList {
+                    self.shirts.removeAtIndex( n ).removeFromParent()
+                }
+                removeList.removeAll()
+
+                for var i = 0; i < self.shirts.count; ++i {
+                    // bring shirts back
+                    var destination = ccp( 0, CGFloat( -Receptacle.stackOffset * Float( i + 1 ) ) )
+                    destination = ccpRotateByAngle( destination, CGPointZero, CC_DEGREES_TO_RADIANS( self.rotation ) )
+                    destination = ccpAdd( destination, self.oldPosition )
+                    destination = ccpSub( destination, self.shirts[i].position )
+
+                    var move: CCAction = CCActionMoveBy.actionWithDuration( CCTime(self.receiveTime), position: destination ) as! CCActionMoveBy
+                    move = CCActionEaseSineOut.actionWithAction( move as! CCActionMoveBy ) as! CCActionEaseSineOut
+                    self.shirts[i].runAction( move )
                 }
             }
         }), comeBack, CCActionCallBlock.actionWithBlock({ () -> Void in
@@ -230,7 +247,7 @@ class Receptacle: CCNode {
                             shirts.removeAtIndex( i )
                         }
                     }
-                    var sequence = CCActionSequence.actionWithArray([moveOffScreen!.copyWithZone( nil ) as! CCAction, CCActionCallBlock.actionWithBlock({ () -> Void in
+                    let sequence = CCActionSequence.actionWithArray([moveOffScreen!.copyWithZone( nil ) as! CCAction, CCActionCallBlock.actionWithBlock({ () -> Void in
                         q.removeFromParent()
                     }) as! CCActionCallBlock]) as! CCActionSequence
                     q.runAction( sequence )
@@ -255,7 +272,7 @@ class Receptacle: CCNode {
     func cashInLoad( regurgitated: Bool ) -> Void {
         if GameState.sharedState.lost { return }
         // cash in
-        var p = countPointsAndCreateString( regurgitated )
+        let p = countPointsAndCreateString( regurgitated )
         GameState.sharedState.cashIn( p.points )
         AchievementManager.sharedManager.notifyCashedInColor( self.shirtColor, plus: p.points )
 
@@ -309,7 +326,7 @@ class Receptacle: CCNode {
             prefix = String( golds ) + " gold "
         }
 
-        var reg = regurgitated && points > 0
+        let reg = regurgitated && points > 0
         if reg { modifier = max( modifier * 3, 3 ) }
 
         // create a string of the format:
@@ -372,7 +389,7 @@ class Receptacle: CCNode {
             positionReady = true
             let pos = self.position
             self.positionType = CCPositionTypeMake( CCPositionUnit.Points, CCPositionUnit.Points, CCPositionReferenceCorner.BottomLeft )
-            self.position = ccp(pos.x * self.parent.contentSizeInPoints.width, pos.y * self.parent.contentSizeInPoints.height)
+            self.position = ccp(pos.x * self.parent!.contentSizeInPoints.width, pos.y * self.parent!.contentSizeInPoints.height)
 
             initialPosition = self.position
             positionLastFrame = self.position
