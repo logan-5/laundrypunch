@@ -13,7 +13,8 @@ class Bouncer: CCNode {
     weak var handle: BouncerHandle!
     weak var glove: CCNode!
     weak var sensor: CCNode!
-    weak var guide: CCNode!
+    weak var guide: CCNode?
+    var guideDying: Bool = false
 
     func didLoadFromCCB() -> Void {
         self.rotation = -90
@@ -23,7 +24,9 @@ class Bouncer: CCNode {
         sensor.physicsBody.collisionGroup = "bouncer"
         sensor.physicsBody.collisionType = "animateSensor"
         sensor.physicsBody.sensor = true
-        guide.visible = GameState.sharedState.modeInfo.shouldShowGuide
+        if !GameState.sharedState.modeInfo.shouldShowGuide {
+            guide?.removeFromParent()
+        }
     }
     
     func updateAngle( position: CGPoint ) -> Void {
@@ -42,5 +45,16 @@ class Bouncer: CCNode {
     func animateGlove() {
         glove.animationManager.runAnimationsForSequenceNamed( "Punch" )
         GameState.sharedState.playSound( "audioFiles/punch.caf" )
+    }
+
+    func killGuide() {
+        if guide != nil && !guideDying {
+            guideDying = true
+            let die = CCActionCallBlock.actionWithBlock({ () -> Void in
+                guide?.removeFromParent()
+            }) as! CCAction
+            let fadeOut = CCActionFadeTo.actionWithDuration( 2, opacity: 0 ) as! CCAction
+            guide?.runAction( CCActionSequence.actionWithArray([fadeOut, die]) as! CCAction )
+        }
     }
 }

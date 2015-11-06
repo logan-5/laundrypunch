@@ -1,0 +1,16 @@
+info face="Courier" size=68 bold=0 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=0,0
+common lineHeight=69 base=53 scaleW=320 scaleH=256 pages=1 packed=0
+page id=0 file="bigScoreBlack.png"
+chars count=12
+char id=32 x=1 y=246 width=0 height=0 xoffset=0 yoffset=51 xadvance=41 page=0 chnl=0
+char id=48 x=1 y=197 width=100 height=48 xoffset=7 yoffset=8 xadvance=41 page=0 chnl=0
+char id=49 x=102 y=95 width=100 height=46 xoffset=9 yoffset=9 xadvance=41 page=0 chnl=0
+char id=50 x=203 y=48 width=100 height=46 xoffset=6 yoffset=9 xadvance=41 page=0 chnl=0
+char id=51 x=1 y=148 width=100 height=48 xoffset=7 yoffset=8 xadvance=41 page=0 chnl=0
+char id=52 x=102 y=48 width=100 height=46 xoffset=6 yoffset=9 xadvance=41 page=0 chnl=0
+char id=53 x=203 y=1 width=100 height=46 xoffset=6 yoffset=10 xadvance=41 page=0 chnl=0
+char id=54 x=1 y=99 width=100 height=48 xoffset=7 yoffset=8 xadvance=41 page=0 chnl=0
+char id=55 x=102 y=1 width=100 height=46 xoffset=7 yoffset=9 xadvance=41 page=0 chnl=0
+char id=56 x=1 y=50 width=100 height=48 xoffset=7 yoffset=8 xadvance=41 page=0 chnl=0
+char id=57 x=1 y=1 width=100 height=48 xoffset=7 yoffset=8 xadvance=41 page=0 chnl=0
+char id=44 x=102 y=142 width=100 height=26 xoffset=13 yoffset=39 xadvance=41 page=0 chnl=0

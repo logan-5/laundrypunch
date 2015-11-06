@@ -44,7 +44,7 @@ public class GameState: NSObject {
     private var scoreUpdateTimer: NSTimer?
     private(set) var oldHighScore: Int64 = 0
     var goldShirts: Int64 = 0
-    private var finalScore: Int64 = 0
+    private(set) var finalScore: Int64 = 0
     private(set) var lives: Int = 0
     private(set) var lost = false
     var emittedFirstShirt = false
@@ -76,9 +76,20 @@ public class GameState: NSObject {
 
         super.init()
 
+        CCDirector.sharedDirector().view.userInteractionEnabled = true
         refresh()
     }
-    
+
+    func validateGameCenter() {
+        // not comfortable with this "solution"
+        let wtf = GCSwiftHelper.init(WithHelper: GCHelper.defaultHelper())
+        wtf.authenticateLocalUserOnViewController( CCDirector.sharedDirector(), setCallbackObject: scene!, withPauseSelector: "pause")
+        //        let controller = CCDirector.sharedDirector()
+        //        GCHelper.defaultHelper().authenticateLocalUserOnViewController( controller, setCallbackObject: self, withPauseSelector: nil )
+        GCHelper.defaultHelper().registerListener( CCDirector.sharedDirector() )
+
+    }
+
     func failure() -> Void {
         if --lives < 0 {
             scene!.gameOver()
@@ -88,17 +99,23 @@ public class GameState: NSObject {
         lastColor = nil
     }
 
-    func cashIn( amount: Int64 ) {
-        cashIn( amount, speedUp: true )
-    }
+//    func cashIn( amount: Int64 ) {
+//        cashIn( amount, speedUp: true )
+//    }
 
-    func cashIn( amount: Int64, speedUp: Bool ) -> Void {
+    var scoreUpdateStep: Int64 = 1
+    func cashIn( amount: Int64, speedUp: Bool = true ) -> Void {
         if amount <= 0 || lost { return }
 
+        syncScoreAndTargetScore()
         targetScore += amount
-        if scoreUpdateTimer == nil {
-            scoreUpdateTimer = NSTimer.scheduledTimerWithTimeInterval( 0.04, target: self, selector: "incrementScore", userInfo: nil, repeats: true )
+        if amount > 50 {
+            scoreUpdateStep = targetScore / 50
+        } else {
+            scoreUpdateStep = 1
         }
+        scoreUpdateTimer?.invalidate()
+        scoreUpdateTimer = NSTimer.scheduledTimerWithTimeInterval( 0.04, target: self, selector: "incrementScore", userInfo: nil, repeats: true )
         if scene!.scoreEffect == nil { scene!.scoreEffect?.stopSystem() }
         //if scene!.nextEffect == "Effects/GoldExplosion" {
             let effect = CCBReader.load( "Effects/GoldExplosion" ) as! CCParticleSystem
@@ -110,11 +127,18 @@ public class GameState: NSObject {
         if speedUp {
             emitRate = max( emitRate - modeInfo.emitRateDecay, modeInfo.minEmitRate )
         }
+
+        if modeInfo.shouldShowGuide {
+            if targetScore >= modeInfo.guideDisappearThreshold {
+                scene!.bouncer.killGuide()
+            }
+        }
     }
 
     func incrementScore() -> Void {
         if let s = scoreUpdateTimer {
-            if ++score >= targetScore {
+            score = min( targetScore, score + scoreUpdateStep )
+            if score >= targetScore {
                 s.invalidate()
                 scoreUpdateTimer = nil
                 if scene!.scoreEffect != nil { scene!.scoreEffect?.stopSystem() }
@@ -138,25 +162,32 @@ public class GameState: NSObject {
     var firstReceptacle: Receptacle?
     var lastColor: Shirt.Color?
     var inARow: Int64 = 1
+    var inARowJackpot: Int64 = 2
     func stackShirt( receptacle: Receptacle, item: Dispensable, forPoints: Bool ) -> Void {
         if lost { return }
 
-        if let _ = item as? Quarter {
-            inARow = 1
-            lastColor = nil
-        } else {
+//        if let _ = item as? Quarter {
+//            inARow = 1
+//            lastColor = nil
+//        } else {
             if lastColor == nil {
                 lastColor = receptacle.shirtColor
             } else if lastColor == receptacle.shirtColor {
                 if ++inARow > 2 {
-                    cashIn( inARow, speedUp: false )
-                    setUpComboTextAnimation( String(inARow) + " in a row!\n+" + String(inARow) )
+                    if modeInfo.inARowExponential {
+                        cashIn( inARowJackpot, speedUp: false )
+                        setUpComboTextAnimation( String(inARow) + " in a row!\n+" + String(inARowJackpot) )
+                        inARowJackpot = min( inARowJackpot * 2, 2048 )
+                    } else {
+                        cashIn( inARow, speedUp: false )
+                        setUpComboTextAnimation( String(inARow) + " in a row!\n+" + String(inARow) )
+                    }
                 }
             } else {
                 inARow = 1
-                lastColor = nil
+                lastColor = receptacle.shirtColor
             }
-        }
+        //}
 
         if forPoints && modeInfo.scoringModel == ScoringModel.PerShirt {
             cashIn( 1 )
@@ -174,11 +205,11 @@ public class GameState: NSObject {
         }
     }
 
-    func setUpComboTextAnimation( string: String ) {
-        setUpComboTextAnimation( string, rainbow: true )
-    }
+//    func setUpComboTextAnimation( string: String ) {
+//        setUpComboTextAnimation( string, rainbow: true )
+//    }
 
-    func setUpComboTextAnimation( string: String, rainbow: Bool ) {
+    func setUpComboTextAnimation( string: String, rainbow: Bool = true ) {
         // set up numerical animation
         let label: CCLabelTTF = CCLabelTTF.labelWithString( string, fontName: "Courier", fontSize: 20 )
         label.cascadeColorEnabled = true; label.cascadeOpacityEnabled = true
@@ -246,7 +277,7 @@ public class GameState: NSObject {
             }
             allReceptaclesHaveReceivedShirts = all
             if !allReceptaclesHaveReceivedShirts { return }
-            else { println( "all received shirts" ) } // debugging only
+            else { print( "all received shirts" ) } // debugging only
         }
 
         for r in receptacles {
@@ -274,8 +305,8 @@ public class GameState: NSObject {
     }
 
     func trickShot( receptacle: Receptacle ) {
-        if !modeInfo.allowAdvancedCombos { return }
-        if receptacle.shirts.count <= 0 { return }
+        guard modeInfo.allowAdvancedCombos else { return }
+        guard receptacle.shirts.count > 0 else { return }
         var rainbow = false
         let insane = receptacle.shirts.count > 9
         let quarter = receptacle.shirts[0] as? Quarter
@@ -289,13 +320,40 @@ public class GameState: NSObject {
         setUpComboTextAnimation( resultString, rainbow: rainbow )
     }
 
+    func checkBouncyTrickshot( bounces: Int64, firstOut: Bool ) {
+        guard !firstOut else { return }
+        guard modeInfo.allowAdvancedCombos else { return }
+        guard bounces > 2 else { return }
+
+        ++goldShirts
+        let resultString = "bouncy trick shot!\n+1 gold"
+        setUpComboTextAnimation( resultString )
+    }
+
+    // number of objects in the play field, i.e. bouncing around and not stacked
+    var liveObjects: Int64 = 0
+    // number of objects in play to be considered "mayhem." higher -> this trick shot is harder.  obviously
+    let mayhemThreshold: Int64 = 5
+    func checkMayhemSkillshot() {
+        assert( liveObjects >= 0, "# of live objects is negative" )
+        guard modeInfo.allowAdvancedCombos else { return }
+        guard liveObjects >= mayhemThreshold else { return }
+
+        goldShirts += 3
+        let resultString = "mayhem skill shot!\n+3 gold"
+        setUpComboTextAnimation( resultString )
+    }
+
     func endGame() -> Void {
         lost = true
         invalidateCombo()
         syncScoreAndTargetScore()
         finalScore = score * Int64(goldShirts + 1)
+        print( "SCORE BEFORE GOLDS: " + String(score) )
+        print( "FINAL SCORE: " + String(finalScore) )
         oldHighScore = Data.sharedData.score
         Data.sharedData.score = finalScore
+        validateGameCenter()
         GCHelper.defaultHelper().reportScore( finalScore, forLeaderboardID:mode.rawValue )
     }
     
@@ -322,15 +380,19 @@ public class GameState: NSObject {
         score = 0
         goldShirts = 0
         targetScore = 0
+        inARow = 1
+        inARowJackpot = 2
+        liveObjects = 0
         lost = false
+        DispensableCache.sharedCache.emptyCache()
         AchievementManager.sharedManager.resetAll()
     }
 
-    func playSound( name: String ) -> ALSoundSource? {
-        return playSound( name, loop: false )
-    }
+//    func playSound( name: String ) -> ALSoundSource? {
+//        return playSound( name, loop: false )
+//    }
 
-    func playSound( name: String, loop: Bool ) -> ALSoundSource? {
+    func playSound( name: String, loop: Bool = false ) -> ALSoundSource? {
         if Data.sharedData.soundOn {
             return audioEngine?.playEffect( name, loop: loop )
         }
@@ -342,98 +404,110 @@ struct ModeInfo {
     var mode: GameState.Mode
 
     var initialLives: Int {
-        get {
-            switch mode {
-            case .Hard:
-                return 0
-            case .Efficiency:
-                return 10
-            default:
-                return 5
-            }
+        switch mode {
+        case .Hard:
+            return 0
+        case .Efficiency:
+            return 10
+        default:
+            return 5
         }
     }
 
     var initialEmitRate: Float {
-        get {
-            switch mode {
-            case .Easy:
-                return 3
-            case .Efficiency:
-                return 0.8
-            default:
-                return 2
-            }
+        switch mode {
+        case .Easy:
+            return 3
+        case .Efficiency:
+            return 0.8
+        default:
+            return 2
         }
     }
 
     var emitRateDecay: Float {
-        get {
-            switch mode {
-            case .Easy:
-                fallthrough
-            case .Efficiency:
-                return 0
-            default:
-                return 0.03
-            }
+        switch mode {
+        case .Easy:
+            //fallthrough
+            return GameState.sharedState.score > guideDisappearThreshold ? 0.025 : 0
+        case .Efficiency:
+            return 0
+        default:
+            return 0.025
         }
     }
 
     var minEmitRate: Float {
-        get {
-            switch mode {
-            default:
+        switch mode {
+        default:
                 return 1
-            }
         }
     }
 
     var specialEventsActive: Bool {
-        get { return mode != .Easy }
+        return mode != .Easy
     }
 
     var shouldShowGuide: Bool {
-        get {
-            switch mode {
-            case .Easy:
-                return true
-            default:
-                return false
-            }
+        switch mode {
+        case .Easy:
+            return true
+        default:
+            return false
+        }
+    }
+
+    var guideDisappearThreshold: Int64 {
+        switch mode {
+        default:
+            return 50
         }
     }
 
     var worldGravity: CGPoint {
-        get {
-            switch mode {
-            case .Easy:
-                return ccp( 0, -500 )
-            default:
-                return ccp( 0, -600 )
-            }
+        switch mode {
+//            case .Easy:
+//                return ccp( 0, -500 )
+        default:
+            return ccp( 0, -600 )
         }
     }
 
     var scoringModel: ScoringModel {
-        get {
-            switch mode {
-            case .Easy:
-                return ScoringModel.PerShirt
-            default:
-                return ScoringModel.PerCashIn
-            }
+        switch mode {
+        case .Easy:
+            return ScoringModel.PerShirt
+        default:
+            return ScoringModel.PerCashIn
         }
     }
 
     var allowAdvancedCombos: Bool {
-        get {
-            switch mode {
-            case .Easy:
-                return false
-            default:
-                return true
-            }
+        switch mode {
+        case .Easy:
+            return false
+        default:
+            return true
+        }
+    }
+
+    var previewNextShirt: Bool {
+        switch mode {
+        case .Efficiency:
+            fallthrough
+        case .Hard:
+            return false
+        default:
+            return true
+        }
+    }
+
+    var inARowExponential: Bool {
+        switch mode {
+        case .Easy:
+            return false
+        default:
+            return true
         }
     }
 }

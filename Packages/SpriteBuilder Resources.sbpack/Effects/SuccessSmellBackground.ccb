@@ -136,7 +136,7 @@
 				<key>type</key>
 				<string>Integer</string>
 				<key>value</key>
-				<integer>10</integer>
+				<integer>30</integer>
 			</dict>
 			<dict>
 				<key>name</key>
@@ -156,8 +156,8 @@
 				<string>FloatVar</string>
 				<key>value</key>
 				<array>
-					<real>38</real>
-					<real>15</real>
+					<real>19</real>
+					<real>7</real>
 				</array>
 			</dict>
 			<dict>
@@ -167,8 +167,8 @@
 				<string>FloatVar</string>
 				<key>value</key>
 				<array>
-					<real>38</real>
-					<real>15</real>
+					<real>19</real>
+					<real>7</real>
 				</array>
 			</dict>
 			<dict>
@@ -212,16 +212,16 @@
 				<key>value</key>
 				<array>
 					<array>
-						<real>0.63407677412033081</real>
-						<real>0.63407677412033081</real>
-						<real>0.63407677412033081</real>
+						<real>1</real>
+						<real>1</real>
+						<real>1</real>
 						<real>1</real>
 					</array>
 					<array>
-						<real>0.84126764535903931</real>
-						<real>0.84023106098175049</real>
-						<real>0.8583376407623291</real>
-						<real>0.5</real>
+						<real>1</real>
+						<real>1</real>
+						<real>1</real>
+						<real>1</real>
 					</array>
 				</array>
 			</dict>
@@ -233,15 +233,15 @@
 				<key>value</key>
 				<array>
 					<array>
-						<real>1</real>
-						<real>1</real>
-						<real>1</real>
+						<real>0.19605055451393127</real>
+						<real>0.19605055451393127</real>
+						<real>0.19605055451393127</real>
 						<real>0.0</real>
 					</array>
 					<array>
-						<real>0.20000000298023224</real>
-						<real>0.20000000298023224</real>
-						<real>0.20000000298023224</real>
+						<real>1</real>
+						<real>1</real>
+						<real>1</real>
 						<real>0.0</real>
 					</array>
 				</array>
@@ -315,7 +315,7 @@
 				<key>type</key>
 				<string>Texture</string>
 				<key>value</key>
-				<string>ccbResources/ccbParticleFire.png</string>
+				<string>particleSprites/bubble.png</string>
 			</dict>
 		</array>
 		<key>selected</key>
@@ -329,11 +329,25 @@
 			<key>centeredOrigin</key>
 			<false/>
 			<key>ext</key>
+			<string>phone</string>
+			<key>height</key>
+			<integer>0</integer>
+			<key>name</key>
+			<string>Phone</string>
+			<key>scale</key>
+			<real>1</real>
+			<key>width</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>centeredOrigin</key>
+			<false/>
+			<key>ext</key>
 			<string>tablet phonehd</string>
 			<key>height</key>
 			<integer>0</integer>
 			<key>name</key>
-			<string>Fixed</string>
+			<string>Tablet</string>
 			<key>scale</key>
 			<real>2</real>
 			<key>width</key>

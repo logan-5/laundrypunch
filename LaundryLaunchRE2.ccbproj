@@ -78,6 +78,11 @@
 			<key>previewFolderHidden</key>
 			<true/>
 		</dict>
+		<key>DryerMode/assets</key>
+		<dict>
+			<key>isSmartSpriteSheet</key>
+			<true/>
+		</dict>
 		<key>Sprites</key>
 		<dict/>
 		<key>background.png</key>
@@ -171,16 +176,11 @@
 		</dict>
 		<key>miscSprites</key>
 		<dict>
-			<key>isDirty</key>
-			<true/>
 			<key>isSmartSpriteSheet</key>
 			<true/>
 		</dict>
 		<key>particleSprites</key>
-		<dict>
-			<key>isSmartSpriteSheet</key>
-			<true/>
-		</dict>
+		<dict/>
 		<key>springs</key>
 		<dict>
 			<key>isSmartSpriteSheet</key>

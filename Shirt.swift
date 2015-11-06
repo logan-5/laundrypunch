@@ -28,50 +28,54 @@ class Shirt: Dispensable {
         }
     }
     
-    let isRainbow = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
-    let isGold: Bool = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
+    var isRainbow: Bool!
+    var isGold: Bool!
     weak var sparkler: FreeParticles?
     var rainbowAnimation: CCAction?
     static var shirtContentSize: CGSize!
 
     var displayDying = false
     
-    weak var sprite: CCNode?
     var shirtColor: Color!
-    
-    override func didLoadFromCCB() -> Void {
+
+    override func initialize() {
         Shirt.shirtContentSize = self.contentSizeInPoints
         initialXVelocity = 0
         initialYVelocity = -8
         maxInitialAngularMomentum = 10
         bounceSpeed = 600
-        super.didLoadFromCCB()
+        super.initialize()
         shirtColor = Shirt.Color.randomColor()
         self.physicsBody.collisionType = "shirt"
         self.physicsBody.collisionGroup = "shirt"
-        
+
         // choose sprite
         let shirtSprite = CCSprite.spriteWithImageNamed( getShirtSprite() ) as! CCSprite
+        sprite?.removeFromParent()
         sprite = shirtSprite
         sprite!.position = CGPointZero
         self.addChild( sprite )
         sprite!.scale = Float( self.contentSize.height / sprite!.contentSize.height )
+        spriteScale = sprite.scale
         self.contentSize = CGSizeMake( sprite!.contentSize.width * CGFloat( sprite!.scale ), self.contentSize.height )
         sprite!.anchorPoint = CGPointZero
-        
+
         self.cascadeColorEnabled = true
-        if isRainbow && (GameState.sharedState.scene != nil) {
+        recalculateRainbowOrGold()
+        if isRainbow == true && (GameState.sharedState.scene != nil) {
             rainbowAnimation = CCActionAnimateRainbow.instantiate()
             self.runAction( rainbowAnimation )
-        } else if isGold {
+        } else if isGold == true {
             if !GameState.sharedState.lowFXMode && GameState.sharedState.scene != nil {
                 let sparkle = CCBReader.load( "Effects/GoldSparkle" ) as! FreeParticles
                 sparkle.particlePositionType = CCParticleSystemPositionType.Free
                 GameState.sharedState.scene!.addChild( sparkle )
                 sparkle.object = self
                 sparkler = sparkle
+                GameState.sharedState.playSound( "audioFiles/sparkle.caf" )
             }
         } else {
+            if rainbowAnimation != nil { stopAction( rainbowAnimation ) }
             var tintColor: CCColor!
             switch shirtColor! {
             case .Red:
@@ -88,56 +92,47 @@ class Shirt: Dispensable {
                 tintColor = CCColor.purpleColor()
             }
             self.color = tintColor
-        }
-
-        if isGold {
-            GameState.sharedState.playSound( "audioFiles/sparkle.caf" )
-        } else {
             GameState.sharedState.playSound( "audioFiles/whoosh.caf" )
         }
+    }
 
+    func recalculateRainbowOrGold() {
+        isRainbow = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
+        isGold = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
     }
     
     func getShirtSprite() -> String {
-        /*let numberOfItems = Float( clothesSprites.count ) // types in Swift are a freakin' disaster
-        let upperBound = UInt32( min( max( Float( GameState.sharedState.score ) / 3, 1 ), numberOfItems - 1 ) )
-        return "clothesSprites/" + clothesSprites[Int( arc4random_uniform( upperBound ) )] + ".png" // file extension apparently required in Swift*/
         let shirts = Data.sharedData.unlockedShirts
         let shirt = (shirts.objectAtIndex(Int(arc4random_uniform( UInt32(shirts.count) ))) as! String)
         return "clothesSprites/" + shirt + ".png"
     }
 
-//    func stack( color: Color ) -> Void {
-//        if let r = rainbowAnimation {
-//            self.sprite!.stopAction( rainbowAnimation )
-//            var tint: CCActionTintTo?;
-//
-//            switch color {
-//            case .Blue:
-//                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.blueColor() ) as? CCActionTintTo
-//            case .Green:
-//                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.greenColor() ) as? CCActionTintTo
-//            case .Purple:
-//                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.purpleColor() ) as? CCActionTintTo
-//            case .Red:
-//                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.redColor() ) as? CCActionTintTo
-//            case .Yellow:
-//                fallthrough
-//            default:
-//                tint = CCActionTintTo.actionWithDuration( 0, color: CCColor.yellowColor() ) as? CCActionTintTo
-//            }
-//            if let t = tint {
-//                self.sprite!.runAction( t )
-//            }
+    
+    /* DEBUGGING CODE ONLY BELOW */
+
+//    deinit {
+//        if !displayDying {
+//            print( "shirt dealloc" )
 //        }
 //    }
 
-
-
-    // for debugging only
+//    var dummyVar = 0
+//    var checkPos = false
+//    var checkPos2 = false
 //    override func update(delta: CCTime) {
-//        if isGold && sparkler == nil {
-//            println( "aha!" )
+//        if checkPos {
+//            print( "frame 0: body: " + String(self.physicsBody) + "\npos: " + String(self.position ) + "\nvel: " + String( self.physicsBody.velocity ))
+//            checkPos = false
+//            checkPos2 = true
+//        } else if checkPos2 {
+//            print( "frame 1: body: " + String(self.physicsBody) + "\npos: " + String( self.position ) + "\nvel: " + String( self.physicsBody.velocity ) )
+//            checkPos2 = false
 //        }
+//        var VERY_IMPORTANT_NUMBER_PLEASE_DONT_OPTIMIZE_AWAY_COMPILER = 0
+//        if self.position.x.isNaN {
+//            VERY_IMPORTANT_NUMBER_PLEASE_DONT_OPTIMIZE_AWAY_COMPILER = 9
+//            VERY_IMPORTANT_NUMBER_PLEASE_DONT_OPTIMIZE_AWAY_COMPILER *= GameState.sharedState.scene!.children.count
+//        }
+//        dummyVar = VERY_IMPORTANT_NUMBER_PLEASE_DONT_OPTIMIZE_AWAY_COMPILER
 //    }
 }

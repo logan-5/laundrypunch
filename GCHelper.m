@@ -15,7 +15,10 @@
 
 @end
 
-@implementation GCHelper
+@implementation GCHelper {
+    GCSwiftHelper* _helper;
+    NSMutableArray* _scores;
+}
 
 @synthesize gameCenterAvailable;
 
@@ -40,6 +43,8 @@ static GCHelper *_sharedHelper = nil;
             NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
             [nc addObserver:self selector:@selector(authenticationChanged) name:GKPlayerAuthenticationDidChangeNotificationName object:nil];
         }
+        _helper = [[GCSwiftHelper alloc] initWithHelper:self];
+        _scores = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -67,17 +72,24 @@ static GCHelper *_sharedHelper = nil;
         [self loadLeaderBoardInfo];
         [self loadAchievements];
 
+        for ( NSArray* score in _scores ) {
+            [self reportScore:((NSNumber*)score[0]).longLongValue forLeaderboardID:(NSString*)score[1]];
+        }
+
     } else if (![GKLocalPlayer localPlayer].isAuthenticated && userAuthenticated) {
         NSLog(@"Authentication changed: player not authenticated.");
         userAuthenticated = FALSE;
     }
 }
 
+// broken
 - (void)authenticateLocalUserOnViewController:(UIViewController*)viewController
                             setCallbackObject:(id)obj
                             withPauseSelector:(SEL)selector
 {
-    if (!gameCenterAvailable) return;
+    [_helper authenticateLocalUserOnViewController:viewController setCallbackObject:obj withPauseSelector:selector];
+    return;
+    /* if (!gameCenterAvailable) return;
     GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
 
     NSLog(@"Authenticating local user...");
@@ -88,8 +100,13 @@ static GCHelper *_sharedHelper = nil;
                     [obj performSelector:selector withObject:nil afterDelay:0];
                 }
 
-                [viewController presentViewController:authViewController animated:YES completion:^ {
-                }];
+//                [viewController presentViewController:authViewController animated:YES completion:^ {
+//                    NSLog( @"view controller finished" );
+//                    [[CCDirector sharedDirector] startAnimation];
+//                }];
+                //SanityViewController *c1 = [SanityViewController new], *c2 = [SanityViewController new];
+                [[CCDirector sharedDirector] presentViewController:[SanityViewController new] animated:NO completion:nil];
+                //[c1 presentViewController:c2 animated:NO completion:nil];
             } else if (error != nil) {
                 // process error
             }
@@ -97,7 +114,7 @@ static GCHelper *_sharedHelper = nil;
     }
     else {
         NSLog(@"Already authenticated!");
-    }
+    } */
 }
 
 #pragma mark Leaderboards
@@ -111,6 +128,11 @@ static GCHelper *_sharedHelper = nil;
 
 - (void)reportScore:(int64_t)score forLeaderboardID:(NSString*)identifier
 {
+    if (![GKLocalPlayer localPlayer].authenticated ) {
+        NSArray* storedScore = @[[NSNumber numberWithLongLong:score], identifier];
+        [_scores addObject:storedScore];
+        return;
+    }
     GKScore *scoreReporter = [[GKScore alloc] initWithLeaderboardIdentifier: identifier];
     scoreReporter.value = score;
     scoreReporter.context = 0;
@@ -139,7 +161,6 @@ static GCHelper *_sharedHelper = nil;
 - (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
 {
     [gameCenterViewController dismissViewControllerAnimated:YES completion:^{
-
     }];
 }
 

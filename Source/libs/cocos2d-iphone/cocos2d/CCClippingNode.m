@@ -90,6 +90,7 @@ SetProgram(CCNode *n, CCShader *p, NSNumber *alpha) {
                 CCLOGWARN(@"Stencil buffer is not enabled; enable it by setting the Stencil attribue to 8 bit in the Attributes inspector of the CCGLView view object in MainMenu.xib, or programmatically by adding NSOpenGLPFAStencilSize and 8 in the NSOpenGLPixelFormatAttribute array of the NSOpenGLPixelFormat used when initializing CCGLView. Until then, everything will be drawn without stencil.");
 #endif
             }
+            _stencilBits = 24;
         });
     }
     return self;

@@ -4,6 +4,19 @@
 <dict>
 	<key>frames</key>
 	<dict>
+		<key>particleSprites/bubble.png</key>
+		<dict>
+			<key>frame</key>
+			<string>{{1, 259}, {128, 128}}</string>
+			<key>offset</key>
+			<string>{0, 0}</string>
+			<key>rotated</key>
+			<false/>
+			<key>sourceColorRect</key>
+			<string>{{0, 0}, {128, 128}}</string>
+			<key>sourceSize</key>
+			<string>{128, 128}</string>
+		</dict>
 		<key>particleSprites/sad.png</key>
 		<dict>
 			<key>frame</key>

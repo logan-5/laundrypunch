@@ -1,11 +1,12 @@
-import Foundation
+import UIKit
 
 class MainScene: CCNode, CCPhysicsCollisionDelegate {
     private(set) weak var bouncer: Bouncer!
     private(set) weak var inflow: Inflow!
+    private(set) weak var nozzle: CCSprite!
     private(set) weak var handle: BouncerHandle!
     private(set) weak var myPhysicsNode: CCPhysicsNode!
-    private(set) weak var scoreLabel: CCLabelTTF!
+    private(set) weak var scoreLabel: CCLabelBMFont!//CCLabelTTF!
     private(set) weak var modeLabel: CCLabelTTF!
     private(set) weak var restartButton: CCButton!
     private(set) weak var dieButton: CCButton!
@@ -17,16 +18,18 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     private(set) var endGameFalling = false
     var nextEffect: String!
     var hasBeenTouched = false
+
+    let gameState = GameState.sharedState
     
     func didLoadFromCCB() -> Void {
-        GCHelper.defaultHelper().authenticateLocalUserOnViewController( CCDirector.sharedDirector(), setCallbackObject: self, withPauseSelector: nil )
-        GCHelper.defaultHelper().registerListener( CCDirector.sharedDirector() )
-        GameState.sharedState.scene = self
+        gameState.scene = self
         print( "loaded main scene" )
         self.userInteractionEnabled = false
         myPhysicsNode.collisionDelegate = self
         updateScoreLabel()
+        nozzle.zOrder = 2
         scoreLabel.zOrder = 2
+        scoreLabel.setAlignment( CCTextAlignment.Center )
         restartButton.background.margin = 0
         dieButton.background.margin = 0
         modeLabel.string = Data.sharedData.modeName + " mode"
@@ -38,12 +41,19 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as! CCAction
         overlay.runAction( fadeOut )
 
-        myPhysicsNode.gravity = GameState.sharedState.modeInfo.worldGravity
+        myPhysicsNode.gravity = gameState.modeInfo.worldGravity
+
+        particleLayer.zOrder = 4
+
+//        originalScoreLabelContentSizeWidth = scoreLabel.contentSizeInPoints.width
+//        originalScoreLabelContentSizeFrac = Float( originalScoreLabelContentSizeWidth / self.contentSizeInPoints.width)
+        //
+        //myPhysicsNode.debugDraw = true
     }
 
     override func addChild(node: CCNode!) {
         if let _ = node as? CCParticleSystem {
-            if particleLayer != nil && !GameState.sharedState.lost {
+            if particleLayer != nil && !gameState.lost {
                 particleLayer.addChild( node )
                 return
             }
@@ -52,7 +62,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
 
     func pause() {
-        if GameState.sharedState.lost { return }
+        if gameState.lost { return }
         myPhysicsNode.paused = !myPhysicsNode.paused
         particleLayer.paused = myPhysicsNode.paused
         
@@ -68,42 +78,54 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         }
     }
 
+    func isPaused() -> Bool {
+        return myPhysicsNode.paused
+    }
+
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, animateSensor: CCNode!, wildcard: CCNode!) -> ObjCBool {
-        if !GameState.sharedState.lost && ( wildcard.physicsBody.collisionType == "shirt" || wildcard.physicsBody.collisionType == "quarter" || wildcard.physicsBody.collisionType == "restoredQuarter" ) {
+        if !gameState.lost && ( wildcard.physicsBody.collisionType == "shirt" || wildcard.physicsBody.collisionType == "quarter" || wildcard.physicsBody.collisionType == "restoredQuarter" ) {
             bouncer.animateGlove()
         }
         return false
     }
     
-    func ccPhysicsCollisionPostSolve( pair:CCPhysicsCollisionPair!, shirt:Shirt!, bouncer:Bouncer! ) -> ObjCBool {
+    func ccPhysicsCollisionBegin( pair:CCPhysicsCollisionPair!, shirt:Shirt!, bouncer:Bouncer! ) -> ObjCBool  {
+        guard !shirt.justBounced else { return false }
         let shirtSpeed = shirt.bounceSpeed //ccpLength( shirt.physicsBody.velocity )
+        //print( "shirt speed = " + String( shirtSpeed ) )
         var shirtNewVelocity = ccp( shirtSpeed, 0 )
         shirtNewVelocity = ccpRotateByAngle( shirtNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
         shirt.physicsBody.velocity = ccp( -shirtNewVelocity.x, shirtNewVelocity.y )
         shirt.startTrickShotTimer()
+        shirt.startBounceTimer()
 
-        return true
+        return false
     }
-    
-    func ccPhysicsCollisionPostSolve( pair:CCPhysicsCollisionPair!, quarter:Quarter!, bouncer:Bouncer! ) -> ObjCBool {
+
+    func ccPhysicsCollisionBegin( pair:CCPhysicsCollisionPair!, quarter:Quarter!, bouncer:Bouncer! ) -> ObjCBool {
+        guard !quarter.justBounced else { return false }
         let quarterSpeed = quarter.bounceSpeed
         var quarterNewVelocity = ccp( quarterSpeed, 0 )
         quarterNewVelocity = ccpRotateByAngle( quarterNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
         quarter.physicsBody.velocity = ccp( -quarterNewVelocity.x, quarterNewVelocity.y )
         quarter.startTrickShotTimer()
+        quarter.startBounceTimer()
 
-        return true
+        print( "bounce" )
+        return false
     }
 
-    func ccPhysicsCollisionPostSolve(pair: CCPhysicsCollisionPair!, restoredQuarter: Quarter!, bouncer: Bouncer!) -> ObjCBool {
-        restoredQuarter.physicsBody.collisionType = "quarter"
-        let quarterSpeed = restoredQuarter.bounceSpeed
+    func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, restoredQuarter quarter: Quarter!, bouncer: Bouncer!) -> ObjCBool  {
+        quarter.physicsBody.collisionType = "quarter"
+        guard !quarter.justBounced else { return false }
+        let quarterSpeed = quarter.bounceSpeed
         var quarterNewVelocity = ccp( quarterSpeed, 0 )
         quarterNewVelocity = ccpRotateByAngle( quarterNewVelocity, CGPointZero, CC_DEGREES_TO_RADIANS( bouncer.rotation - 180 ) )
-        restoredQuarter.physicsBody.velocity = ccp( -quarterNewVelocity.x, quarterNewVelocity.y )
-        restoredQuarter.startTrickShotTimer()
+        quarter.physicsBody.velocity = ccp( -quarterNewVelocity.x, quarterNewVelocity.y )
+        quarter.startTrickShotTimer()
+        quarter.startBounceTimer()
 
-        return true
+        return false
     }
 
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, quarter: CCNode!, shirt: CCNode!) -> ObjCBool {
@@ -131,17 +153,19 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
 
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, shirt: Shirt!, receptacle: Receptacle!) -> ObjCBool {
-        if GameState.sharedState.lost { return false }
-        if shirt.isRainbow || shirt.isGold || shirt.shirtColor == receptacle.shirtColor {
+        if gameState.lost { return false }
+        if shirt.isRainbow == true  || shirt.isGold == true || shirt.shirtColor == receptacle.shirtColor {
             receptacle.receiveItem( shirt )
         } else {
-            GameState.sharedState.failure()
+            gameState.failure()
             shirt.fall()
-            if GameState.sharedState.mode != GameState.Mode.Efficiency { // efficiency mode is too hard if it kills previously stacked shirts
+            --gameState.liveObjects
+            shirt.decremented = true
+            if gameState.mode != GameState.Mode.Efficiency { // efficiency mode is too hard if it kills previously stacked shirts
                 receptacle.killShirt()
             }
             runFailParticles( shirt.position )
-            GameState.sharedState.playSound( "audioFiles/explosion.caf" )
+            gameState.playSound( "audioFiles/explosion.caf" )
         }
         return false
     }
@@ -155,29 +179,38 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         let failEffect = CCBReader.load( "Effects/Failure" ) as! CCParticleSystem
         failEffect.autoRemoveOnFinish = true
         failEffect.position = position
-        let particles = 1.0 / Float( max(GameState.sharedState.lives, 1) ) * 80.0
+        let particles = 1.0 / Float( max(gameState.lives, 1) ) * 80.0
         failEffect.totalParticles = UInt( 20 + UInt( max( particles, 80.0 ) ) )
         addChild( failEffect )
     }
     
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, quarter: Quarter!, receptacle: Receptacle!) -> ObjCBool {
-        if GameState.sharedState.lost { return false }
+        if gameState.lost { return false }
         quarter.physicsBody.collisionType = "usedQuarter"
         receptacle.receiveItem( quarter )
         //receptacle.doLaundry( quarter.gold )
 
         return false
     }
-    
+
+    //var originalScoreLabelContentSizeWidth: CGFloat!
+    //var originalScoreLabelContentSizeFrac: Float!
     func updateScoreLabel() -> Void {
         if scoreLabel != nil {
-            scoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: GameState.sharedState.score ) )
-            if scoreLabel.texture != nil {
-            let l = scoreLabel.texture.contentSize().width
-                if  l > ( self.contentSizeInPoints.width / 4 ) {
-                    scoreLabel.scale = Float(( self.contentSizeInPoints.width / 4 ) / scoreLabel.texture.contentSize().width)
+            let string = String.localizedStringWithFormat( "%@", NSNumber( longLong: gameState.score ) )
+            scoreLabel.setString( string )
+//            if scoreLabel.texture != nil && ready {
+//            let l = scoreLabel.texture.contentSize().width
+//                if  l > ( self.contentSizeInPoints.width / 4 ) {
+//                    scoreLabel.scale = Float(( self.contentSizeInPoints.width / 4 ) / scoreLabel.texture.contentSize().width)
+//                }
+//                let l = scoreLabel.contentSize.width
+                let digits = string.characters.count
+                if digits > 4 {
+                    //scoreLabel.scale = Float(originalScoreLabelContentSizeWidth)/(Float(digits))
+                    scoreLabel.scale = 3.0 / Float( digits )
                 }
-            }
+            //}
         }
     }
 
@@ -186,7 +219,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
     
     func gameOver( delay: CCTime ) -> Void {
-        if GameState.sharedState.lost { return } // YOLO
+        if gameState.lost { return } // YOLO
         inflow.cancel()
         let delay = CCActionDelay.actionWithDuration( delay ) as! CCActionDelay
         let effect = CCActionCallBlock.actionWithBlock { () -> Void in
@@ -200,6 +233,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
                         if let s = node as? Shirt {
                             s.fall()
                         }
+
                     } else {
                         node.physicsBody = CCPhysicsBody( circleOfRadius: 10, andCenter: node.position )
                         node.physicsBody!.affectedByGravity = true
@@ -235,16 +269,16 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     }
 
     func restartButtonPressed() {
-        GameState.sharedState.restart()
-        GameState.sharedState.playSound( "audioFiles/flush.caf" )
+        gameState.restart()
+        gameState.playSound( "audioFiles/flush.caf" )
     }
 
     func dieButtonPressed() {
         gameOver( 0 )
         myPhysicsNode.paused = false
         particleLayer.paused = false
-        GameState.sharedState.endGame()
-        GameState.sharedState.playSound( "audioFiles/explosion.caf" )
+        gameState.endGame()
+        gameState.playSound( "audioFiles/explosion.caf" )
     }
 
     func killSelf() {
@@ -259,7 +293,11 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         }
     }
 
+    var ready = false
     override func update(delta: CCTime) {
+        if !ready {
+            ready = true
+        }
         if endGameFalling && ( myPhysicsNode != nil ) {
             for node in myPhysicsNode.children {
                 if node.positionInPoints.y < -node.contentSizeInPoints.height {

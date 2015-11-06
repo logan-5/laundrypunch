@@ -466,6 +466,7 @@ void FNTConfigRemoveCache( void )
 }
 
 @synthesize alignment = _alignment;
+@dynamic color, opacity;
 
 #pragma mark LabelBMFont - Purge Cache
 +(void) purgeCachedData

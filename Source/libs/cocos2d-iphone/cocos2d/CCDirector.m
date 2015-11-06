@@ -115,6 +115,7 @@ extern NSString * cocos2dVersion(void);
 @synthesize scheduler = _scheduler;
 @synthesize actionManager = _actionManager;
 @synthesize actionManagerFixed = _actionManagerFixed;
+@dynamic view;
 
 //
 // singleton stuff

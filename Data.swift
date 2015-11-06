@@ -88,4 +88,14 @@ class Data: NSObject {
             defaults.setBool( newValue, forKey: "Sound" )
         }
     }
+
+    var __TESTING_ONLY__previewMode: Bool {
+        get {
+            //println( "TESTING-ONLY PROPERTY READ" )
+            return false//defaults.boolForKey( "Preview" )
+        }
+        set {
+            defaults.setBool( newValue, forKey: "Preview" )
+        }
+    }
 }

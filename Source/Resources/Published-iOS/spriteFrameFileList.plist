@@ -10,7 +10,7 @@
 	<key>spriteFrameFiles</key>
 	<array>
 		<string>springs.plist</string>
-		<string>particleSprites.plist</string>
+		<string>DryerMode/assets.plist</string>
 		<string>clothesSprites.plist</string>
 		<string>miscSprites.plist</string>
 	</array>

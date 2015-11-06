@@ -46,7 +46,7 @@ class LivesDisplay: CCNode {
             --lives
             var shirt: Shirt
             var i = 1
-            do {
+            repeat {
                 let index = self.children.count - i++
                 if index < 0 || index >= self.children.count { return }
                 shirt = self.children[index] as! Shirt

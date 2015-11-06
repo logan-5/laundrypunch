@@ -177,9 +177,42 @@ static void CCLogShader(NSString *label, NSArray *sources)
     }
 }
 
+#define EXTENSION_STRING "#extension GL_OES_standard_derivatives : enable"
+static NSString * g_extensionStr = @EXTENSION_STRING;
+
+static NSArray * PrependExtensionIfNeeded(NSArray *sources)
+{
+    NSMutableArray *mutableSources = [NSMutableArray array];
+
+    BOOL hasExtension = NO;
+
+    for (NSString *source in sources)
+    {
+        NSString *newSource = [source copy];
+        if([source rangeOfString:g_extensionStr].location != NSNotFound)
+        {
+            hasExtension = YES;
+            NSArray *strs = [source componentsSeparatedByString:g_extensionStr];
+            newSource = [strs componentsJoinedByString:@"\n"];
+        }
+
+        [mutableSources addObject:newSource];
+    }
+
+    if (hasExtension)
+    {
+        NSMutableString *firstSource = [NSMutableString stringWithString:[mutableSources firstObject]];
+        [firstSource insertString:[NSString stringWithFormat:@"%@\n", g_extensionStr] atIndex:0];
+        [mutableSources replaceObjectAtIndex:0 withObject:firstSource];
+    }
+
+    return mutableSources;
+}
+
 static GLint
 CompileShaderSources(GLenum type, NSArray *sources)
 {
+    sources = PrependExtensionIfNeeded(sources);
     const GLchar **charSources = malloc(sizeof(GLchar*) * sources.count);
     int i = 0;
     for (NSString *source in sources)

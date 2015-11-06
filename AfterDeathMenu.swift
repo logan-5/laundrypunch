@@ -12,6 +12,8 @@ class AfterDeathMenu: CCNode {
 
     weak var scoreLabel: CCLabelTTF!
     weak var scoreScoreLabel: CCLabelTTF!
+    weak var goldInfoLabel: CCLabelTTF?
+    var goldInfoRunningActions = false
     weak var highScoreLabel: CCLabelTTF!
     weak var stinkyLabel: CCLabelTTF!
     weak var restartButton: CCButton!
@@ -19,6 +21,7 @@ class AfterDeathMenu: CCNode {
     weak var leaderboardsButton: CCButton!
     weak var achievementsButton: CCButton!
     weak var unlockablesButton: CCButton!
+    weak var dryerModeButton: CCButton!
     weak var soundButton: CCButton!
     weak var creditsLabel: CCLabelTTF!
     weak var scoreFireworks: CCParticleSystem?
@@ -27,8 +30,17 @@ class AfterDeathMenu: CCNode {
     private var targetScore: Int64 = 0
     private var scoreUpdateTimer: NSTimer?
     private var scoreUpdateStep: Int64 = 1
+    private var doubleTapTimer: NSTimer?
+
     private var ready = false
     private var scoreDisplayed = false
+
+//    weak var __TESTING_ONLY__previewButton: CCButton!
+//    func __TESTING_ONLY__previewButtonPressed() {
+//        let new = !Data.sharedData.__TESTING_ONLY__previewMode
+//        Data.sharedData.__TESTING_ONLY__previewMode = new
+//        __TESTING_ONLY__previewButton.label.string = "TESTING ONLY preview mode " + ( new ? "ON" : "OFF" )
+//    }
 
     var chaChingSound = GameState.sharedState.playSound( "audioFiles/chaching.caf", loop: true )
 
@@ -38,17 +50,21 @@ class AfterDeathMenu: CCNode {
         self.opacity = 0
         let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as! CCAction
         self.runAction( fadeIn )
+        self.zOrder = 3
         
         self.userInteractionEnabled = true
         scoreScoreLabel.runAction( CCActionAnimateRainbow.instantiate() )
+        goldInfoLabel!.opacity = 0
 
         highScoreLabel.string = Data.sharedData.modeName + " best:\n" + String.localizedStringWithFormat( "%@", NSNumber( longLong: GameState.sharedState.oldHighScore ) )
         //highScoreLabel.opacity = 0
 
         setSoundButtonText()
         creditsLabel.string = "© 2015 logan r smith // noisecode.net"
+
+        //__TESTING_ONLY__previewButton.label.string = "TESTING ONLY preview mode " + ( Data.sharedData.__TESTING_ONLY__previewMode ? "ON" : "OFF" )
     }
-    
+
     func restartButtonPressed() -> Void {
         GameState.sharedState.restart()
     }
@@ -73,6 +89,11 @@ class AfterDeathMenu: CCNode {
         self.addChild( CCBReader.load( "UnlockablesMenu" ) )
     }
 
+    func dryerModeButtonPressed() {
+        let transition = CCTransition( crossFadeWithDuration: 0.5  )
+        CCDirector.sharedDirector().replaceScene( CCBReader.loadAsScene( "DryerMode/DryerScene" ), withTransition: transition )
+    }
+
     func soundButtonPressed() -> Void {
         Data.sharedData.soundOn = Data.sharedData.soundOn == false
         setSoundButtonText()
@@ -83,10 +104,34 @@ class AfterDeathMenu: CCNode {
     }
     
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
+        if doubleTapTimer == nil {
+            doubleTapTimer = NSTimer.scheduledTimerWithTimeInterval( 0.4, target: self, selector: "doubleTapExpire", userInfo: nil, repeats: false )
+        } else {
+            doubleTapExpire()
+            scoreUpdateTimer?.invalidate()
+            scoreUpdateTimer = nil
+            gold = 0
+            if scoreFireworks != nil {
+                scoreFireworks!.stopSystem()
+            }
+            self.stopAllActions()
+            chaChingSound?.stop()
+            score = GameState.sharedState.finalScore
+            updateScoreLabel()
+            goldExplosion()
+            goldShirtEffectManager()
+            return
+        }
+
         let failEffectSmell = CCBReader.load( "Effects/FailureSmell" ) as! CCParticleSystem
         failEffectSmell.autoRemoveOnFinish = true
         failEffectSmell.position = touch.locationInNode( self )
         self.addChild( failEffectSmell )
+    }
+
+    func doubleTapExpire() {
+        doubleTapTimer?.invalidate()
+        doubleTapTimer = nil
     }
 
     func displayScore() -> Void {
@@ -105,34 +150,55 @@ class AfterDeathMenu: CCNode {
             self.addChild( fireWorks )
         } else {
             scoreScoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: score ) )
+            if scoreScoreLabel.texture != nil {
+                let l = scoreScoreLabel.texture.contentSize().width
+                if  l > ( self.contentSizeInPoints.width ) {
+                    scoreScoreLabel.scale = Float(( self.contentSizeInPoints.width ) / scoreScoreLabel.texture.contentSize().width)
+                }
+            }
             chaChingSound?.stop()
             goldShirtEffectManager()
         }
     }
 
+    var goldCounter: Int64 = 1
     func goldShirtEffectManager() {
         if gold-- > 0 {
             let delay = CCActionDelay.actionWithDuration( 0.22 ) as! CCActionDelay
             let effect = CCActionCallFunc.actionWithTarget( self, selector: "goldShirtEffect" ) as! CCActionCallFunc
             self.runAction( CCActionSequence.actionWithArray([delay, effect] ) as! CCActionSequence )
         } else {
+            if !goldInfoRunningActions {
+                goldInfoLabel?.string = "x " + String( GameState.sharedState.goldShirts ) + " gold"
+                let fade = CCActionFadeOut.actionWithDuration( 1.7 ) as! CCAction
+                let die = CCActionCallBlock.actionWithBlock({ () -> Void in
+                    self.goldInfoLabel?.removeFromParent()
+                }) as! CCAction
+                goldInfoLabel?.runAction( CCActionSequence.actionWithArray( [fade, die] ) as! CCAction )
+                goldInfoRunningActions = true
+            }
             if GameState.sharedState.oldHighScore != Data.sharedData.score {
                 highScoreLabel.string = "new " + Data.sharedData.modeName + " best!\n" + String.localizedStringWithFormat( "%@", NSNumber( longLong: Data.sharedData.score ) )
             }
         }
     }
 
-    func goldShirtEffect() {
+    func goldExplosion() {
         let goldExplosion = CCBReader.load( "Effects/GoldExplosion" ) as! CCParticleSystem
         goldExplosion.autoRemoveOnFinish = true
         //fireWorks.positionType = scoreScoreLabel.positionType
         goldExplosion.position = scoreScoreLabel.positionInPoints
         self.addChild( goldExplosion )
+    }
+
+    func goldShirtEffect() {
+        goldExplosion()
 
         GameState.sharedState.playSound( "audioFiles/explosion.caf" )
 
         score += targetScore
-        scoreScoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: score ) )
+        updateScoreLabel()
+        goldInfoLabel!.string = "x " + String( ++goldCounter ) + " gold"
         goldShirtEffectManager()
     }
 
@@ -146,21 +212,42 @@ class AfterDeathMenu: CCNode {
                 if scoreFireworks != nil {
                     scoreFireworks!.stopSystem()
                 }
+                if gold > 0 {
+                    goldInfoLabel!.runAction( CCActionFadeIn.actionWithDuration( 0.2 ) as! CCAction )
+                    goldInfoLabel!.runAction( CCActionAnimateRainbow.instantiate( 1 ) )
+                } else {
+                    goldInfoLabel!.removeFromParent()
+                }
                 chaChingSound?.stop()
                 goldShirtEffectManager()
             }
         }
-        scoreScoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: score ) )
-        if scoreScoreLabel.texture != nil {
-            let l = scoreScoreLabel.texture.contentSize().width
-            if  l > ( self.contentSizeInPoints.width ) {
-                scoreScoreLabel.scale = Float(( self.contentSizeInPoints.width ) / scoreScoreLabel.texture.contentSize().width)
-            }
-        }
+        updateScoreLabel()
     }
 
+    func updateScoreLabel() {
+        scoreScoreLabel.string = String.localizedStringWithFormat( "%@", NSNumber( longLong: score ) )
+        labelScaleDirty = true
+    }
+
+    var labelScaleDirty = false
+    var frameDelay = false // why
     override func update(delta: CCTime) {
         if !ready { ready = true; return }
         if !scoreDisplayed { displayScore(); scoreDisplayed = true }
+        if labelScaleDirty {
+            if !frameDelay {
+                frameDelay = true
+            } else {
+                frameDelay = false
+                labelScaleDirty = false
+                if scoreScoreLabel.texture != nil {
+                    let l = scoreScoreLabel.texture.contentSize().width
+                    if  l > ( self.contentSizeInPoints.width ) {
+                        scoreScoreLabel.scale = Float(( self.contentSizeInPoints.width ) / scoreScoreLabel.texture.contentSize().width)
+                    }
+                }
+            }
+        }
     }
 }

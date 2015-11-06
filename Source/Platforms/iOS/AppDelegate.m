@@ -45,15 +45,16 @@
     else
         [UIScreen mainScreen].currentMode = [UIScreenMode emulatedMode:UIScreenScaledAspectFitEmulationMode];
 #endif
-    
+
     // Configure CCFileUtils to work with SpriteBuilder
     [CCBReader configureCCFileUtils];
     
     // Do any extra configuration of Cocos2d here (the example line changes the pixel format for faster rendering, but with less colors)
     //[cocos2dSetup setObject:kEAGLColorFormatRGB565 forKey:@"CCConfigPixelFormat"];
-    
+    [cocos2dSetup setObject:@GL_DEPTH24_STENCIL8_OES forKey:CCSetupDepthFormat]; // dryer mode
+
     [self setupCocos2dWithOptions:cocos2dSetup];
-    [CCTexture setDefaultAlphaPixelFormat:CCTexturePixelFormat_RGBA4444];
+    //[CCTexture setDefaultAlphaPixelFormat:CCTexturePixelFormat_RGBA4444];
     return YES;
 }
 

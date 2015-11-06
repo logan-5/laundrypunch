@@ -20,10 +20,12 @@ class AchievementManager: NSObject {
     var launchedShirts: Int64 = 0
     var firstColor: Shirt.Color?
     var colorChanged = false
+    var acrossScreenStacks: [Shirt.Color] = Array()
 
     func resetAll() {
         launchedShirts = 0
         firstColor = nil
+        acrossScreenStacks.removeAll()
     }
 
     func notifyShirtLaunch() {
@@ -44,9 +46,13 @@ class AchievementManager: NSObject {
         }
     }
 
-    func notifyStackSize( size: Int ) {
+    func notifyStackSize( size: Int, color: Shirt.Color ) {
+        for c in acrossScreenStacks {
+            if c == color { return }
+        }
         if ( CGFloat(Float(Shirt.shirtContentSize.width) + Float(size) * Receptacle.stackOffset )) >= GameState.sharedState.scene!.contentSizeInPoints.width {
             gc.reportAchievementIdentifier( "procrastinator3", percentComplete: 100 )
+            acrossScreenStacks.append( color )
         }
     }
 }
