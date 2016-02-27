@@ -199,7 +199,7 @@ class Receptacle: CCNode {
             self.cashInLoad( quarter.regurgitated )
 
             if !goldCoin {
-                print( "silver cash in" )
+                // print( "silver cash in" )
                 // gold coins cash in the stack but don't destroy it
                 // so destroy if not gold coin
                 for shirt in self.shirts {
@@ -214,7 +214,7 @@ class Receptacle: CCNode {
                 }
                 self.shirts.removeAll( keepCapacity: true )
             } else {
-                print( "gold cash in" )
+                // print( "gold cash in" )
                 // but if it is, just remove the coin(s)
 //                var removeList: [Int] = Array()
 //                for var i = 0; i < self.shirts.count; ++i {
@@ -246,7 +246,7 @@ class Receptacle: CCNode {
                         move = CCActionEaseSineOut.actionWithAction( move as! CCActionMoveBy ) as! CCActionEaseSineOut
                         self.shirts[i].runAction( move )
                     }
-                    print( "re-stacked shirts" )
+                    // print( "re-stacked shirts" )
                 } else {
                     // faster I think
                     for shirt in self.shirts {
@@ -364,7 +364,7 @@ class Receptacle: CCNode {
 
         // create a string of the format:
         // [# gold] +[score] [x [modifiers]]
-        string = prefix + "+" + String( points ) + ( modifier > 0 ? " x " + String( modifier ) : "" ) + ( reg ? " combo!" : "" )
+        string = prefix + "+" + String( points ) + ( modifier > 0 ? " \u{00D7} " + String( modifier ) : "" ) + ( reg ? " combo!" : "" )
 
         if modifier > 0 { points *= modifier }
         return ( points, golds, string )

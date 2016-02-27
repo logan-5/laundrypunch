@@ -28,7 +28,7 @@ class BouncerHandle: CCNode {
     }
     
     override func touchBegan( touch: CCTouch!, withEvent event: CCTouchEvent! ) -> Void {
-        guard !GameState.sharedState.scene!.isPaused() else { return }
+        if GameState.sharedState.scene!.isPaused() { GameState.sharedState.scene!.pause() } // unpause if paused
         GameState.sharedState.scene!.hasBeenTouched = true
 
         let touchPoint = touch.locationInNode( self.parent )

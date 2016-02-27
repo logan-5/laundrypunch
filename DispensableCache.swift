@@ -34,7 +34,7 @@ class DispensableCache: NSObject {
         case is Shirt:
             shirtCache.append( object as! Shirt )
         default:
-            print( "non-quarter, non-shirt Dispensable object died. removing" )
+            // print( "non-quarter, non-shirt Dispensable object died. removing" )
             object.removeFromParent()
         }
 
@@ -64,7 +64,7 @@ class DispensableCache: NSObject {
         if shirtCache.count > 0 {
             shirt = shirtCache.removeLast()
             shirt.initialize()
-            print( "SHIRT REUSED" )
+            // print( "SHIRT REUSED" )
         } else {
             shirt = CCBReader.load( "Shirt" ) as! Shirt
             GameState.sharedState.scene!.myPhysicsNode.addChild( shirt )

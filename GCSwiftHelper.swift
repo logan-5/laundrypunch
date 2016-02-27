@@ -21,7 +21,7 @@ class GCSwiftHelper: NSObject {
         if !helper.gameCenterAvailable { return }
         let localPlayer = GKLocalPlayer.localPlayer()
 
-        print("Authenticating local user...")
+        // print("Authenticating local user...")
         if !localPlayer.authenticated {
             localPlayer.authenticateHandler = { ( authViewController: UIViewController?, error: NSError? ) -> Void in
                 guard authViewController != nil else { return }
@@ -32,13 +32,13 @@ class GCSwiftHelper: NSObject {
                 obj?.performSelector( selector, withObject: nil, afterDelay: 0 )
 
                 viewController.presentViewController( authViewController!, animated: true, completion: { () -> Void in
-                    print( "view controller finished" )
+                    // print( "view controller finished" )
                     CCDirector.sharedDirector().startAnimation()
                     GameState.sharedState.scene!.pause()
                 })
             }
         } else {
-            print( "Already authenticated!" )
+            // print( "Already authenticated!" )
         }
     }
 }

@@ -8,6 +8,8 @@
 
 import UIKit
 
+let menuFadeSpeed = 0.3
+
 class Data: NSObject {
     // this is how you do singletons in swift
     class var sharedData: Data {

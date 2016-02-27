@@ -97,8 +97,8 @@ class Shirt: Dispensable {
     }
 
     func recalculateRainbowOrGold() {
-        isRainbow = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
-        isGold = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.specialEventsActive ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
+        isRainbow = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.allowRainbowShirts ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
+        isGold = probabilityOf( 0.04 * (GameState.sharedState.modeInfo.allowGoldShirts ? 1 : 0) * (GameState.sharedState.emittedFirstShirt ? 1 : 0) )
     }
     
     func getShirtSprite() -> String {
@@ -106,33 +106,4 @@ class Shirt: Dispensable {
         let shirt = (shirts.objectAtIndex(Int(arc4random_uniform( UInt32(shirts.count) ))) as! String)
         return "clothesSprites/" + shirt + ".png"
     }
-
-    
-    /* DEBUGGING CODE ONLY BELOW */
-
-//    deinit {
-//        if !displayDying {
-//            print( "shirt dealloc" )
-//        }
-//    }
-
-//    var dummyVar = 0
-//    var checkPos = false
-//    var checkPos2 = false
-//    override func update(delta: CCTime) {
-//        if checkPos {
-//            print( "frame 0: body: " + String(self.physicsBody) + "\npos: " + String(self.position ) + "\nvel: " + String( self.physicsBody.velocity ))
-//            checkPos = false
-//            checkPos2 = true
-//        } else if checkPos2 {
-//            print( "frame 1: body: " + String(self.physicsBody) + "\npos: " + String( self.position ) + "\nvel: " + String( self.physicsBody.velocity ) )
-//            checkPos2 = false
-//        }
-//        var VERY_IMPORTANT_NUMBER_PLEASE_DONT_OPTIMIZE_AWAY_COMPILER = 0
-//        if self.position.x.isNaN {
-//            VERY_IMPORTANT_NUMBER_PLEASE_DONT_OPTIMIZE_AWAY_COMPILER = 9
-//            VERY_IMPORTANT_NUMBER_PLEASE_DONT_OPTIMIZE_AWAY_COMPILER *= GameState.sharedState.scene!.children.count
-//        }
-//        dummyVar = VERY_IMPORTANT_NUMBER_PLEASE_DONT_OPTIMIZE_AWAY_COMPILER
-//    }
 }

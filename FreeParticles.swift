@@ -17,11 +17,12 @@ class FreeParticles: CCParticleSystem {
 
     override func update(delta: CCTime) {
         //guard self != nil else { return }
+        if self.parent == nil { return }
         if !ready && object != nil {
             ready = true
-            self.autoRemoveOnFinish = true
             return
         } else if ready && ( object == nil || object?.visible == false ) && !stopped {
+            self.autoRemoveOnFinish = true
             self.stopSystem()
             stopped = true
         } else if ready && !stopped {

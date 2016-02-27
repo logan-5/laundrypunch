@@ -91,7 +91,7 @@
 		B759E4EC1880C33700E8166C /* cpSlideJoint.c in Sources */ = {isa = PBXBuildFile; fileRef = B759E4E11880C33700E8166C /* cpSlideJoint.c */; };
 		B759E4F51880C38800E8166C /* cpArbiter.c in Sources */ = {isa = PBXBuildFile; fileRef = B759E4ED1880C38800E8166C /* cpArbiter.c */; };
 		B759E4F61880C38800E8166C /* cpBBTree.c in Sources */ = {isa = PBXBuildFile; fileRef = B759E4EE1880C38800E8166C /* cpBBTree.c */; };
-		B759E4F71880C38800E8166C /* cpCollision.c in Sources */ = {isa = PBXBuildFile; fileRef = B759E4EF1880C38800E8166C /* cpCollision.c */; };
+		B759E4F71880C38800E8166C /* cpCollision.c in Sources */ = {isa = PBXBuildFile; fileRef = B759E4EF1880C38800E8166C /* cpCollision.c */; settings = {COMPILER_FLAGS = "-fno-fast-math"; }; };
 		B759E4F81880C38800E8166C /* cpPolyShape.c in Sources */ = {isa = PBXBuildFile; fileRef = B759E4F01880C38800E8166C /* cpPolyShape.c */; };
 		B759E4F91880C38800E8166C /* cpShape.c in Sources */ = {isa = PBXBuildFile; fileRef = B759E4F11880C38800E8166C /* cpShape.c */; };
 		B759E4FA1880C38800E8166C /* cpSpaceHash.c in Sources */ = {isa = PBXBuildFile; fileRef = B759E4F21880C38800E8166C /* cpSpaceHash.c */; };

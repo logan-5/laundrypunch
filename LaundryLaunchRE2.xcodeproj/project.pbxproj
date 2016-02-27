@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		022A696F1B9680E90004BDEB /* CCActionAnimateRainbow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022A696E1B9680E90004BDEB /* CCActionAnimateRainbow.swift */; };
-		024D0B6A1BB4DF32004272D4 /* DryerScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024D0B691BB4DF32004272D4 /* DryerScene.swift */; settings = {ASSET_TAGS = (); }; };
-		024D0B6F1BB4DF75004272D4 /* LintScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024D0B6E1BB4DF75004272D4 /* LintScreen.swift */; settings = {ASSET_TAGS = (); }; };
-		024D0BA81BB61692004272D4 /* LintScreenQuarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024D0BA71BB61692004272D4 /* LintScreenQuarter.swift */; settings = {ASSET_TAGS = (); }; };
-		024D0BAA1BB61AB1004272D4 /* LintScreenGoldQuarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024D0BA91BB61AB1004272D4 /* LintScreenGoldQuarter.swift */; settings = {ASSET_TAGS = (); }; };
+		024D0B6A1BB4DF32004272D4 /* DryerScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024D0B691BB4DF32004272D4 /* DryerScene.swift */; };
+		024D0B6F1BB4DF75004272D4 /* LintScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024D0B6E1BB4DF75004272D4 /* LintScreen.swift */; };
+		024D0BA81BB61692004272D4 /* LintScreenQuarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024D0BA71BB61692004272D4 /* LintScreenQuarter.swift */; };
+		024D0BAA1BB61AB1004272D4 /* LintScreenGoldQuarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024D0BA91BB61AB1004272D4 /* LintScreenGoldQuarter.swift */; };
 		024D56A11B9FE06000E390BB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 024D56A01B9FE05F00E390BB /* Images.xcassets */; };
 		024D56AE1B9FE13000E390BB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 024D56A21B9FE13000E390BB /* Default-568h@2x.png */; };
 		024D56AF1B9FE13000E390BB /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 024D56A31B9FE13000E390BB /* Default-Landscape~ipad.png */; };
@@ -25,7 +25,7 @@
 		024D56B71B9FE13000E390BB /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 024D56AB1B9FE13000E390BB /* iTunesArtwork.png */; };
 		024D56B81B9FE13000E390BB /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 024D56AC1B9FE13000E390BB /* iTunesArtwork@2x.png */; };
 		024D56B91B9FE13000E390BB /* spotlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 024D56AD1B9FE13000E390BB /* spotlight.png */; };
-		02CEE1C11BB230BA00F5AE7B /* GCSwiftHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02CEE1C01BB230BA00F5AE7B /* GCSwiftHelper.swift */; settings = {ASSET_TAGS = (); }; };
+		02CEE1C11BB230BA00F5AE7B /* GCSwiftHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02CEE1C01BB230BA00F5AE7B /* GCSwiftHelper.swift */; };
 		02D33F6B1B97EEF300C235EA /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 02D33F6A1B97EEF300C235EA /* Settings.plist */; };
 		02D33F6F1B9A3AD700C235EA /* FreeParticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F6E1B9A3AD700C235EA /* FreeParticles.swift */; };
 		02D33F721B9A7FC800C235EA /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F711B9A7FC800C235EA /* Data.swift */; };
@@ -37,7 +37,9 @@
 		02D33F871B9BC05A00C235EA /* Unlockables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F861B9BC05A00C235EA /* Unlockables.swift */; };
 		02D33F891B9BDBF100C235EA /* BuyShirtButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33F881B9BDBF100C235EA /* BuyShirtButton.swift */; };
 		02D33FA71B9E5E5900C235EA /* AchievementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D33FA61B9E5E5900C235EA /* AchievementManager.swift */; };
-		02EB14081BABB89700DCF922 /* DispensableCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EB14071BABB89700DCF922 /* DispensableCache.swift */; settings = {ASSET_TAGS = (); }; };
+		02D3C9AC1C701C70005CE194 /* MKiCloudSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 02D3C9AB1C701C70005CE194 /* MKiCloudSync.m */; };
+		02D3C9B01C703300005CE194 /* CreditsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D3C9AF1C703300005CE194 /* CreditsScreen.swift */; };
+		02EB14081BABB89700DCF922 /* DispensableCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EB14071BABB89700DCF922 /* DispensableCache.swift */; };
 		5B121030197484FA004C1E1D /* LaundryLaunchREActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B12102F197484FA004C1E1D /* LaundryLaunchREActivity.m */; };
 		5B121038197487F2004C1E1D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B737893E1807617C0076A88C /* AppDelegate.m */; };
 		7A046D7919E84ED5004C4763 /* MainScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A046D7519E84C36004C4763 /* MainScene.swift */; };
@@ -178,6 +180,10 @@
 		02D33F861B9BC05A00C235EA /* Unlockables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unlockables.swift; sourceTree = "<group>"; };
 		02D33F881B9BDBF100C235EA /* BuyShirtButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyShirtButton.swift; sourceTree = "<group>"; };
 		02D33FA61B9E5E5900C235EA /* AchievementManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AchievementManager.swift; sourceTree = "<group>"; };
+		02D3C9A51C6FFCE5005CE194 /* LaundryLaunchRE2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = LaundryLaunchRE2.entitlements; sourceTree = "<group>"; };
+		02D3C9AA1C701C70005CE194 /* MKiCloudSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKiCloudSync.h; sourceTree = "<group>"; };
+		02D3C9AB1C701C70005CE194 /* MKiCloudSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKiCloudSync.m; sourceTree = "<group>"; };
+		02D3C9AF1C703300005CE194 /* CreditsScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditsScreen.swift; sourceTree = "<group>"; };
 		02EB14071BABB89700DCF922 /* DispensableCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispensableCache.swift; sourceTree = "<group>"; };
 		5B12100919748273004C1E1D /* libEGL.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libEGL.so; path = /usr/lib/armv7a/libEGL.so; sourceTree = SDKROOT; };
 		5B12100F197483EE004C1E1D /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_launcher.png; sourceTree = "<group>"; };
@@ -375,6 +381,8 @@
 		7A40362119DDF08C007B6E8F /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				02D3C9AA1C701C70005CE194 /* MKiCloudSync.h */,
+				02D3C9AB1C701C70005CE194 /* MKiCloudSync.m */,
 				B737893D1807617C0076A88C /* AppDelegate.h */,
 				B737893E1807617C0076A88C /* AppDelegate.m */,
 			);
@@ -484,6 +492,7 @@
 			isa = PBXGroup;
 			children = (
 				96AFCD101B925DFA009319E5 /* AfterDeathMenu.swift */,
+				02D3C9AF1C703300005CE194 /* CreditsScreen.swift */,
 				96A9901A1B92EB2000B40AA7 /* Options.swift */,
 				02D33F751B9A968200C235EA /* Difficulty.swift */,
 				02D33F861B9BC05A00C235EA /* Unlockables.swift */,
@@ -542,6 +551,7 @@
 		B77F1B2517B978D7009739AE = {
 			isa = PBXGroup;
 			children = (
+				02D3C9A51C6FFCE5005CE194 /* LaundryLaunchRE2.entitlements */,
 				B737893C1807616C0076A88C /* Source */,
 				B77F1B4617B978D7009739AE /* Resources */,
 				B77F1CCF17B978D8009739AE /* Supporting Files */,
@@ -695,6 +705,9 @@
 						DevelopmentTeam = L3MT7T2VPW;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
+								enabled = 1;
+							};
+							com.apple.iCloud = {
 								enabled = 1;
 							};
 						};
@@ -883,10 +896,12 @@
 				022A696F1B9680E90004BDEB /* CCActionAnimateRainbow.swift in Sources */,
 				7A046D7919E84ED5004C4763 /* MainScene.swift in Sources */,
 				02D33F6F1B9A3AD700C235EA /* FreeParticles.swift in Sources */,
+				02D3C9B01C703300005CE194 /* CreditsScreen.swift in Sources */,
 				96AFCD111B925DFB009319E5 /* AfterDeathMenu.swift in Sources */,
 				96AA23BF1B8E8D240033C26B /* Receptacle.swift in Sources */,
 				96AA23BB1B8E8CB90033C26B /* GameState.swift in Sources */,
 				02EB14081BABB89700DCF922 /* DispensableCache.swift in Sources */,
+				02D3C9AC1C701C70005CE194 /* MKiCloudSync.m in Sources */,
 				96AA23B51B8E8C760033C26B /* Bouncer.swift in Sources */,
 				5B121038197487F2004C1E1D /* AppDelegate.m in Sources */,
 				02D33F871B9BC05A00C235EA /* Unlockables.swift in Sources */,
@@ -1187,8 +1202,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-2";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = LaundryLaunchRE2.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1225,10 +1241,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-2";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = LaundryLaunchRE2.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;
 				HEADER_SEARCH_PATHS = (

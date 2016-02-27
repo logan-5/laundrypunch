@@ -27,6 +27,7 @@
 
 #import "AppDelegate.h"
 #import "CCBuilderReader.h"
+#import "MKiCloudSync.h"
 
 @implementation AppController
 
@@ -55,6 +56,9 @@
 
     [self setupCocos2dWithOptions:cocos2dSetup];
     //[CCTexture setDefaultAlphaPixelFormat:CCTexturePixelFormat_RGBA4444];
+
+    [MKiCloudSync startWithPrefix:@""];
+
     return YES;
 }
 

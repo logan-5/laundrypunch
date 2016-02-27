@@ -26,7 +26,7 @@ class Inflow: CCNode {
     
     func didLoadFromCCB() -> Void {
         emitPoint = CGPointMake( self.contentSizeInPoints.width / 2, self.positionInPoints.y + (preview ? 50 : 0) )
-        //self.zOrder = 2
+        self.zOrder = Int.max
     }
     
     func setUpLaunch() -> Void {

@@ -31,7 +31,7 @@ class AchievementManager: NSObject {
     func notifyShirtLaunch() {
         ++launchedShirts
         if launchedShirts == 50 && GameState.sharedState.score == 0 {
-            gc.reportAchievementIdentifier( "procrastinator1", percentComplete: 100 )
+            //gc.reportAchievementIdentifier( "procrastinator1", percentComplete: 100 )
         }
     }
 
@@ -42,7 +42,7 @@ class AchievementManager: NSObject {
         if !colorChanged && color != firstColor {
             colorChanged = true
         } else if !colorChanged && GameState.sharedState.score + plus >= 50 {
-            gc.reportAchievementIdentifier( "procrastinator2", percentComplete: 100 )
+            //gc.reportAchievementIdentifier( "procrastinator2", percentComplete: 100 )
         }
     }
 
@@ -51,8 +51,8 @@ class AchievementManager: NSObject {
             if c == color { return }
         }
         if ( CGFloat(Float(Shirt.shirtContentSize.width) + Float(size) * Receptacle.stackOffset )) >= GameState.sharedState.scene!.contentSizeInPoints.width {
-            gc.reportAchievementIdentifier( "procrastinator3", percentComplete: 100 )
-            acrossScreenStacks.append( color )
+            //gc.reportAchievementIdentifier( "procrastinator3", percentComplete: 100 )
+            //acrossScreenStacks.append( color )
         }
     }
 }

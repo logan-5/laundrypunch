@@ -349,8 +349,8 @@ public class GameState: NSObject {
         invalidateCombo()
         syncScoreAndTargetScore()
         finalScore = score * Int64(goldShirts + 1)
-        print( "SCORE BEFORE GOLDS: " + String(score) )
-        print( "FINAL SCORE: " + String(finalScore) )
+        // print( "SCORE BEFORE GOLDS: " + String(score) )
+        // print( "FINAL SCORE: " + String(finalScore) )
         oldHighScore = Data.sharedData.score
         Data.sharedData.score = finalScore
         validateGameCenter()
@@ -446,6 +446,24 @@ struct ModeInfo {
 
     var specialEventsActive: Bool {
         return mode != .Easy
+    }
+
+    var allowRainbowShirts: Bool {
+        switch mode {
+        case .Easy:
+            return GameState.sharedState.score > guideDisappearThreshold
+        default:
+            return true
+        }
+    }
+
+    var allowGoldShirts: Bool {
+        switch mode {
+        case .Easy:
+            return false
+        default:
+            return true
+        }
     }
 
     var shouldShowGuide: Bool {

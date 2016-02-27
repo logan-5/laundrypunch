@@ -23,7 +23,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
     
     func didLoadFromCCB() -> Void {
         gameState.scene = self
-        print( "loaded main scene" )
+        // print( "loaded main scene" )
         self.userInteractionEnabled = false
         myPhysicsNode.collisionDelegate = self
         updateScoreLabel()
@@ -63,10 +63,12 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
 
     func pause() {
         if gameState.lost { return }
-        myPhysicsNode.paused = !myPhysicsNode.paused
-        particleLayer.paused = myPhysicsNode.paused
-        
-        if !myPhysicsNode.paused {
+        let paused = !myPhysicsNode.paused
+        myPhysicsNode.paused = paused
+        particleLayer.paused = paused
+
+        pauseButton.selected = paused
+        if !paused {
             pauseButton.cascadeOpacityEnabled = true
             pauseButton.enabled = false
             pauseButton.opacity = 0
@@ -111,7 +113,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate {
         quarter.startTrickShotTimer()
         quarter.startBounceTimer()
 
-        print( "bounce" )
+        // print( "bounce" )
         return false
     }
 

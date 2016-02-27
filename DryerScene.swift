@@ -63,8 +63,8 @@ class DryerScene: CCScene {
     func loadNextLintScreen() {
         currentLintScreen!.removeFromParent()
         currentLintScreen = CCBReader.load( "DryerMode/lintScreen" ) as? LintScreen
-        currentLintScreen!.position = ccp( -currentLintScreen!.contentSizeInPoints.width * 2, 0 )
         self.addChild( currentLintScreen! )
+        currentLintScreen!.position = ccp( -currentLintScreen!.contentSizeInPoints.width * 2, 0 )
 
         let moveOnScreen = CCActionMoveTo.actionWithDuration( 0.4, position: CGPointZero ) as! CCAction
         currentLintScreen!.runAction( moveOnScreen )

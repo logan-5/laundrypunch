@@ -17,14 +17,14 @@ class Unlockables: CCNode {
         updateShirtsToSpend()
         setUpShirts()
         self.opacity = 0
-        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as! CCAction
+        let fadeIn = CCActionFadeIn.actionWithDuration( menuFadeSpeed ) as! CCAction
         self.runAction( fadeIn )
 
         self.userInteractionEnabled = true
     }
 
     func returnToPrevious() -> Void {
-        let fadeOut = CCActionFadeOut.actionWithDuration( 0.3 ) as! CCAction
+        let fadeOut = CCActionFadeOut.actionWithDuration( menuFadeSpeed ) as! CCAction
         let dispose = CCActionCallBlock.actionWithBlock( { () -> Void in
             self.removeFromParent()
         } )as! CCAction

@@ -51,7 +51,7 @@ class Bouncer: CCNode {
         if guide != nil && !guideDying {
             guideDying = true
             let die = CCActionCallBlock.actionWithBlock({ () -> Void in
-                guide?.removeFromParent()
+                self.guide?.removeFromParent()
             }) as! CCAction
             let fadeOut = CCActionFadeTo.actionWithDuration( 2, opacity: 0 ) as! CCAction
             guide?.runAction( CCActionSequence.actionWithArray([fadeOut, die]) as! CCAction )

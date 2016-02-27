@@ -23,7 +23,7 @@ class AfterDeathMenu: CCNode {
     weak var unlockablesButton: CCButton!
     weak var dryerModeButton: CCButton!
     weak var soundButton: CCButton!
-    weak var creditsLabel: CCLabelTTF!
+    weak var creditsButton: CCButton!
     weak var scoreFireworks: CCParticleSystem?
     private(set) var gold: Int64 = GameState.sharedState.goldShirts
     private(set) var score: Int64 = 0
@@ -48,7 +48,7 @@ class AfterDeathMenu: CCNode {
     func didLoadFromCCB() -> Void {
         self.cascadeOpacityEnabled = true
         self.opacity = 0
-        let fadeIn = CCActionFadeIn.actionWithDuration( 0.3 ) as! CCAction
+        let fadeIn = CCActionFadeIn.actionWithDuration( menuFadeSpeed ) as! CCAction
         self.runAction( fadeIn )
         self.zOrder = 3
         
@@ -60,7 +60,6 @@ class AfterDeathMenu: CCNode {
         //highScoreLabel.opacity = 0
 
         setSoundButtonText()
-        creditsLabel.string = "© 2015 logan r smith // noisecode.net"
 
         //__TESTING_ONLY__previewButton.label.string = "TESTING ONLY preview mode " + ( Data.sharedData.__TESTING_ONLY__previewMode ? "ON" : "OFF" )
     }
@@ -102,6 +101,10 @@ class AfterDeathMenu: CCNode {
     func setSoundButtonText() {
         soundButton.label.string = Data.sharedData.soundOn ? "sound on" : "muted"
     }
+
+    func creditsButtonPressed() {
+        self.addChild( CCBReader.load( "CreditsScreen" ) )
+    }
     
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
         if doubleTapTimer == nil {
@@ -111,9 +114,7 @@ class AfterDeathMenu: CCNode {
             scoreUpdateTimer?.invalidate()
             scoreUpdateTimer = nil
             gold = 0
-            if scoreFireworks != nil {
-                scoreFireworks!.stopSystem()
-            }
+            scoreFireworks?.stopSystem()
             self.stopAllActions()
             chaChingSound?.stop()
             score = GameState.sharedState.finalScore
